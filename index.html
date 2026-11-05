@@ -3,8 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="apple-touch-icon" href="favicon.svg">
 <title>Yupasoft — Software a medida para negocios y organizaciones</title>
 <meta name="description" content="Software a medida para negocios y organizaciones en Perú. Inventario y ventas, y transmisión y grabación de eventos. Herramientas simples, sin instalaciones complicadas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -109,7 +107,14 @@ h2{font-size:clamp(29px,3.6vw,42px);font-weight:800;letter-spacing:-.025em;line-
 .linea .btn{margin-top:22px;width:100%}
 .proxima{grid-column:1/-1;background:transparent;border-style:dashed;border-color:#C9D6E3;box-shadow:none;text-align:center;align-items:center;padding:34px}
 .proxima h3{font-size:20px}
-.proxima .desc{max-width:40em;margin-top:10px}
+.proxima .desc{max-width:44em;margin-top:10px}
+.ejemplos{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin-top:20px}
+.ejemplos li{background:#fff;border:1px solid var(--claro-2);border-radius:999px;padding:9px 16px;font-size:14px;color:var(--tinta)}
+.ejemplos li::before{content:"";display:inline-block;width:7px;height:7px;border-radius:2px;background:var(--turq);margin-right:9px;vertical-align:1px}
+@media(max-width:640px){
+  .ejemplos{flex-direction:column;align-items:stretch;gap:8px}
+  .ejemplos li{text-align:left;border-radius:11px;font-size:14.5px}
+}
 
 /* ---------- pasos ---------- */
 .pasos{counter-reset:p;margin-top:44px;display:grid;gap:2px}
@@ -313,9 +318,16 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
 
       <!-- PRÓXIMAS LÍNEAS -->
       <article class="linea proxima">
-        <div class="linea-num" style="justify-content:center"><span>PRÓXIMAS LÍNEAS</span></div>
+        <div class="linea-num" style="justify-content:center"><span>PROYECTOS A MEDIDA</span></div>
         <h3>¿Tu problema no está en esta lista?</h3>
-        <p class="desc">Estas son las líneas que hoy tenemos armadas, pero el trabajo es el mismo: entender cómo operas y construirte la herramienta que te falta. Si lo tuyo es otra cosa, cuéntamelo y te digo con honestidad si puedo resolverlo.</p>
+        <p class="desc">Estas son las líneas que hoy tengo armadas, pero el trabajo es el mismo: entender cómo operas y construirte la herramienta que te falta. Algunos ejemplos de lo que se puede resolver así:</p>
+        <ul class="ejemplos">
+          <li>Catálogo de productos con pedidos que llegan por WhatsApp</li>
+          <li>Control de asistencia con código QR y reporte de horas</li>
+          <li>Formularios de inspección con tablero para el jefe</li>
+          <li>Registro de incidencias y seguimiento de pendientes</li>
+        </ul>
+        <p class="desc" style="margin-top:16px">Si lo tuyo es otra cosa, cuéntamelo y te digo con honestidad si puedo resolverlo.</p>
         <div class="empuja" style="margin-top:22px"><a href="#contacto" class="btn btn-claro" style="width:auto">Proponer un proyecto a medida</a></div>
       </article>
 
