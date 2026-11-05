@@ -3,16 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Yupana — Sistema de inventario y ventas para tu negocio</title>
-<meta name="description" content="Sistema de inventario, ventas y reportes hecho a la medida de tu negocio. Stock en tiempo real, varios usuarios a la vez, desde el celular.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<title>Yupasoft — Software a medida para negocios y organizaciones</title>
+<meta name="description" content="Software a medida para negocios y organizaciones en Perú. Inventario y ventas, y transmisión y grabación de eventos. Herramientas simples, sin instalaciones complicadas.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --tinta:#0C1A2E; --panel:#152741; --borde:#243B58;
-  --turq:#2ED3B7; --turq-soft:#5CE0C4; --ambar:#F2A93B;
-  --gris:#9BB0C9; --claro:#F4F7FA; --claro-2:#E4EBF2;
+  --turq:#2ED3B7; --turq-soft:#5CE0C4; --turq-osc:#159C86; --ambar:#F2A93B;
+  --gris:#9BB0C9; --gris-osc:#5A7086; --claro:#F4F7FA; --claro-2:#E4EBF2;
   --display:'Sora',system-ui,sans-serif; --mono:'IBM Plex Mono',monospace;
   --wrap:1120px;
 }
@@ -24,133 +26,153 @@ a{color:inherit;text-decoration:none}
 :focus-visible{outline:3px solid var(--turq);outline-offset:3px;border-radius:6px}
 
 /* ---------- marca ---------- */
-.logo{display:flex;align-items:center;gap:13px}
-.logo svg{height:34px;width:auto;display:block}
+.logo{display:flex;align-items:center}
+.logo svg{height:28px;width:auto;display:block}
 
 /* ---------- nav ---------- */
-header{position:sticky;top:0;z-index:50;background:rgba(12,26,46,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:74px}
-.btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;font-weight:700;font-size:15px;padding:13px 24px;border:0;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+header{position:sticky;top:0;z-index:50;background:rgba(12,26,46,.86);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:14px;height:74px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;font-weight:700;font-size:15px;padding:13px 24px;border:0;cursor:pointer;white-space:nowrap;transition:transform .18s ease,box-shadow .18s ease,border-color .18s,color .18s}
+.corto{display:none}
 .btn-1{background:linear-gradient(90deg,var(--turq),var(--turq-soft));color:var(--tinta);box-shadow:0 6px 24px rgba(46,211,183,.28)}
 .btn-1:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(46,211,183,.4)}
 .btn-2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.22)}
 .btn-2:hover{border-color:var(--turq);color:var(--turq)}
+.btn-claro{background:var(--tinta);color:#fff}
+.btn-claro:hover{transform:translateY(-2px)}
 
-/* ---------- fondo de celdas (la yupana) ---------- */
+/* ---------- fondo de celdas ---------- */
 .celdas{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='46'%3E%3Crect x='1' y='1' width='44' height='44' rx='9' fill='none' stroke='%232ED3B7' stroke-width='1.4' opacity='0.06'/%3E%3C/svg%3E");pointer-events:none}
-.glow{position:absolute;width:900px;height:900px;right:-280px;top:-420px;background:radial-gradient(circle,rgba(46,211,183,.22),transparent 62%);pointer-events:none}
+.glow{position:absolute;width:900px;height:900px;right:-280px;top:-420px;background:radial-gradient(circle,rgba(46,211,183,.17),transparent 62%);pointer-events:none}
 
 /* ---------- hero ---------- */
-.hero{position:relative;padding:78px 0 96px;overflow:hidden}
+.hero{position:relative;padding:72px 0 92px;overflow:hidden}
 .hero-grid{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
-.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.22em;color:var(--turq);margin-bottom:20px}
-h1{font-size:clamp(40px,5.4vw,64px);font-weight:800;line-height:1.03;letter-spacing:-.025em}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.2em;color:var(--turq);margin-bottom:20px}
+h1{font-size:clamp(38px,5.2vw,62px);font-weight:800;line-height:1.04;letter-spacing:-.025em}
 h1 em{font-style:normal;color:var(--turq)}
-.sub{color:var(--gris);font-size:19px;line-height:1.62;margin:22px 0 32px;max-width:30em}
+.sub{color:var(--gris);font-size:19px;line-height:1.62;margin:22px 0 32px;max-width:31em}
 .acciones{display:flex;gap:14px;flex-wrap:wrap}
-.mini{font-family:var(--mono);font-size:12.5px;color:var(--gris);margin-top:26px;letter-spacing:.04em}
+.mini{font-family:var(--mono);font-size:12.5px;color:var(--gris);margin-top:26px;letter-spacing:.04em;line-height:1.7}
 
-/* ---------- consola demo (elemento firma) ---------- */
+/* ---------- consola demo ---------- */
 .consola{background:linear-gradient(170deg,#162944,#101F36);border:1px solid var(--borde);border-radius:20px;padding:22px;box-shadow:0 30px 70px rgba(0,0,0,.45)}
-.c-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid var(--borde)}
-.c-tit{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--gris)}
-.vivo{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--turq)}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--turq);animation:latir 1.7s infinite}
+.c-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:16px;border-bottom:1px solid var(--borde)}
+.c-tit{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--gris)}
+.vivo{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--turq);white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--turq);animation:latir 1.7s infinite;flex:none}
 @keyframes latir{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.8)}}
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 0 18px}
 .kpi b{display:block;font-size:29px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.kpi span{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--gris)}
+.kpi span{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--gris)}
 .fila{padding:11px 0;border-top:1px solid rgba(255,255,255,.06)}
-.fila-top{display:flex;justify-content:space-between;align-items:baseline;font-size:14.5px;margin-bottom:8px}
-.fila-top s{text-decoration:none;font-family:var(--mono);font-size:13px;color:var(--turq);font-variant-numeric:tabular-nums}
+.fila-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14.5px;margin-bottom:8px}
+.fila-top s{text-decoration:none;font-family:var(--mono);font-size:13px;color:var(--turq);font-variant-numeric:tabular-nums;white-space:nowrap}
 .fila.bajo .fila-top s{color:var(--ambar)}
 .pista{height:8px;border-radius:5px;background:#1E3251;overflow:hidden}
 .pista i{display:block;height:100%;border-radius:5px;background:var(--turq);transition:width .9s cubic-bezier(.4,0,.2,1)}
 .fila.bajo .pista i{background:var(--ambar)}
-.scan{margin-top:16px;display:flex;align-items:center;gap:12px;background:rgba(46,211,183,.09);border:1px dashed rgba(46,211,183,.4);border-radius:12px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;color:var(--turq);min-height:46px}
+.scan{margin-top:16px;display:flex;align-items:center;gap:12px;background:rgba(46,211,183,.09);border:1px dashed rgba(46,211,183,.4);border-radius:12px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;color:var(--turq);min-height:46px;word-break:break-all}
 .scan svg{flex:none}
 .cursor{display:inline-block;width:8px;height:15px;background:var(--turq);margin-left:2px;animation:parpadeo .9s steps(1) infinite;vertical-align:-2px}
 @keyframes parpadeo{50%{opacity:0}}
+.pie-consola{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--gris);text-align:center;margin-top:14px}
 
 /* ---------- secciones claras ---------- */
 .claro{background:var(--claro);color:var(--tinta)}
-section{padding:88px 0}
-.rotulo{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:#5A7086;margin-bottom:14px}
-h2{font-size:clamp(29px,3.6vw,42px);font-weight:800;letter-spacing:-.025em;line-height:1.12;max-width:16em}
-.h2sub{color:#5A7086;font-size:17.5px;line-height:1.6;margin-top:16px;max-width:34em}
-.tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:18px;margin-top:44px}
-.card{background:#fff;border:1px solid var(--claro-2);border-radius:16px;padding:26px;box-shadow:0 2px 10px rgba(12,26,46,.05)}
-.card h3{font-size:18px;font-weight:700;margin:16px 0 9px}
-.card p{font-size:15px;line-height:1.6;color:#5A7086}
-.ico{width:38px;height:38px;border-radius:10px;background:rgba(46,211,183,.14);display:grid;place-items:center}
+section{padding:86px 0}
+.rotulo{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--gris-osc);margin-bottom:14px}
+h2{font-size:clamp(29px,3.6vw,42px);font-weight:800;letter-spacing:-.025em;line-height:1.12;max-width:17em}
+.h2sub{color:var(--gris-osc);font-size:17.5px;line-height:1.62;margin-top:16px;max-width:36em}
 
-/* ---------- pasos (secuencia real) ---------- */
+/* ---------- líneas de solución ---------- */
+.lineas{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px;align-items:start}
+.linea{background:#fff;border:1px solid var(--claro-2);border-radius:18px;padding:30px;box-shadow:0 2px 12px rgba(12,26,46,.05);display:flex;flex-direction:column;height:100%}
+.linea-num{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--turq-osc);margin-bottom:14px}
+.etiqueta{background:var(--tinta);color:#fff;border-radius:6px;padding:4px 9px;letter-spacing:.1em;font-size:10.5px}
+.linea h3{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.linea .desc{font-size:15.5px;line-height:1.62;color:var(--gris-osc);margin-top:12px}
+.feats{list-style:none;margin:20px 0 0;display:grid;gap:10px}
+.feats li{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:15px;line-height:1.52}
+.tick{width:13px;height:13px;border-radius:3.5px;background:var(--turq);margin-top:5px}
+.empuja{margin-top:auto}
+
+/* precios dentro de la línea */
+.precio-bloque{margin-top:24px;background:var(--claro);border:1px solid var(--claro-2);border-radius:14px;padding:20px}
+.precio-bloque .cab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gris-osc);margin-bottom:14px}
+.fila-precio{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px dashed var(--claro-2);font-size:14.5px}
+.fila-precio:last-child{border-bottom:0}
+.fila-precio b{font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.consultar{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-top:4px}
+.consultar small{display:block;font-size:14px;font-weight:400;color:var(--gris-osc);letter-spacing:0;margin-top:6px;line-height:1.5}
+.nota-linea{margin-top:18px;font-size:13.5px;line-height:1.6;color:var(--gris-osc);border-left:3px solid var(--ambar);padding-left:14px}
+.linea .btn{margin-top:22px;width:100%}
+.proxima{grid-column:1/-1;background:transparent;border-style:dashed;border-color:#C9D6E3;box-shadow:none;text-align:center;align-items:center;padding:34px}
+.proxima h3{font-size:20px}
+.proxima .desc{max-width:40em;margin-top:10px}
+
+/* ---------- pasos ---------- */
 .pasos{counter-reset:p;margin-top:44px;display:grid;gap:2px}
 .paso{counter-increment:p;display:grid;grid-template-columns:74px 1fr;gap:22px;padding:26px 0;border-top:1px solid var(--claro-2);align-items:start}
 .paso:last-child{border-bottom:1px solid var(--claro-2)}
-.paso::before{content:counter(p,decimal-leading-zero);font-family:var(--mono);font-size:26px;color:var(--turq);font-weight:600}
+.paso::before{content:counter(p,decimal-leading-zero);font-family:var(--mono);font-size:26px;color:var(--turq-osc);font-weight:600}
 .paso h3{font-size:19px;font-weight:700;margin-bottom:7px}
-.paso p{color:#5A7086;font-size:15.5px;line-height:1.62;max-width:44em}
-
-/* ---------- precios ---------- */
-.precios{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px}
-.precio{background:var(--panel);border:1px solid var(--borde);border-radius:18px;padding:32px}
-.precio.destacado{border-color:var(--turq);box-shadow:0 0 0 1px var(--turq),0 20px 50px rgba(46,211,183,.14)}
-.precio .tipo{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--turq);margin-bottom:16px}
-.precio .monto{font-size:38px;font-weight:800;letter-spacing:-.03em}
-.precio .monto small{font-size:15px;font-weight:400;color:var(--gris);letter-spacing:0}
-.precio ul{list-style:none;margin-top:22px;display:grid;gap:11px}
-.precio li{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:15px;line-height:1.5;color:#CBD8E6}
-.tick{width:13px;height:13px;border-radius:3.5px;background:var(--turq);margin-top:5px}
-.nota{margin-top:26px;font-size:14.5px;line-height:1.62;color:var(--gris);border-left:3px solid var(--ambar);padding-left:16px;max-width:56em}
+.paso p{color:var(--gris-osc);font-size:15.5px;line-height:1.62;max-width:46em}
 
 /* ---------- formulario ---------- */
-.form{background:#fff;color:var(--tinta);border-radius:20px;padding:34px;text-align:left;box-shadow:0 30px 70px rgba(0,0,0,.4);max-width:760px;margin:36px auto 0}
-.form .campos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cierre{position:relative;text-align:center;overflow:hidden;padding:92px 0}
+.cierre h2{margin:0 auto;max-width:15em}
+.form{background:#fff;color:var(--tinta);border-radius:20px;padding:34px;text-align:left;box-shadow:0 30px 70px rgba(0,0,0,.4);max-width:780px;margin:36px auto 0}
+.campos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .campo{display:flex;flex-direction:column;gap:7px}
 .campo.ancho{grid-column:1/-1}
 .campo label{font-size:13.5px;font-weight:700;color:#33465C}
 .campo input,.campo select,.campo textarea{font-family:var(--display);font-size:15px;color:var(--tinta);background:#F7F9FB;border:1.5px solid var(--claro-2);border-radius:11px;padding:12px 13px;width:100%;transition:border-color .15s}
-.campo textarea{resize:vertical;min-height:78px}
+.campo textarea{resize:vertical;min-height:80px}
 .campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--turq);outline:none;background:#fff}
 .campo.error input,.campo.error select{border-color:#E0574E;background:#FEF4F3}
-.aviso{font-size:13.5px;color:#5A7086;line-height:1.55;margin-top:18px}
+.bloque{display:none;grid-column:1/-1;margin-top:4px}
+.bloque.on{display:block}
+.bloque .cab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--gris-osc);margin:10px 0 14px;padding-top:16px;border-top:1px solid var(--claro-2)}
+.bloque .campos{margin:0}
+.aviso{font-size:13.5px;color:var(--gris-osc);line-height:1.58;margin-top:20px}
 .form-btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;align-items:center}
 .btn-3{background:#EDF2F6;color:#33465C;border:1.5px solid var(--claro-2)}
-.btn-3:hover{border-color:#9BB0C9}
-.estado{font-size:13.5px;color:#159C86;font-weight:600}
-@media(max-width:640px){.form{padding:24px}.form .campos{grid-template-columns:1fr}}
-
-/* ---------- cierre ---------- */
-.cierre{position:relative;text-align:center;overflow:hidden;padding:96px 0}
-.cierre h2{margin:0 auto;max-width:14em}
+.btn-3:hover{border-color:var(--gris)}
+.estado{font-size:13.5px;color:var(--turq-osc);font-weight:600}
 footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var(--mono);font-size:12.5px;color:var(--gris);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
 @media(max-width:900px){
   .hero-grid{grid-template-columns:1fr;gap:44px}
-  .precios{grid-template-columns:1fr}
+  .lineas{grid-template-columns:1fr}
+  .campos{grid-template-columns:1fr}
   .nav .btn-2{display:none}
-  section{padding:64px 0}
+  section{padding:62px 0}
 }
 @media(max-width:640px){
-  .logo svg{height:25px}
-  .nav{height:62px}
-  .btn{padding:12px 18px;font-size:14px}
-  .hero{padding:44px 0 62px}
-  h1{font-size:37px}
+  .logo svg{height:19px}
+  .nav{height:60px;gap:10px}
+  .nav .larga{display:none}
+  .nav .corto{display:inline}
+  .nav .btn{padding:11px 16px;font-size:13.5px}
+  .btn{padding:12px 17px;font-size:14px}
+  .hero{padding:40px 0 60px}
+  h1{font-size:35px}
   .sub{font-size:17px}
-  .mini{font-size:10.5px;letter-spacing:.02em;line-height:1.7}
+  .mini{font-size:10.5px;letter-spacing:.02em}
   .consola{padding:16px;border-radius:16px}
   .kpis{grid-template-columns:1fr 1fr;gap:16px 10px;padding:18px 0 14px}
   .kpi b{font-size:23px}
   .fila-top{font-size:13.5px}
-  .scan{font-size:11px;padding:10px 12px;word-break:break-all}
+  .scan{font-size:11px;padding:10px 12px}
+  .linea{padding:22px}
+  .linea h3{font-size:21px}
+  .precio-bloque{padding:16px}
+  .fila-precio{flex-direction:column;gap:2px;align-items:flex-start}
   .paso{grid-template-columns:46px 1fr;gap:14px;padding:22px 0}
   .paso::before{font-size:20px}
-  .precio{padding:24px}
-  .precio .monto{font-size:32px}
-  .form-btns .btn{width:100%;justify-content:center}
-  .acciones .btn{width:100%;justify-content:center}
+  .form{padding:22px}
+  .form-btns .btn,.acciones .btn{width:100%}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -160,40 +182,33 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
 <!-- ================= NAV ================= -->
 <header>
   <div class="wrap nav">
-    <div class="logo">
-      <svg viewBox="0 0 621 101" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yupana">
-        <g id="iso">
-          <rect x="81" y="0" width="20" height="20" rx="5.5" fill="#F2A93B"/>
-          <rect x="1.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#fff" stroke-width="3.2" opacity=".3"/>
-          <rect x="28.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#fff" stroke-width="3.2" opacity=".3"/>
-          <rect x="55.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#fff" stroke-width="3.2" opacity=".3"/>
-          <rect x="1.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#fff" stroke-width="3.2" opacity=".3"/>
-          <rect x="28.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#fff" stroke-width="3.2" opacity=".3"/>
-          <rect x="54" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="81" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="1.6" y="55.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#fff" stroke-width="3.2" opacity=".3"/>
-          <rect x="27" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="54" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="81" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="0" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="27" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="54" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-          <rect x="81" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
-        </g>
-        <clipPath id="cap"><rect x="-1" y="0" width="66" height="96"/></clipPath>
-        <g fill="none" stroke="#fff" stroke-width="15" stroke-linecap="butt" stroke-miterlimit="8">
-          <g transform="translate(141,3)" clip-path="url(#cap)"><path d="M0,0 L32,46 L64,0"/><path d="M32,46 L32,96"/></g>
-          <g transform="translate(227,3)" clip-path="url(#cap)"><path d="M0,0 L0,56 A32,32.5 0 0 0 64,56 L64,0"/></g>
-          <g transform="translate(313,3)" clip-path="url(#cap)"><path d="M0,96 L0,0 L30,0 A26,26 0 0 1 30,52 L0,52"/></g>
-          <g transform="translate(389,3)" clip-path="url(#cap)"><path d="M0,96 L32,0 L64,96"/><path d="M13,68 L51,68"/></g>
-          <g transform="translate(477,3)" clip-path="url(#cap)"><path d="M0,96 L0,0 L64,96 L64,0"/></g>
-          <g transform="translate(557,3)" clip-path="url(#cap)"><path d="M0,96 L32,0 L64,96"/><path d="M13,68 L51,68"/></g>
-        </g>
-      </svg>
-    </div>
+    <div class="logo"><svg viewBox="0 0 757 101" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yupasoft"><rect x="1.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="1.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="1.6" y="55.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="0" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="28.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="28.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="27" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="27" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="55.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="54" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="54" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="54" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="81" y="0" width="20" height="20" rx="5.5" fill="#F2A93B"/>
+<rect x="81" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="81" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="81" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/><defs><clipPath id="capnv"><rect x="-12" y="0" width="90" height="96"/></clipPath></defs>
+<g transform="translate(141,3)" clip-path="url(#capnv)"><path d="M0,0 L32,46 L64,0" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M32,46 L32,96" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(227,3)" clip-path="url(#capnv)"><path d="M0,0 L0,56 A32,32.5 0 0 0 64,56 L64,0" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(313,3)" clip-path="url(#capnv)"><path d="M0,96 L0,0 L30,0 A26,26 0 0 1 30,52 L0,52" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(389,3)" clip-path="url(#capnv)"><path d="M0,96 L32,0 L64,96" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M13,68 L51,68" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(469,3)" clip-path="url(#capnv)"><path d="M56.5,27.75 A24.5,20.25 0 1 0 32,48 A24.5,20.25 0 1 1 7.5,68.25" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(547,3)" clip-path="url(#capnv)"><path d="M7.5,48 A24.5,40.5 0 0 1 56.5,48 A24.5,40.5 0 0 1 7.5,48 Z" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(629,3)" clip-path="url(#capnv)"><path d="M0,96 L0,0 L57,0" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M0,48 L44,48" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(693,3)" clip-path="url(#capnv)"><path d="M0,7.5 L64,7.5" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M32,7.5 L32,96" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g></svg></div>
     <div style="display:flex;gap:12px;align-items:center">
-      <a href="#precios" class="btn btn-2">Ver precios</a>
-      <a href="#contacto" class="btn btn-1">Pedir una demo</a>
+      <a href="#soluciones" class="btn btn-2">Soluciones</a>
+      <a href="#contacto" class="btn btn-1"><span class="larga">Pedir una propuesta</span><span class="corto">Propuesta</span></a>
     </div>
   </div>
 </header>
@@ -203,62 +218,107 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
   <div class="celdas"></div><div class="glow"></div>
   <div class="wrap hero-grid">
     <div>
-      <p class="eyebrow">INVENTARIO · VENTAS · REPORTES</p>
-      <h1>Tu Excel ya no<br><em>da para más.</em></h1>
-      <p class="sub">Un sistema de inventario y ventas hecho a la medida de tu negocio. Stock en tiempo real, varios usuarios a la vez, y los números del día en una sola pantalla. Empiezo con la información que ya tienes.</p>
+      <p class="eyebrow">SOFTWARE A MEDIDA · LIMA, PERÚ</p>
+      <h1>El software que te falta.<br><em>Hecho a tu medida.</em></h1>
+      <p class="sub">Yupasoft resuelve problemas concretos con herramientas simples: nada que instalar, nada que configurar. Se abre, se usa, y funciona igual desde el celular que desde la computadora.</p>
       <div class="acciones">
-        <a href="#contacto" class="btn btn-1">Quiero una demo con mis productos</a>
-        <a href="demo.html" class="btn btn-2">Ver el sistema por dentro</a>
+        <a href="#contacto" class="btn btn-1">Cuéntame tu problema</a>
+        <a href="#soluciones" class="btn btn-2">Ver nuestras soluciones</a>
       </div>
-      <p class="mini">SIN INSTALACIONES · FUNCIONA EN CELULAR Y COMPUTADORA · TUS DATOS SE EXPORTAN CUANDO QUIERAS</p>
+      <p class="mini">SIN INSTALACIONES · FUNCIONA EN CELULAR Y COMPUTADORA · TU INFORMACIÓN SIEMPRE ES TUYA</p>
     </div>
 
-    <!-- elemento firma: la consola que se mueve sola -->
-    <div class="consola" aria-hidden="true">
-      <div class="c-top">
-        <span class="c-tit">STOCK EN TIEMPO REAL</span>
-        <span class="vivo"><i class="dot"></i>ACTUALIZADO</span>
+    <div>
+      <div class="consola" aria-hidden="true">
+        <div class="c-top">
+          <span class="c-tit">STOCK EN TIEMPO REAL</span>
+          <span class="vivo"><i class="dot"></i>ACTUALIZADO</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><b id="k1">1,284</b><span>PRODUCTOS</span></div>
+          <div class="kpi"><b id="k2">S/ 8,420</b><span>VENDIDO HOY</span></div>
+          <div class="kpi"><b id="k3" style="color:var(--ambar)">7</b><span>POR AGOTARSE</span></div>
+        </div>
+        <div id="filas"></div>
+        <div class="scan">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2ED3B7" stroke-width="2" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"/></svg>
+          <span id="scan-txt"></span><i class="cursor"></i>
+        </div>
       </div>
-      <div class="kpis">
-        <div class="kpi"><b id="k1">1,284</b><span>PRODUCTOS</span></div>
-        <div class="kpi"><b id="k2">S/ 8,420</b><span>VENDIDO HOY</span></div>
-        <div class="kpi"><b id="k3" style="color:var(--ambar)">7</b><span>POR AGOTARSE</span></div>
-      </div>
-      <div id="filas"></div>
-      <div class="scan">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2ED3B7" stroke-width="2" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"/></svg>
-        <span id="scan-txt"></span><i class="cursor"></i>
-      </div>
+      <p class="pie-consola">UNA PANTALLA REAL DE LA LÍNEA DE INVENTARIO Y VENTAS</p>
     </div>
   </div>
 </div>
 
-<!-- ================= QUÉ HACE ================= -->
-<section class="claro" id="que">
+<!-- ================= SOLUCIONES ================= -->
+<section class="claro" id="soluciones">
   <div class="wrap">
-    <p class="rotulo">LO QUE VES DESDE EL PRIMER DÍA</p>
-    <h2>Todo lo que hoy buscas en tres archivos distintos, en una sola pantalla.</h2>
-    <div class="tarjetas">
-      <div class="card">
-        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#159C86" stroke-width="2" stroke-linecap="round"><path d="M20 7 12 3 4 7v10l8 4 8-4V7z"/><path d="m4 7 8 4 8-4M12 21V11"/></svg></div>
-        <h3>Inventario en tiempo real</h3>
-        <p>Cuánto tienes de cada producto, ahora mismo. Con variantes de talla, color o presentación si tu negocio las maneja.</p>
-      </div>
-      <div class="card">
-        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#159C86" stroke-width="2" stroke-linecap="round"><path d="M3 3v18h18M7 15l4-5 3 3 5-7"/></svg></div>
-        <h3>Ventas y reportes</h3>
-        <p>Qué se vendió hoy, qué producto se mueve y cuál lleva dos meses parado ocupando tu capital.</p>
-      </div>
-      <div class="card">
-        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#159C86" stroke-width="2" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"/></svg></div>
-        <h3>Búsqueda por código</h3>
-        <p>Apuntas con la cámara del celular al código del producto y aparece su ficha. Sin lector especial, sin escribir nada.</p>
-      </div>
-      <div class="card">
-        <div class="ico"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#159C86" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
-        <h3>Varios usuarios a la vez</h3>
-        <p>Tu vendedor registra, tú miras los reportes, nadie se pisa. Y queda el historial de quién movió qué.</p>
-      </div>
+    <p class="rotulo">NUESTRAS SOLUCIONES</p>
+    <h2>Líneas de trabajo distintas, la misma forma de construir.</h2>
+    <p class="h2sub">Cada línea resuelve un problema concreto. Todas comparten lo mismo: se usan desde el navegador, no requieren instalación y se adaptan a cómo ya trabajas.</p>
+
+    <div class="lineas">
+
+      <!-- LÍNEA 01 -->
+      <article class="linea">
+        <div class="linea-num"><span>LÍNEA 01</span></div>
+        <h3>Inventario y ventas</h3>
+        <p class="desc">Para tiendas, distribuidoras y almacenes que hoy llevan su control en Excel y ya chocaron con el límite: dos personas no pueden usarlo a la vez y nadie sabe con certeza qué queda.</p>
+        <ul class="feats">
+          <li><i class="tick"></i>Inventario en tiempo real, con tallas, colores o presentaciones</li>
+          <li><i class="tick"></i>Registro de ventas con historial de quién hizo qué</li>
+          <li><i class="tick"></i>Reportes: qué se mueve, qué está parado y qué se va a agotar</li>
+          <li><i class="tick"></i>Búsqueda por código escaneado con la cámara del celular</li>
+          <li><i class="tick"></i>Varios usuarios a la vez, sin que se pisen entre ellos</li>
+          <li><i class="tick"></i>Exportación a Excel cuando la necesites</li>
+        </ul>
+
+        <div class="precio-bloque">
+          <p class="cab">PRECIOS DE ESTA LÍNEA</p>
+          <div class="fila-precio"><span>Puesta en marcha <em style="font-style:normal;color:var(--gris-osc)">· pago único</em></span><b>S/ 890 – 2,500</b></div>
+          <div class="fila-precio"><span>Servicio mensual</span><b>S/ 150 – 300 /mes</b></div>
+          <div class="fila-precio"><span>Local adicional</span><b>desde S/ 60 /mes</b></div>
+          <div class="fila-precio"><span>Módulo a medida</span><b>S/ 700 – 1,800</b></div>
+        </div>
+
+        <p class="nota-linea"><b>Lo que esta línea no hace:</b> no emite boleta ni factura electrónica ante SUNAT. Es un sistema de control interno de inventario y ventas, y convive con el facturador que ya uses. Prefiero decírtelo aquí y no después de que pagues.</p>
+
+        <div class="empuja"><a href="demo.html" class="btn btn-claro">Ver el sistema por dentro</a></div>
+      </article>
+
+      <!-- LÍNEA 02 -->
+      <article class="linea">
+        <div class="linea-num"><span>LÍNEA 02</span><span class="etiqueta">YUPAVIDEO</span></div>
+        <h3>Transmisión y grabación de eventos</h3>
+        <p class="desc">Para iglesias, ministerios, colegios y eventos. El celular funciona como cámara y la laptop muestra y graba en vivo. Sin equipos caros, sin cables, sin técnico.</p>
+        <ul class="feats">
+          <li><i class="tick"></i>El celular es la cámara; la laptop muestra y graba</li>
+          <li><i class="tick"></i>El logo de tu organización sobre el video</li>
+          <li><i class="tick"></i>Formato horizontal o vertical, según dónde publiques</li>
+          <li><i class="tick"></i>Pausa durante la transmisión</li>
+          <li><i class="tick"></i>Grabación segura por partes: si algo falla, no pierdes todo</li>
+          <li><i class="tick"></i>Reconexión automática si se cae el internet</li>
+          <li><i class="tick"></i>No se instala nada: funciona desde el navegador y también como app instalable</li>
+        </ul>
+
+        <div class="precio-bloque">
+          <p class="cab">MODALIDAD</p>
+          <p class="consultar">Alquiler por evento
+            <small>El precio depende del tipo de evento, la duración y cuántas cámaras necesitas. Escríbeme y lo vemos.</small>
+          </p>
+        </div>
+
+        <div class="empuja"><a href="#contacto" class="btn btn-claro">Consultar para mi evento</a></div>
+      </article>
+
+      <!-- PRÓXIMAS LÍNEAS -->
+      <article class="linea proxima">
+        <div class="linea-num" style="justify-content:center"><span>PRÓXIMAS LÍNEAS</span></div>
+        <h3>¿Tu problema no está en esta lista?</h3>
+        <p class="desc">Estas son las líneas que hoy tenemos armadas, pero el trabajo es el mismo: entender cómo operas y construirte la herramienta que te falta. Si lo tuyo es otra cosa, cuéntamelo y te digo con honestidad si puedo resolverlo.</p>
+        <div class="empuja" style="margin-top:22px"><a href="#contacto" class="btn btn-claro" style="width:auto">Proponer un proyecto a medida</a></div>
+      </article>
+
     </div>
   </div>
 </section>
@@ -266,19 +326,19 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
 <!-- ================= CÓMO ================= -->
 <section class="claro" id="como" style="padding-top:0">
   <div class="wrap">
-    <p class="rotulo">CÓMO ARRANCAMOS</p>
+    <p class="rotulo">CÓMO TRABAJAMOS</p>
     <h2>Tres pasos. No empiezas de cero.</h2>
     <div class="pasos">
       <div class="paso">
         <div>
           <h3>Me muestras cómo trabajas hoy</h3>
-          <p>Una reunión de 40 minutos y tu archivo de productos tal como está. No lo ordenes para mí: necesito verlo real para saber qué se puede rescatar.</p>
+          <p>Una reunión de 40 minutos para entender tu operación tal como es. Si ya llevas información en archivos, me los mandas como están. No los ordenes para mí: necesito verlos reales para saber qué se puede rescatar.</p>
         </div>
       </div>
       <div class="paso">
         <div>
-          <h3>Cargo tu información y armo tu sistema</h3>
-          <p>Limpio y cargo tus productos, configuro tus categorías, precios y usuarios. Te entrego el sistema con tus datos adentro, no con datos de ejemplo.</p>
+          <h3>Construyo tu herramienta con tu información adentro</h3>
+          <p>Cargo tus datos, configuro lo que tu operación necesita y te entrego algo que puedes usar desde el primer día, no una demostración con datos de ejemplo.</p>
         </div>
       </div>
       <div class="paso">
@@ -291,78 +351,74 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
   </div>
 </section>
 
-<!-- ================= PRECIOS ================= -->
-<section id="precios">
-  <div class="celdas" style="opacity:.6"></div>
-  <div class="wrap" style="position:relative">
-    <p class="rotulo" style="color:var(--turq)">PRECIOS</p>
-    <h2>Claros desde el inicio.</h2>
-    <p class="h2sub" style="color:var(--gris)">Se paga una vez la puesta en marcha, y luego una mensualidad por el servicio. Sin contratos de permanencia.</p>
-    <div class="precios">
-      <div class="precio">
-        <p class="tipo">PUESTA EN MARCHA · PAGO ÚNICO</p>
-        <p class="monto">S/ 890 <small>a S/ 2,500</small></p>
-        <ul>
-          <li><i class="tick"></i>Carga y limpieza de tu catálogo de productos</li>
-          <li><i class="tick"></i>Configuración de categorías, precios y usuarios</li>
-          <li><i class="tick"></i>Capacitación a tu equipo</li>
-          <li><i class="tick"></i>Primer mes de acompañamiento incluido</li>
-        </ul>
-        <p style="margin-top:20px;font-size:14px;color:var(--gris);line-height:1.55">El monto depende de cuántos productos tengas y de cómo esté tu información hoy. Te lo digo exacto después de ver tu archivo, nunca antes.</p>
-      </div>
-      <div class="precio destacado">
-        <p class="tipo">SERVICIO MENSUAL</p>
-        <p class="monto">S/ 150 <small>a S/ 300 al mes</small></p>
-        <ul>
-          <li><i class="tick"></i>Sistema en línea, respaldos diarios</li>
-          <li><i class="tick"></i>Soporte por WhatsApp en horario de tienda</li>
-          <li><i class="tick"></i>Correcciones y ajustes menores sin costo</li>
-          <li><i class="tick"></i>Exportación a Excel cuando la necesites</li>
-        </ul>
-        <p style="margin-top:20px;font-size:14px;color:var(--gris);line-height:1.55">Según cuántos usuarios y locales manejes. Local adicional desde S/ 60 al mes. Módulos nuevos se cotizan aparte.</p>
-      </div>
-    </div>
-    <p class="nota"><b>Lo que este sistema no hace:</b> no emite boleta ni factura electrónica ante SUNAT. Es un sistema de control interno de inventario y ventas, y convive con el facturador que ya uses. Prefiero decírtelo aquí y no después de que pagues.</p>
-  </div>
-</section>
-
-<!-- ================= CIERRE ================= -->
+<!-- ================= CONTACTO ================= -->
 <div class="cierre" id="contacto">
   <div class="celdas"></div>
   <div class="glow" style="left:-300px;right:auto;top:-500px"></div>
   <div class="wrap" style="position:relative">
-    <h2 style="font-size:clamp(30px,4.4vw,48px)">Pide tu demo con tus propios productos.</h2>
+    <h2 style="font-size:clamp(30px,4.4vw,48px)">Cuéntame qué necesitas resolver.</h2>
     <p class="h2sub" style="color:var(--gris);margin:20px auto 0;max-width:34em;text-align:center">Respóndeme esto y te preparo una propuesta con precio real en 48 horas. No cuesta nada y no te compromete a nada.</p>
 
     <div class="form">
       <div class="campos">
-        <div class="campo ancho"><label for="f-nombre">Tu nombre *</label><input id="f-nombre" type="text" placeholder="Cómo te llamo"></div>
-        <div class="campo ancho"><label for="f-negocio">Nombre de tu negocio y a qué se dedica *</label><input id="f-negocio" type="text" placeholder="Ej. Bazar Yuli — ropa para dama"></div>
+        <div class="campo ancho"><label for="f-nombre">Tu nombre *</label><input id="f-nombre" type="text" placeholder="Cómo te llamo" autocomplete="name"></div>
+        <div class="campo ancho"><label for="f-negocio">Nombre de tu negocio u organización, y a qué se dedica *</label><input id="f-negocio" type="text" placeholder="Ej. Bazar Yuli — ropa para dama"></div>
 
-        <div class="campo"><label for="f-productos">¿Cuántos productos distintos manejas? *</label>
-          <select id="f-productos"><option value="">Elige una opción</option><option>Menos de 100</option><option>Entre 100 y 500</option><option>Entre 500 y 2,000</option><option>Más de 2,000</option><option>No lo sé con exactitud</option></select></div>
+        <div class="campo ancho"><label for="f-solucion">¿Qué solución te interesa? *</label>
+          <select id="f-solucion">
+            <option value="">Elige una opción</option>
+            <option>Inventario y ventas</option>
+            <option>Transmisión de eventos</option>
+            <option>Otro proyecto a medida</option>
+          </select></div>
 
-        <div class="campo"><label for="f-locales">¿Cuántos locales o almacenes tienes?</label>
-          <select id="f-locales"><option value="">Elige una opción</option><option>Uno</option><option>Dos</option><option>Tres o más</option></select></div>
+        <div class="campo ancho"><label for="f-necesidad">¿Qué necesitas resolver?</label><textarea id="f-necesidad" placeholder="Cuéntame en tus palabras qué te está costando tiempo o dinero hoy"></textarea></div>
 
-        <div class="campo"><label for="f-usuarios">¿Cuántas personas usarían el sistema?</label>
-          <select id="f-usuarios"><option value="">Elige una opción</option><option>Solo yo</option><option>Entre 2 y 3</option><option>Entre 4 y 8</option><option>Más de 8</option></select></div>
+        <!-- Bloque: Inventario y ventas -->
+        <div class="bloque" id="b-inventario">
+          <p class="cab">SOBRE TU INVENTARIO</p>
+          <div class="campos">
+            <div class="campo"><label for="f-productos">¿Cuántos productos distintos manejas? *</label>
+              <select id="f-productos"><option value="">Elige una opción</option><option>Menos de 100</option><option>Entre 100 y 500</option><option>Entre 500 y 2,000</option><option>Más de 2,000</option><option>No lo sé con exactitud</option></select></div>
 
-        <div class="campo"><label for="f-codigo">¿Tus productos tienen código de barras?</label>
-          <select id="f-codigo"><option value="">Elige una opción</option><option>Sí, vienen de fábrica</option><option>Los codifico yo</option><option>No uso códigos</option></select></div>
+            <div class="campo"><label for="f-locales">¿Cuántos locales o almacenes tienes?</label>
+              <select id="f-locales"><option value="">Elige una opción</option><option>Uno</option><option>Dos</option><option>Tres o más</option></select></div>
 
-        <div class="campo"><label for="f-variantes">¿Manejas tallas, colores o presentaciones?</label>
-          <select id="f-variantes"><option value="">Elige una opción</option><option>Sí, cada producto tiene variantes</option><option>No, cada producto es único</option></select></div>
+            <div class="campo"><label for="f-usuarios">¿Cuántas personas usarían el sistema?</label>
+              <select id="f-usuarios"><option value="">Elige una opción</option><option>Solo yo</option><option>Entre 2 y 3</option><option>Entre 4 y 8</option><option>Más de 8</option></select></div>
 
-        <div class="campo"><label for="f-lotes">¿Manejas lotes o fechas de vencimiento?</label>
-          <select id="f-lotes"><option value="">Elige una opción</option><option>Sí</option><option>No</option></select></div>
+            <div class="campo"><label for="f-codigo">¿Tus productos tienen código de barras?</label>
+              <select id="f-codigo"><option value="">Elige una opción</option><option>Sí, vienen de fábrica</option><option>Los codifico yo</option><option>No uso códigos</option></select></div>
 
-        <div class="campo ancho"><label for="f-factura">¿Con qué emites tus boletas y facturas hoy?</label><input id="f-factura" type="text" placeholder="Ej. Nubefact, un contador, talonario, todavía no emito"></div>
+            <div class="campo"><label for="f-variantes">¿Manejas tallas, colores o presentaciones?</label>
+              <select id="f-variantes"><option value="">Elige una opción</option><option>Sí, cada producto tiene variantes</option><option>No, cada producto es único</option></select></div>
 
-        <div class="campo ancho"><label for="f-quiero">¿Qué te gustaría ver apenas abres el sistema en la mañana?</label><textarea id="f-quiero" placeholder="Ej. cuánto vendí ayer y qué productos están por acabarse"></textarea></div>
+            <div class="campo"><label for="f-lotes">¿Manejas lotes o fechas de vencimiento?</label>
+              <select id="f-lotes"><option value="">Elige una opción</option><option>Sí</option><option>No</option></select></div>
+
+            <div class="campo ancho"><label for="f-factura">¿Con qué emites tus boletas y facturas hoy?</label><input id="f-factura" type="text" placeholder="Ej. Nubefact, un contador, talonario, todavía no emito"></div>
+          </div>
+        </div>
+
+        <!-- Bloque: Transmisión de eventos -->
+        <div class="bloque" id="b-eventos">
+          <p class="cab">SOBRE TUS EVENTOS</p>
+          <div class="campos">
+            <div class="campo"><label for="f-organizacion">¿Qué tipo de organización eres?</label>
+              <select id="f-organizacion"><option value="">Elige una opción</option><option>Iglesia o ministerio</option><option>Colegio o institución educativa</option><option>Empresa</option><option>Organizador de eventos</option><option>Otro</option></select></div>
+
+            <div class="campo"><label for="f-frecuencia">¿Con qué frecuencia transmites?</label>
+              <select id="f-frecuencia"><option value="">Elige una opción</option><option>Un evento puntual</option><option>Todas las semanas</option><option>Varias veces al mes</option><option>Todavía no transmito</option></select></div>
+
+            <div class="campo"><label for="f-formato">¿En qué formato lo publicas?</label>
+              <select id="f-formato"><option value="">Elige una opción</option><option>Horizontal (YouTube, Facebook)</option><option>Vertical (TikTok, reels, estados)</option><option>Los dos</option><option>No estoy seguro</option></select></div>
+
+            <div class="campo"><label for="f-fecha">¿Para cuándo lo necesitas?</label><input id="f-fecha" type="text" placeholder="Ej. el domingo 15, o todavía no tengo fecha"></div>
+          </div>
+        </div>
       </div>
 
-      <p class="aviso"><b>Un pedido más:</b> después de enviar esto, mándame por WhatsApp tu archivo de productos <b>tal como está hoy</b>. No lo ordenes para mí — necesito verlo real para decirte un precio honesto y no uno inventado.</p>
+      <p class="aviso" id="aviso-archivo"><b>Un pedido más:</b> después de enviar esto, mándame por WhatsApp tu archivo de productos <b>tal como está hoy</b>. No lo ordenes para mí — necesito verlo real para decirte un precio honesto y no uno inventado.</p>
 
       <div class="form-btns">
         <button type="button" class="btn btn-1" id="f-enviar">Enviar por WhatsApp</button>
@@ -376,13 +432,17 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
 </div>
 
 <footer class="wrap">
-  <span>YUPANA · SISTEMAS DE INVENTARIO Y VENTAS · LIMA, PERÚ</span>
+  <span>YUPASOFT · SOFTWARE A MEDIDA PARA NEGOCIOS Y ORGANIZACIONES · LIMA, PERÚ</span>
   <span>+51 967 292 374</span>
 </footer>
 
 <script>
+/* La consola del hero es decorativa: va aislada para que ningún fallo suyo
+   pueda tumbar el formulario, que es lo único que no se puede perder. */
 (function(){
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ try{
+  var reduce = true;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
 
   var productos = [
     {n:'Polo algodón blanco · M', max:150, stock:126},
@@ -407,83 +467,176 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
   }
   pinta();
 
-  if (reduce) return;
+  if (!reduce){
+    var vendido = 8420;
+    setInterval(function(){
+      var i = Math.floor(Math.random()*productos.length);
+      var p = productos[i];
+      if (p.stock > 2) { p.stock -= Math.ceil(Math.random()*2); } else { p.stock = p.max; }
+      vendido += Math.floor(Math.random()*90)+25;
+      document.getElementById('k2').textContent = 'S/ ' + vendido.toLocaleString('es-PE');
+      document.getElementById('k3').textContent = productos.filter(function(q){return q.stock<=q.max*0.15}).length + 6;
+      pinta();
+    }, 2600);
 
-  // ventas que van bajando el stock
-  var vendido = 8420, porAgotarse = 7;
-  setInterval(function(){
-    var i = Math.floor(Math.random()*productos.length);
-    var p = productos[i];
-    if (p.stock > 2) { p.stock -= Math.ceil(Math.random()*2); }
-    else { p.stock = p.max; }
-    vendido += Math.floor(Math.random()*90)+25;
-    document.getElementById('k2').textContent = 'S/ ' + vendido.toLocaleString('es-PE');
-    document.getElementById('k3').textContent = productos.filter(function(q){return q.stock<=q.max*0.15}).length + 6;
-    pinta();
-  }, 2600);
+    var guiones = ['7501234567890 → Polo algodón blanco · M','7756009911234 → Casaca denim · L','7501122334455 → Pantalón drill · 32'];
+    var gi=0, ci=0, borrando=false, el=document.getElementById('scan-txt');
+    setInterval(function(){
+      var txt = guiones[gi];
+      if(!borrando){
+        ci++; el.textContent = txt.slice(0,ci);
+        if(ci>=txt.length){ borrando=true; }
+      } else {
+        ci-=3; el.textContent = txt.slice(0,Math.max(0,ci));
+        if(ci<=0){ borrando=false; gi=(gi+1)%guiones.length; }
+      }
+    }, 65);
+  }
+ }catch(e){}
+})();
 
-  // ---- formulario de demo ----
-  var SHEET_URL = "https://script.google.com/macros/s/AKfycby8we_EPPH04Y-YRpt5mm9N7dPX8aXQg9yuuP0PPk8nRRUCdkyhorAGUY6IrJlkNauk/exec";
+/* ---------- formulario ---------- */
+(function(){
+  /* =========================================================
+     CONFIGURACIÓN — el único valor que falta es la llave.
+     En Supabase: Settings > API Keys > "Publishable key"
+     (la que empieza con sb_publishable_). Es segura de publicar.
+     NUNCA pongas aquí una "Secret key" (sb_secret_): esa salta
+     todas las protecciones y da control total de la base.
+     Mientras la llave esté vacía el formulario igual sirve:
+     manda todo por WhatsApp, solo que no guarda el registro.
+     ========================================================= */
+  var SUPABASE_URL = "https://ylwqztypjilecjwywawd.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_oHr1AqDbKi_lileKrmkhMg_4T6zYJ7E";
+  var TABLA        = "solicitudes";
+  var WHATSAPP     = "51967292374";
 
-  var preguntas = [
-    ["f-nombre",    "Nombre",                 true],
-    ["f-negocio",   "Negocio",                true],
-    ["f-productos", "Cantidad de productos",  true],
-    ["f-locales",   "Locales",                false],
-    ["f-usuarios",  "Personas que lo usarán", false],
-    ["f-codigo",    "Código de barras",       false],
-    ["f-variantes", "Variantes",              false],
-    ["f-lotes",     "Lotes o vencimiento",    false],
-    ["f-factura",   "Factura hoy con",        false],
-    ["f-quiero",    "Quiere ver al abrir",    false]
+  function $(id){ return document.getElementById(id); }
+  function val(id){ var e = $(id); return e ? (e.value||"").trim() : ""; }
+
+  /* id de campo, etiqueta en el mensaje, obligatorio, línea a la que pertenece */
+  var PREGUNTAS = [
+    ["f-nombre",       "Nombre",                 true,  "*"],
+    ["f-negocio",      "Negocio u organización", true,  "*"],
+    ["f-solucion",     "Solución de interés",    true,  "*"],
+    ["f-necesidad",    "Qué necesita resolver",  false, "*"],
+    ["f-productos",    "Cantidad de productos",  true,  "Inventario y ventas"],
+    ["f-locales",      "Locales",                false, "Inventario y ventas"],
+    ["f-usuarios",     "Personas que lo usarán", false, "Inventario y ventas"],
+    ["f-codigo",       "Código de barras",       false, "Inventario y ventas"],
+    ["f-variantes",    "Variantes",              false, "Inventario y ventas"],
+    ["f-lotes",        "Lotes o vencimiento",    false, "Inventario y ventas"],
+    ["f-factura",      "Factura hoy con",        false, "Inventario y ventas"],
+    ["f-organizacion", "Tipo de organización",   false, "Transmisión de eventos"],
+    ["f-frecuencia",   "Frecuencia",             false, "Transmisión de eventos"],
+    ["f-formato",      "Formato",                false, "Transmisión de eventos"],
+    ["f-fecha",        "Para cuándo",            false, "Transmisión de eventos"]
   ];
 
-  function val(id){ var e=document.getElementById(id); return e ? (e.value||"").trim() : ""; }
+  /* columna de la tabla "solicitudes" en Supabase donde cae cada campo */
+  var CLAVES = {
+    "f-nombre":"nombre", "f-negocio":"negocio", "f-solucion":"solucion",
+    "f-necesidad":"necesidad", "f-productos":"productos", "f-locales":"locales",
+    "f-usuarios":"usuarios", "f-codigo":"codigo", "f-variantes":"variantes",
+    "f-lotes":"lotes", "f-factura":"factura", "f-organizacion":"organizacion",
+    "f-frecuencia":"frecuencia", "f-formato":"formato", "f-fecha":"fecha_evento"
+  };
+
+  function solucion(){ return val("f-solucion"); }
+  function activa(p){ return p[3] === "*" || p[3] === solucion(); }
+
+  function alternarBloques(){
+    var s = solucion();
+    $("b-inventario").classList.toggle("on", s === "Inventario y ventas");
+    $("b-eventos").classList.toggle("on", s === "Transmisión de eventos");
+    $("aviso-archivo").style.display = (s === "Inventario y ventas" || s === "") ? "" : "none";
+    PREGUNTAS.forEach(function(p){
+      if (!activa(p)) { var e = $(p[0]); if (e) e.parentNode.classList.remove("error"); }
+    });
+  }
 
   function armar(){
-    var faltan = false, lineas = ["Hola Christian, quiero una demo de Yupana.", ""];
-    preguntas.forEach(function(p){
-      var el = document.getElementById(p[0]);
+    var faltan = false;
+    var lineas = ["Hola Christian, quiero una propuesta de Yupasoft.", ""];
+    PREGUNTAS.forEach(function(p){
+      var el = $(p[0]);
+      if (!el) return;
       var v = (el.value || "").trim();
-      el.parentNode.classList.toggle("error", p[2] && !v);
-      if (p[2] && !v) faltan = true;
-      if (v) lineas.push(p[1] + ": " + v);
+      var pedida = p[2] && activa(p);
+      el.parentNode.classList.toggle("error", pedida && !v);
+      if (pedida && !v) faltan = true;
+      if (v && activa(p)) lineas.push(p[1] + ": " + v);
     });
+    var e = $("f-estado");
     if (faltan){
-      document.getElementById("f-estado").style.color = "#E0574E";
-      document.getElementById("f-estado").textContent = "Completa los campos marcados";
+      e.style.color = "#E0574E";
+      e.textContent = "Completa los campos marcados";
       return null;
     }
-    document.getElementById("f-estado").textContent = "";
+    e.textContent = "";
     return lineas.join("\n");
   }
 
-  document.getElementById("f-enviar").addEventListener("click", function(){
+  function payload(msg){
+    var d = { mensaje: msg };
+    PREGUNTAS.forEach(function(p){
+      d[CLAVES[p[0]]] = activa(p) ? val(p[0]) : "";
+    });
+    return d;
+  }
+
+  $("f-solucion").addEventListener("change", alternarBloques);
+  alternarBloques();
+
+  /* Guarda la solicitud en Supabase. A diferencia del envío a ciegas de antes,
+     aquí sí leemos la respuesta, así que sabemos si el registro entró o no. */
+  /* Las llaves nuevas (sb_publishable_) van solo en "apikey".
+     Las antiguas (JWT, empiezan con eyJ) además en Authorization. */
+  function cabeceras(){
+    var h = {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Prefer": "return=minimal"
+    };
+    if (SUPABASE_KEY.indexOf("eyJ") === 0) h["Authorization"] = "Bearer " + SUPABASE_KEY;
+    return h;
+  }
+
+  function guardar(msg){
+    if (!SUPABASE_URL || !SUPABASE_KEY) return Promise.resolve(null);
+    return fetch(SUPABASE_URL.replace(/\/+$/, "") + "/rest/v1/" + TABLA, {
+      method: "POST",
+      headers: cabeceras(),
+      body: JSON.stringify(payload(msg))
+    }).then(function(r){
+      if (!r.ok) return r.text().then(function(t){ throw new Error(r.status + " " + t); });
+      return true;
+    });
+  }
+
+  $("f-enviar").addEventListener("click", function(){
     var msg = armar();
     if (!msg) return;
-    if (SHEET_URL){
-      var payload = {
-        mensaje:   msg,
-        nombre:    val("f-nombre"),
-        negocio:   val("f-negocio"),
-        productos: val("f-productos"),
-        locales:   val("f-locales"),
-        usuarios:  val("f-usuarios"),
-        codigo:    val("f-codigo"),
-        variantes: val("f-variantes"),
-        lotes:     val("f-lotes"),
-        factura:   val("f-factura"),
-        quiere:    val("f-quiero")
-      };
-      try{ fetch(SHEET_URL, {method:"POST", mode:"no-cors", body:JSON.stringify(payload)}); }catch(e){}
-    }
-    window.open("https://wa.me/51967292374?text=" + encodeURIComponent(msg), "_blank");
+
+    /* WhatsApp se abre primero y de forma síncrona: si esperamos a la red,
+       el navegador bloquea la ventana por considerarla emergente. */
+    window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg), "_blank");
+
+    var e = $("f-estado");
+    guardar(msg).then(function(ok){
+      if (ok) { e.style.color = "#159C86"; e.textContent = "Registrado. Te respondo en 48 horas."; }
+    }).catch(function(err){
+      /* El lead no se pierde: ya viaja por WhatsApp. */
+      e.style.color = "#8A5A0B";
+      e.textContent = "Se abrió WhatsApp; el registro no se guardó. Envía el mensaje igual.";
+      if (window.console) console.warn("Supabase:", err);
+    });
   });
 
-  document.getElementById("f-copiar").addEventListener("click", function(){
+  $("f-copiar").addEventListener("click", function(){
     var msg = armar();
     if (!msg) return;
-    var e = document.getElementById("f-estado");
+    var e = $("f-estado");
     navigator.clipboard.writeText(msg).then(function(){
       e.style.color = "#159C86";
       e.textContent = "Copiado. Pégalo donde quieras enviármelo.";
@@ -492,20 +645,6 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
       e.textContent = "No se pudo copiar. Usa el botón de WhatsApp.";
     });
   });
-
-  // escaneo escribiéndose
-  var guiones = ['7501234567890 → Polo algodón blanco · M','7756009911234 → Casaca denim · L','7501122334455 → Pantalón drill · 32'];
-  var gi=0, ci=0, borrando=false, el=document.getElementById('scan-txt');
-  setInterval(function(){
-    var txt = guiones[gi];
-    if(!borrando){
-      ci++; el.textContent = txt.slice(0,ci);
-      if(ci>=txt.length){ borrando=true; }
-    } else {
-      ci-=3; el.textContent = txt.slice(0,Math.max(0,ci));
-      if(ci<=0){ borrando=false; gi=(gi+1)%guiones.length; }
-    }
-  }, 65);
 })();
 </script>
 </body>

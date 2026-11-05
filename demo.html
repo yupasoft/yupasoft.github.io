@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#0C1A2E">
-<title>Yupana — Demo</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<title>Yupasoft — Demo del sistema de inventario y ventas</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -27,7 +29,11 @@ input,select{font-family:inherit;font-size:16px}
 .top .neg{font-size:15px;font-weight:600;line-height:1.2}
 .top .usr{font-family:var(--mono);font-size:10.5px;color:#9BB0C9;letter-spacing:.06em}
 .top svg{height:20px}
-.pill{background:rgba(46,211,183,.16);color:var(--turq);font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:5px 9px;border-radius:99px}
+.pill{background:rgba(46,211,183,.16);color:var(--turq);font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:5px 9px;border-radius:99px;white-space:nowrap}
+.marca-top{display:flex;flex-direction:column;align-items:flex-end;gap:7px;flex:none}
+.sello{display:block;opacity:.62}
+.sello svg{height:10px;width:auto;display:block}
+@media(min-width:900px){.sello svg{height:13px}}
 
 /* cuerpo */
 .cuerpo{flex:1;overflow-y:auto;padding:16px 16px 96px}
@@ -159,7 +165,33 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
       <div class="neg" id="negocio">Bazar Yuli</div>
       <div class="usr" id="usuario">YULIANA · DUEÑA</div>
     </div>
-    <span class="pill">DEMO</span>
+    <div class="marca-top">
+      <span class="pill">DEMO</span>
+      <a class="sello" href="index.html" aria-label="Yupasoft"><svg viewBox="0 0 757 101" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yupasoft"><rect x="1.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="1.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="1.6" y="55.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="0" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="28.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="28.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="27" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="27" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="55.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" opacity="0.34"/>
+<rect x="54" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="54" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="54" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="81" y="0" width="20" height="20" rx="5.5" fill="#F2A93B"/>
+<rect x="81" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="81" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7"/>
+<rect x="81" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7"/><defs><clipPath id="capdm"><rect x="-12" y="0" width="90" height="96"/></clipPath></defs>
+<g transform="translate(141,3)" clip-path="url(#capdm)"><path d="M0,0 L32,46 L64,0" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M32,46 L32,96" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(227,3)" clip-path="url(#capdm)"><path d="M0,0 L0,56 A32,32.5 0 0 0 64,56 L64,0" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(313,3)" clip-path="url(#capdm)"><path d="M0,96 L0,0 L30,0 A26,26 0 0 1 30,52 L0,52" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(389,3)" clip-path="url(#capdm)"><path d="M0,96 L32,0 L64,96" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M13,68 L51,68" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(469,3)" clip-path="url(#capdm)"><path d="M56.5,27.75 A24.5,20.25 0 1 0 32,48 A24.5,20.25 0 1 1 7.5,68.25" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(547,3)" clip-path="url(#capdm)"><path d="M7.5,48 A24.5,40.5 0 0 1 56.5,48 A24.5,40.5 0 0 1 7.5,48 Z" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(629,3)" clip-path="url(#capdm)"><path d="M0,96 L0,0 L57,0" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M0,48 L44,48" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(693,3)" clip-path="url(#capdm)"><path d="M0,7.5 L64,7.5" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M32,7.5 L32,96" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g></svg></a>
+    </div>
   </div>
 
   <div class="cuerpo" id="cuerpo">
@@ -169,7 +201,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
       <div class="ancho">
         <h2>Buen día, Yuliana</h2>
         <p class="sub" id="fecha-hoy"></p>
-        <div class="aviso">Esta es una demostración con productos de ejemplo. Todo lo que hagas aquí funciona de verdad, pero se borra al recargar la página.</div>
+        <div class="aviso">Esta es una demostración de <b>Yupasoft</b> con productos de ejemplo. Todo lo que hagas aquí funciona de verdad, pero se borra al recargar la página.</div>
       </div>
 
       <div class="kpis ancho">
