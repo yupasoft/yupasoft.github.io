@@ -1,0 +1,31 @@
+name: Mantener Supabase despierto
+
+on:
+  schedule:
+    - cron: "23 11 * * *"
+    - cron: "23 23 * * *"
+  workflow_dispatch:
+
+jobs:
+  latido:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar la base
+        env:
+          URL: "https://ylwqztypjilecjwywawd.supabase.co"
+          LLAVE: "sb_publishable_oHr1AqDbKi_lileKrmkhMg_4T6zYJ7E"
+        run: |
+          codigo=$(curl -sS --max-time 30 -o /tmp/respuesta.txt -w "%{http_code}" \
+            "$URL/rest/v1/latido?select=id&limit=1" \
+            -H "apikey: $LLAVE")
+
+          echo "Respuesta HTTP: $codigo"
+          cat /tmp/respuesta.txt
+          echo ""
+
+          if [ "$codigo" != "200" ]; then
+            echo "::error::Supabase no respondió 200. Revisa la llave o si el proyecto ya está pausado."
+            exit 1
+          fi
+
+          echo "Listo: la base respondió. El proyecto sigue activo."
