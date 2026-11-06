@@ -203,19 +203,21 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
   <div class="wrap nav">
     <div class="logo"><svg viewBox="0 0 718 101" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yupasoft"><style>
 .ycnv{transform-box:fill-box;transform-origin:center}
-.yfnv{animation:ypnv .52s cubic-bezier(.2,1.5,.45,1) backwards,
-          yonv 5s ease-in-out infinite}
-.yvnv{opacity:.34;animation:ydnv .5s ease-out backwards}
-.ywnv{animation:yenv .7s cubic-bezier(.22,1,.36,1) .62s backwards}
-@keyframes ypnv{from{opacity:0;transform:scale(.25)}to{opacity:1;transform:scale(1)}}
-@keyframes ydnv{from{opacity:0}to{opacity:.34}}
-@keyframes yonv{0%,16%,100%{transform:scale(1)}6%{transform:scale(1.2)}}
-@keyframes yenv{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
-@media(prefers-reduced-motion:reduce){
-  .yfnv,.yvnv,.ywnv{animation:none}
-  .yvnv{opacity:.34}
+.yvnv{opacity:.3}
+.yfnv{animation:ycnva 5.6s cubic-bezier(.3,1.4,.5,1) infinite both}
+.ywnv{animation:ywnva .7s cubic-bezier(.22,1,.36,1) .55s backwards}
+@keyframes ycnva{
+  0%  {opacity:.3;transform:scale(.78)}
+  7%  {opacity:1; transform:scale(1.1)}
+  12% {opacity:1; transform:scale(1)}
+  76% {opacity:1; transform:scale(1)}
+  88%,100% {opacity:.3;transform:scale(.78)}
 }
-</style><rect class="ycnv yvnv" x="1.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" style="animation-delay:0.020s"/><rect class="ycnv yvnv" x="1.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" style="animation-delay:0.050s"/><rect class="ycnv yvnv" x="1.6" y="55.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" style="animation-delay:0.080s"/><rect class="ycnv yfnv" x="0" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.100s,1.500s"/><rect class="ycnv yvnv" x="28.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" style="animation-delay:0.050s"/><rect class="ycnv yvnv" x="28.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" style="animation-delay:0.080s"/><rect class="ycnv yfnv" x="27" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.210s,1.660s"/><rect class="ycnv yfnv" x="27" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.155s,1.580s"/><rect class="ycnv yvnv" x="55.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2" style="animation-delay:0.080s"/><rect class="ycnv yfnv" x="54" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.375s,1.900s"/><rect class="ycnv yfnv" x="54" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.320s,1.820s"/><rect class="ycnv yfnv" x="54" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.265s,1.740s"/><rect class="ycnv yfnv" x="81" y="0" width="20" height="20" rx="5.5" fill="#F2A93B" style="animation-delay:0.595s,2.220s"/><rect class="ycnv yfnv" x="81" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.540s,2.140s"/><rect class="ycnv yfnv" x="81" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.485s,2.060s"/><rect class="ycnv yfnv" x="81" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.430s,1.980s"/><g class="ywnv"><defs><clipPath id="capnv"><rect x="-14" y="0" width="82" height="96"/></clipPath></defs>
+@keyframes ywnva{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .yfnv,.ywnv{animation:none}
+}
+</style><rect class="ycnv yvnv" x="1.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="1.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="1.6" y="55.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="0" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.000s"/><rect class="ycnv yvnv" x="28.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="28.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="27" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.120s"/><rect class="ycnv yfnv" x="27" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.060s"/><rect class="ycnv yvnv" x="55.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="54" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.300s"/><rect class="ycnv yfnv" x="54" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.240s"/><rect class="ycnv yfnv" x="54" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.180s"/><rect class="ycnv yfnv" x="81" y="0" width="20" height="20" rx="5.5" fill="#F2A93B" style="animation-delay:0.540s"/><rect class="ycnv yfnv" x="81" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.480s"/><rect class="ycnv yfnv" x="81" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.420s"/><rect class="ycnv yfnv" x="81" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.360s"/><g class="ywnv"><defs><clipPath id="capnv"><rect x="-14" y="0" width="82" height="96"/></clipPath></defs>
 <g transform="translate(143,3)" clip-path="url(#capnv)"><path d="M0,0 L26,44 L52,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M26,44 L26,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
 <g transform="translate(221,3)" clip-path="url(#capnv)"><path d="M0,0 L0,57 A26,30 0 0 0 52,57 L52,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
 <g transform="translate(304,3)" clip-path="url(#capnv)"><path d="M0,96 L0,0 L20,0 A26,26 0 0 1 20,52 L0,52" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
