@@ -74,11 +74,17 @@ h1 em{font-style:normal;color:var(--turq)}
 .pista{height:8px;border-radius:5px;background:#1E3251;overflow:hidden}
 .pista i{display:block;height:100%;border-radius:5px;background:var(--turq);transition:width .9s cubic-bezier(.4,0,.2,1)}
 .fila.bajo .pista i{background:var(--ambar)}
-.scan{margin-top:16px;display:flex;align-items:center;gap:12px;background:rgba(46,211,183,.09);border:1px dashed rgba(46,211,183,.4);border-radius:12px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;color:var(--turq);min-height:46px;word-break:break-all}
+.scan{margin-top:16px;display:flex;align-items:center;gap:12px;background:rgba(46,211,183,.09);border:1px dashed rgba(46,211,183,.4);border-radius:12px;padding:12px 14px;font-family:var(--mono);font-size:12.5px;color:var(--turq);min-height:46px;line-height:1.45}
 .scan svg{flex:none}
 .cursor{display:inline-block;width:8px;height:15px;background:var(--turq);margin-left:2px;animation:parpadeo .9s steps(1) infinite;vertical-align:-2px}
 @keyframes parpadeo{50%{opacity:0}}
 .pie-consola{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--gris);text-align:center;margin-top:14px}
+#c-cuerpo,.c-tit{transition:opacity .3s ease}
+#c-cuerpo.oculto,.c-tit.oculto{opacity:0}
+.pips{display:flex;justify-content:center;gap:7px;margin-top:16px}
+.pips i{display:block;width:18px;height:3px;border-radius:2px;background:#24405F;transition:background .3s}
+.pips i.on{background:var(--turq)}
+.kpi b.chica{font-size:23px}
 
 /* ---------- secciones claras ---------- */
 .claro{background:var(--claro);color:var(--tinta)}
@@ -170,10 +176,14 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
   .sub{font-size:17px}
   .mini{font-size:10.5px;letter-spacing:.02em}
   .consola{padding:16px;border-radius:16px}
-  .kpis{grid-template-columns:1fr 1fr;gap:16px 10px;padding:18px 0 14px}
-  .kpi b{font-size:23px}
+  .vivo{display:none}
+  .c-tit{font-size:11px;letter-spacing:.12em}
+  .kpis{grid-template-columns:repeat(3,1fr);gap:10px 8px;padding:18px 0 14px}
+  .kpi b{font-size:19px;letter-spacing:-.03em}
+  .kpi b.chica{font-size:16px}
+  .kpi span{font-size:8.5px;letter-spacing:.06em}
   .fila-top{font-size:13.5px}
-  .scan{font-size:11px;padding:10px 12px}
+  .scan{font-size:10.5px;padding:10px 12px;gap:9px}
   .linea{padding:22px}
   .linea h3{font-size:21px}
   .precio-bloque{padding:16px}
@@ -240,21 +250,20 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
     <div>
       <div class="consola" aria-hidden="true">
         <div class="c-top">
-          <span class="c-tit">STOCK EN TIEMPO REAL</span>
-          <span class="vivo"><i class="dot"></i>ACTUALIZADO</span>
+          <span class="c-tit" id="c-tit">INVENTARIO Y VENTAS</span>
+          <span class="vivo"><i class="dot"></i>EN VIVO</span>
         </div>
-        <div class="kpis">
-          <div class="kpi"><b id="k1">1,284</b><span>PRODUCTOS</span></div>
-          <div class="kpi"><b id="k2">S/ 8,420</b><span>VENDIDO HOY</span></div>
-          <div class="kpi"><b id="k3" style="color:var(--ambar)">7</b><span>POR AGOTARSE</span></div>
+        <div id="c-cuerpo">
+          <div class="kpis" id="c-kpis"></div>
+          <div id="c-filas"></div>
         </div>
-        <div id="filas"></div>
         <div class="scan">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2ED3B7" stroke-width="2" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10"/></svg>
-          <span id="scan-txt"></span><i class="cursor"></i>
+          <span id="c-icono"></span>
+          <span id="c-tira"></span><i class="cursor"></i>
         </div>
+        <div class="pips" id="c-pips"></div>
       </div>
-      <p class="pie-consola">UNA PANTALLA REAL DE LA LÍNEA DE INVENTARIO Y VENTAS</p>
+      <p class="pie-consola">EJEMPLOS DE PANTALLAS QUE SE CONSTRUYEN ASÍ</p>
     </div>
   </div>
 </div>
@@ -454,60 +463,110 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
 
 <script>
 /* La consola del hero es decorativa: va aislada para que ningún fallo suyo
-   pueda tumbar el formulario, que es lo único que no se puede perder. */
+   pueda tumbar el formulario, que es lo único que no se puede perder.
+   Muestra ejemplos de pantallas, no productos terminados: el pie lo dice. */
 (function(){
  try{
   var reduce = true;
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
 
-  var productos = [
-    {n:'Polo algodón blanco · M', max:150, stock:126},
-    {n:'Casaca denim · L',        max:40,  stock:4},
-    {n:'Pantalón drill · 32',     max:90,  stock:61}
+  var ICONOS = {
+    codigo: 'M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3M7 12h10',
+    reloj:  'M12 8v5l3 2M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z',
+    chat:   'M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z',
+    check:  'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11',
+    video:  'm23 7-7 5 7 5V7zM14 5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z'
+  };
+
+  var PANTALLAS = [
+    { tit:'INVENTARIO Y VENTAS', icono:'codigo',
+      kpis:[['1,284','PRODUCTOS'],['63','VENTAS HOY'],['7','POR AGOTARSE','alerta']],
+      filas:[['Polo algodón blanco · M','126 und',0.84],
+             ['Casaca denim · L','4 und',0.10,true]],
+      tira:'7501234567890 → Polo blanco' },
+
+    { tit:'TRANSMISIÓN DE EVENTOS', icono:'video',
+      kpis:[['1:24','EN EL AIRE'],['4','PARTES'],['1','RECONEXIÓN','alerta']],
+      filas:[['Señal del celular','92%',0.92],
+             ['Batería del celular','34%',0.34,true]],
+      tira:'Parte 4 guardada · 11:42' },
+
+    { tit:'ASISTENCIA DEL PERSONAL', icono:'reloj',
+      kpis:[['42','PRESENTES'],['96%','ASISTENCIA'],['3','TARDANZAS','alerta']],
+      filas:[['Turno mañana','38 de 40',0.95],
+             ['Turno tarde','9 de 14',0.64,true]],
+      tira:'Marcó entrada · 07:58' },
+
+    { tit:'PEDIDOS POR WHATSAPP', icono:'chat',
+      kpis:[['18','PEDIDOS HOY'],['13','ATENDIDOS'],['5','POR CONFIRMAR','alerta']],
+      filas:[['Pedidos atendidos','13 de 18',0.72],
+             ['Entregas de hoy','4 de 9',0.44,true]],
+      tira:'Pedido nuevo · +51 9·· ··· 214' },
+
+    { tit:'INSPECCIONES EN PLANTA', icono:'check',
+      kpis:[['24','REVISIONES'],['92%','CONFORMES'],['2','OBSERVADAS','alerta']],
+      filas:[['Línea 1 · conforme','22 de 24',0.92],
+             ['Línea 3 · observada','6 de 11',0.55,true]],
+      tira:'Inspección enviada · Línea 3' },
   ];
-  var cont = document.getElementById('filas');
-  productos.forEach(function(p,i){
-    var d = document.createElement('div');
-    d.className = 'fila';
-    d.innerHTML = '<div class="fila-top"><span>'+p.n+'</span><s id="v'+i+'">'+p.stock+' und</s></div>'+
-                  '<div class="pista"><i id="b'+i+'" style="width:'+(p.stock/p.max*100)+'%"></i></div>';
-    cont.appendChild(d);
-  });
 
-  function pinta(){
-    productos.forEach(function(p,i){
-      document.getElementById('v'+i).textContent = p.stock + ' und';
-      document.getElementById('b'+i).style.width = Math.max(2, p.stock/p.max*100) + '%';
-      document.getElementById('b'+i).parentNode.parentNode.classList.toggle('bajo', p.stock <= p.max*0.15);
-    });
+  var $ = function(id){ return document.getElementById(id); };
+  var iTira = null, i = 0;
+
+  function pintar(p){
+    $('c-tit').textContent = p.tit;
+
+    $('c-kpis').innerHTML = p.kpis.map(function(k){
+      var est = k[2] === 'alerta' ? ' style="color:var(--ambar)"' : '';
+      var ch  = k[0].length > 5 ? ' class="chica"' : '';
+      return '<div class="kpi"><b'+ch+est+'>'+k[0]+'</b><span>'+k[1]+'</span></div>';
+    }).join('');
+
+    $('c-filas').innerHTML = p.filas.map(function(f){
+      return '<div class="fila'+(f[3] ? ' bajo' : '')+'">'+
+               '<div class="fila-top"><span>'+f[0]+'</span><s>'+f[1]+'</s></div>'+
+               '<div class="pista"><i style="width:'+Math.round(f[2]*100)+'%"></i></div>'+
+             '</div>';
+    }).join('');
+
+    $('c-icono').innerHTML =
+      '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2ED3B7" '+
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="'+
+      ICONOS[p.icono]+'"/></svg>';
+
+    var c = 0, tira = $('c-tira');
+    tira.textContent = '';
+    if (iTira) clearInterval(iTira);
+    if (reduce) { tira.textContent = p.tira; return; }
+    iTira = setInterval(function(){
+      c++; tira.textContent = p.tira.slice(0, c);
+      if (c >= p.tira.length) clearInterval(iTira);
+    }, 38);
   }
-  pinta();
 
-  if (!reduce){
-    var vendido = 8420;
-    setInterval(function(){
-      var i = Math.floor(Math.random()*productos.length);
-      var p = productos[i];
-      if (p.stock > 2) { p.stock -= Math.ceil(Math.random()*2); } else { p.stock = p.max; }
-      vendido += Math.floor(Math.random()*90)+25;
-      document.getElementById('k2').textContent = 'S/ ' + vendido.toLocaleString('es-PE');
-      document.getElementById('k3').textContent = productos.filter(function(q){return q.stock<=q.max*0.15}).length + 6;
-      pinta();
-    }, 2600);
+  $('c-pips').innerHTML = PANTALLAS.map(function(_, n){
+    return '<i'+(n === 0 ? ' class="on"' : '')+'></i>';
+  }).join('');
 
-    var guiones = ['7501234567890 → Polo algodón blanco · M','7756009911234 → Casaca denim · L','7501122334455 → Pantalón drill · 32'];
-    var gi=0, ci=0, borrando=false, el=document.getElementById('scan-txt');
-    setInterval(function(){
-      var txt = guiones[gi];
-      if(!borrando){
-        ci++; el.textContent = txt.slice(0,ci);
-        if(ci>=txt.length){ borrando=true; }
-      } else {
-        ci-=3; el.textContent = txt.slice(0,Math.max(0,ci));
-        if(ci<=0){ borrando=false; gi=(gi+1)%guiones.length; }
-      }
-    }, 65);
+  function marcar(n){
+    var ps = $('c-pips').children;
+    for (var k = 0; k < ps.length; k++) ps[k].className = (k === n ? 'on' : '');
   }
+
+  pintar(PANTALLAS[0]);
+  if (reduce) return;
+
+  setInterval(function(){
+    $('c-cuerpo').classList.add('oculto');
+    $('c-tit').classList.add('oculto');
+    setTimeout(function(){
+      i = (i + 1) % PANTALLAS.length;
+      pintar(PANTALLAS[i]);
+      marcar(i);
+      $('c-cuerpo').classList.remove('oculto');
+      $('c-tit').classList.remove('oculto');
+    }, 320);
+  }, 4200);
  }catch(e){}
 })();
 
