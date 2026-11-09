@@ -1,7 +1,7 @@
 // Portal Yupasoft · service worker
 // Siempre intenta traer la versión nueva; si no hay internet, usa la guardada.
 // Las llamadas a Supabase NO pasan por aquí (son de otro dominio).
-const CACHE = 'yupasoft-portal-v3';
+const CACHE = 'yupasoft-portal-v4';
 const ARCHIVOS = ['./', './index.html', './exportar-excel.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', e => {

@@ -233,6 +233,46 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:rgba(255,255,255,.035)}
   .dos,.lic .opc{grid-template-columns:1fr}
   .quien .org{display:none}
 }
+/* ---------- versión celular del administrador ---------- */
+.solo-movil{display:none!important}
+.hoja{place-items:end center!important;padding:0!important}
+.hoja .caja-m{width:100%!important;max-width:520px;border-radius:22px 22px 0 0!important;padding-bottom:calc(22px + env(safe-area-inset-bottom))!important;animation:sube .22s ease-out}
+@keyframes sube{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.hoja .lista-mas{display:flex;flex-direction:column;gap:8px}
+.hoja .lista-mas button{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px;border-radius:14px;background:var(--panel-2);border:1px solid var(--borde);font-weight:600;font-size:15px;cursor:pointer;color:#fff}
+.hoja .lista-mas button svg{width:22px;height:22px;color:var(--turq);flex:none}
+.contacto-ac{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.contacto-ac a{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;background:var(--panel-2);border:1px solid var(--borde);color:#fff;font-weight:600;font-size:13px;text-decoration:none}
+.contacto-ac a:hover{border-color:var(--turq);text-decoration:none}
+.kpi[data-a]{cursor:pointer;transition:transform .15s,border-color .15s}
+.kpi[data-a]:active{transform:scale(.98)}
+.opciones-renov{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 14px}
+.opciones-renov button{padding:13px 10px;border-radius:12px;background:var(--panel-2);border:1px solid var(--borde);font-weight:700;cursor:pointer;color:#fff}
+.opciones-renov button.sel{border-color:var(--turq);background:rgba(46,211,183,.14);color:var(--turq)}
+.renov-res{background:var(--tinta-2);border:1px dashed var(--turq-osc);border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:6px}
+@media (max-width:860px){
+  .solo-pc{display:none!important}
+  .solo-movil{display:flex!important}
+  header.barra{padding-top:calc(10px + env(safe-area-inset-top))}
+  .btn.mini{padding:10px 14px;min-height:40px;font-size:13px}
+  nav.lateral button{min-height:52px}
+  nav.lateral{justify-content:space-around}
+  nav.lateral button{min-width:0;flex:1}
+  .barra-filtros input{font-size:16px}
+  .tabla-wrap{border:0;background:none;overflow:visible}
+  table.t-cards{min-width:0;display:block}
+  table.t-cards thead{display:none}
+  table.t-cards tbody{display:flex;flex-direction:column;gap:12px}
+  table.t-cards tr{display:block;background:var(--panel);border:1px solid var(--borde);border-radius:16px;padding:12px 16px}
+  table.t-cards td{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border:0;padding:6px 0;text-align:right}
+  table.t-cards td::before{content:attr(data-l);color:var(--gris);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;flex:none;padding-top:3px;text-align:left}
+  table.t-cards.pc1 td:first-child{display:block;text-align:left;padding-bottom:8px}
+  table.t-cards.pc1 td:first-child::before{display:none}
+  table.t-cards td .herram-chips{justify-content:flex-end}
+  tr.clic:active td{background:none}
+  .drawer .cab{padding-top:calc(16px + env(safe-area-inset-top))}
+  .modal:not(.hoja) .caja-m{max-height:88dvh}
+}
 @media (max-width:520px){ .quien{display:none} header.barra .logo svg{height:24px} .navcli{margin-left:0} }
 </style>
 </head>
@@ -319,6 +359,7 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:rgba(255,255,255,.035)}
 <g transform="translate(654,3)" clip-path="url(#capnv2)"><path d="M0,9 L52,9" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M26,9 L26,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g></g></svg></a>
     <nav class="navcli" id="navCli" hidden><button class="btn mini activo" data-a="cliVista" data-v="herr">Herramientas</button><button class="btn mini" data-a="cliVista" data-v="cuenta">Mi cuenta</button></nav>
     <div class="esp"></div>
+    <button class="btn mini solo-admin" id="bRefrescar" data-a="refrescarTodo" hidden title="Actualizar datos" aria-label="Actualizar datos">↻</button>
     <button class="btn mini" id="bInstalar" hidden>⬇ Instalar</button>
     <div class="quien" id="quien"></div>
     <button class="btn mini" id="bSalir">Salir</button>
@@ -421,6 +462,7 @@ const ICONOS = {
   inbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l3-8h12l3 8v6a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M3 13h5l1.5 2.5h5L16 13h5"/></svg>',
   act: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>',
   apps: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
+  mas: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>',
   tool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 005 5L21 12.6 12.6 21a2.1 2.1 0 01-3-3L18 9.6"/><path d="M12 8l-1-1"/></svg>'
 };
 const icono = k => ICONOS[k] || ICONOS.caja;
@@ -456,8 +498,8 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) naviga
 mostrarInstalar();
 
 /* ---------- ventanas ---------- */
-function modal({titulo, html, botones, onAbrir}){
-  const m = document.createElement('div'); m.className = 'modal';
+function modal({titulo, html, botones, onAbrir, hoja}){
+  const m = document.createElement('div'); m.className = 'modal' + (hoja ? ' hoja' : '');
   m.innerHTML = `<div class="cortina"></div><div class="caja-m" role="dialog" aria-modal="true"><h3>${esc(titulo)}</h3>${html || ''}<div class="botones"></div></div>`;
   const cont = m.querySelector('.botones');
   const cerrar = () => m.remove();
@@ -534,6 +576,7 @@ function pintarBarra(){
   const nombre = P.nombre || P.usuario || 'Tu cuenta';
   $('#quien').innerHTML = `<b>${esc(nombre)}</b>${P.es_super ? ' <span class="chip sup">ADMIN</span>' : ''}<span class="org"><br>${P.empresa ? esc(P.empresa.nombre) : 'Yupasoft'}</span>`;
   $('#navCli').hidden = !!P.es_super;
+  $('#bRefrescar').hidden = !P.es_super;
   document.title = 'Portal Yupasoft';
 }
 
@@ -643,12 +686,13 @@ async function entrarAdmin(){
   pintarShell();
 }
 function nuevasSolicitudes(){ return A ? (A.solicitudes || []).filter(s => (s.estado || 'Nuevo') === 'Nuevo').length : 0; }
+const SOLO_PC = ['herramientas', 'actividad', 'mis'];
 function pintarShell(){
   const nav = VISTAS.map(([id, txt, ic]) => {
     const n = id === 'solicitudes' ? nuevasSolicitudes() : 0;
     return `${id === 'mis' ? '<div class="sec">Mis herramientas</div>' : (id === 'panel' ? '<div class="sec">Administración</div>' : '')}
-      <button data-a="vista" data-v="${id}" class="${vista === id ? 'activo' : ''}">${icono(ic)}<span>${txt}</span>${n ? `<span class="num">${n}</span>` : ''}</button>`;
-  }).join('');
+      <button data-a="vista" data-v="${id}" class="${vista === id ? 'activo' : ''} ${SOLO_PC.includes(id) ? 'solo-pc' : ''}">${icono(ic === 'org' ? 'org' : ic)}<span>${id === 'orgs' ? '<span class="solo-pc">Organizaciones</span><span class="solo-movil">Clientes</span>' : txt}</span>${n ? `<span class="num">${n}</span>` : ''}</button>`;
+  }).join('') + `<button data-a="mas" class="solo-movil ${SOLO_PC.includes(vista) ? 'activo' : ''}">${icono('mas')}<span>Más</span></button>`;
   $('#cuerpoApp').innerHTML = `<div class="shell"><nav class="lateral">${nav}</nav><main class="contenido" id="contenido"></main></div>`;
   pintarVista();
 }
@@ -684,16 +728,16 @@ function vPanel(){
   const dias = []; for (let i = 29; i >= 0; i--) dias.push(sumarDias(hoy, -i));
   const max = Math.max(1, ...dias.map(d => porDia[d] || 0));
   const barras = dias.map(d => { const v = porDia[d] || 0; return `<div class="b ${v ? '' : 'cero'}" style="height:${v ? Math.max(6, v / max * 100) : 2}%" title="${fechaBonita(d)}: ${v}"></div>`; }).join('');
-  const fila = (l, tipo) => `<div class="fila"><div><b>${esc(l.org.nombre)}</b><div class="sub">${esc((A.herramientas.find(h => h.id === l.herramienta_id) || {}).nombre || l.herramienta_id)} · ${tipo === 'v' ? 'venció el ' : 'vence el '}${fechaBonita(l.vence_el)}</div></div><button class="btn mini" data-a="org" data-id="${l.org.id}">Abrir</button></div>`;
+  const fila = (l, tipo) => `<div class="fila"><div><b>${esc(l.org.nombre)}</b><div class="sub">${esc((A.herramientas.find(h => h.id === l.herramienta_id) || {}).nombre || l.herramienta_id)} · ${tipo === 'v' ? 'venció el ' : 'vence el '}${fechaBonita(l.vence_el)}</div></div><div style="display:flex;gap:6px"><button class="btn mini pri" data-a="renovar" data-e="${l.org.id}" data-h="${l.herramienta_id}">Renovar</button><button class="btn mini" data-a="org" data-id="${l.org.id}">Abrir</button></div></div>`;
   return `<div class="titulo-vista"><div><h2>Panel</h2><p>Así está tu negocio hoy, ${fechaBonita(hoy)}.</p></div>
       <button class="btn pri" data-a="nuevaOrg">+ Nueva organización o persona</button></div>
     <div class="kpis">
-      <div class="kpi"><div class="n">${orgs.filter(o => o.activa).length}</div><div class="t">Organizaciones y personas activas</div></div>
-      <div class="kpi"><div class="n">${usuarios}</div><div class="t">Usuarios de clientes</div></div>
+      <div class="kpi" data-a="vista" data-v="orgs"><div class="n">${orgs.filter(o => o.activa).length}</div><div class="t">Organizaciones y personas activas</div></div>
+      <div class="kpi" data-a="vista" data-v="usuarios"><div class="n">${usuarios}</div><div class="t">Usuarios de clientes</div></div>
       <div class="kpi"><div class="n">${vigentes}</div><div class="t">Licencias vigentes</div></div>
       <div class="kpi ${porVencer.length ? 'aviso' : ''}"><div class="n">${porVencer.length}</div><div class="t">Vencen en 30 días</div></div>
       <div class="kpi ${vencidas.length ? 'mal' : ''}"><div class="n">${vencidas.length}</div><div class="t">Vencidas</div></div>
-      <div class="kpi ${nuevas.length ? 'aviso' : ''}"><div class="n">${nuevas.length}</div><div class="t">Solicitudes nuevas</div></div>
+      <div class="kpi ${nuevas.length ? 'aviso' : ''}" data-a="vista" data-v="solicitudes"><div class="n">${nuevas.length}</div><div class="t">Solicitudes nuevas</div></div>
     </div>
     <div class="cuadros">
       <div class="caja"><h3>Licencias por vencer o vencidas</h3>
@@ -714,13 +758,13 @@ function vOrgs(){
   const lista = A.organizaciones.filter(o => !q || (o.nombre + ' ' + (o.contacto || '')).toLowerCase().includes(q));
   const filas = lista.map(o => `<tr class="clic" data-a="org" data-id="${o.id}">
       <td><b>${esc(o.nombre)}</b>${o.activa ? '' : ' <span class="chip mal">Desactivada</span>'}<div class="sub" style="color:var(--gris);font-size:12.5px">${esc(o.contacto || '')}</div></td>
-      <td><span class="chip">${o.tipo === 'individual' ? 'Persona' : 'Organización'}</span></td>
-      <td><div class="herram-chips">${o.licencias.map(chipLic).join('') || '<span class="chip">Sin licencias</span>'}</div></td>
-      <td class="mono">${nUsuarios(o)}</td></tr>`).join('');
+      <td data-l="Tipo"><span class="chip">${o.tipo === 'individual' ? 'Persona' : 'Organización'}</span></td>
+      <td data-l="Licencias"><div class="herram-chips">${o.licencias.map(chipLic).join('') || '<span class="chip">Sin licencias</span>'}</div></td>
+      <td data-l="Usuarios" class="mono">${nUsuarios(o)}</td></tr>`).join('');
   return `<div class="titulo-vista"><div><h2>Organizaciones y personas</h2><p>Cada cliente, con sus licencias y sus usuarios.</p></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-a="xlsVista" data-v="orgs">⬇ Excel</button><button class="btn pri" data-a="nuevaOrg">+ Nueva</button></div></div>
     <div class="barra-filtros"><input id="buscaOrg" placeholder="Buscar por nombre o contacto…" value="${esc(filtroOrg)}"></div>
-    <div class="tabla-wrap"><table><thead><tr><th>Nombre</th><th>Tipo</th><th>Licencias</th><th>Usuarios</th></tr></thead>
+    <div class="tabla-wrap"><table class="t-cards pc1"><thead><tr><th>Nombre</th><th>Tipo</th><th>Licencias</th><th>Usuarios</th></tr></thead>
       <tbody>${filas || '<tr><td colspan="4" class="vacio-mini">No hay resultados.</td></tr>'}</tbody></table></div>`;
 }
 function modalNuevaOrg(){
@@ -766,6 +810,7 @@ function pintarDrawer(conservarScroll){
         <label class="campo" style="margin:0">Dispositivos <select class="lDisp">${Object.entries(NOMBRE_DISP).map(([k, v]) => `<option value="${k}" ${l && l.dispositivos === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
       </div>
       <div class="acc">${l ? `<button class="btn mini pri" data-a="guardarLic" data-h="${h.id}">Guardar licencia</button>
+        <button class="btn mini" data-a="renovar" data-e="${o.id}" data-h="${h.id}">⟳ Renovar</button>
         <button class="btn mini" data-a="verComo" data-h="${h.id}">👁 Ver como esta organización</button>` : `<button class="btn mini pri" data-a="guardarLic" data-h="${h.id}">Activar herramienta</button>`}</div>
     </div>`;
   }).join('');
@@ -775,6 +820,7 @@ function pintarDrawer(conservarScroll){
     <aside class="drawer"><div class="cab"><div><h3>${esc(o.nombre)}</h3><span class="chip">${o.tipo === 'individual' ? 'Persona' : 'Organización'}</span> ${o.activa ? '' : '<span class="chip mal">Desactivada</span>'}</div>
       <button class="btn mini" data-a="cerrarDrawer">Cerrar ✕</button></div>
     <div class="cuerpo">
+      ${contactoAcciones(o.contacto)}
       <div class="bloque"><h4>Datos</h4>
         <label class="campo">Nombre <input id="oNombre" value="${esc(o.nombre)}"></label>
         <div class="dos"><label class="campo">Tipo <select id="oTipo"><option value="organizacion" ${o.tipo === 'organizacion' ? 'selected' : ''}>Organización</option><option value="individual" ${o.tipo === 'individual' ? 'selected' : ''}>Persona</option></select></label>
@@ -843,8 +889,8 @@ function vSolicitudes(){
 const NOMBRES_ACCION = {org_creada: 'Creó una organización', org_editada: 'Editó una organización', org_borrada: 'Borró una organización', licencia_guardada: 'Guardó una licencia', licencia_quitada: 'Quitó una licencia', herramienta_estado: 'Cambió el estado de una herramienta', usuario_guardado: 'Guardó datos de usuario', usuario_asignado: 'Asignó un usuario', usuario_quitado: 'Quitó un usuario de su organización', usuario_creado: 'Creó un usuario', usuario_renombrado: 'Cambió el usuario', usuario_bloqueado: 'Bloqueó un usuario', usuario_desbloqueado: 'Desbloqueó un usuario', usuario_eliminado: 'Eliminó un usuario', clave_cambiada: 'Cambió una contraseña', logo_agregado: 'Agregó un logo', logo_borrado: 'Borró un logo', ver_como: 'Entró a ver como una organización', exportacion_admin: 'Exportó los datos de una organización', exportacion_cliente: 'Un cliente descargó todos sus datos'};
 function vActividad(){
   return `<div class="titulo-vista"><div><h2>Actividad</h2><p>Registro de cada cambio que hiciste como administrador.</p></div><button class="btn" data-a="xlsVista" data-v="actividad">⬇ Excel</button></div>
-    <div class="tabla-wrap"><table><thead><tr><th>Cuándo</th><th>Quién</th><th>Qué</th><th>Organización</th><th>Detalle</th></tr></thead><tbody>
-    ${(A.auditoria || []).map(a => `<tr><td class="mono" style="white-space:nowrap">${new Date(a.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}</td><td>${esc(a.quien_nombre || '')}</td><td>${esc(NOMBRES_ACCION[a.accion] || a.accion)}</td><td>${esc(a.empresa || '')}</td><td class="mono" style="font-size:12px;color:var(--gris)">${esc(a.detalle ? Object.entries(a.detalle).map(([k, v]) => k + ': ' + v).join(' · ') : '')}</td></tr>`).join('') || '<tr><td colspan="5" class="vacio-mini">Aún no hay movimientos.</td></tr>'}
+    <div class="tabla-wrap"><table class="t-cards"><thead><tr><th>Cuándo</th><th>Quién</th><th>Qué</th><th>Organización</th><th>Detalle</th></tr></thead><tbody>
+    ${(A.auditoria || []).map(a => `<tr><td data-l="Cuándo" class="mono" style="white-space:nowrap">${new Date(a.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}</td><td data-l="Quién">${esc(a.quien_nombre || '')}</td><td data-l="Qué">${esc(NOMBRES_ACCION[a.accion] || a.accion)}</td><td data-l="Organización">${esc(a.empresa || '')}</td><td data-l="Detalle" class="mono" style="font-size:12px;color:var(--gris)">${esc(a.detalle ? Object.entries(a.detalle).map(([k, v]) => k + ': ' + v).join(' · ') : '')}</td></tr>`).join('') || '<tr><td colspan="5" class="vacio-mini">Aún no hay movimientos.</td></tr>'}
     </tbody></table></div>`;
 }
 
@@ -1017,7 +1063,7 @@ async function pintarCuentaCliente(){
   catch(e){ $('#cuerpoApp').innerHTML = `<div class="cargando"><p>No se pudo cargar tu cuenta.<br>${esc(e.message)}</p></div>`; return; }
   const org = CU.empresa;
   const hist = CU.historial || [];
-  const filasH = hist.slice(0, 50).map(h => `<tr><td class="mono" style="white-space:nowrap">${new Date(h.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td><td>${esc(h.usuario)}</td><td>${esc(nomHerr(h.herramienta_id))}</td><td>${esc(NOMBRE_EVENTO[h.evento] || h.evento)}</td></tr>`).join('');
+  const filasH = hist.slice(0, 50).map(h => `<tr><td data-l="Cuándo" class="mono" style="white-space:nowrap">${new Date(h.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td><td data-l="Usuario">${esc(h.usuario)}</td><td data-l="Herramienta">${esc(nomHerr(h.herramienta_id))}</td><td data-l="Qué pasó">${esc(NOMBRE_EVENTO[h.evento] || h.evento)}</td></tr>`).join('');
   $('#cuerpoApp').innerHTML = `<div class="pagina">
     <div class="saludo"><div class="rot">Mi cuenta</div><h2>${org ? esc(org.nombre) : 'Mi cuenta'}</h2>
       <p>Tus datos son tuyos: aquí puedes verlos y descargarlos en Excel cuando quieras.</p></div>
@@ -1031,7 +1077,7 @@ async function pintarCuentaCliente(){
         ${(CU.licencias || []).map(l => `<div class="fila"><div><b>${esc(l.herramienta)}</b><div class="sub">${l.vence_el ? 'Vence el ' + fechaBonita(l.vence_el) : 'Sin vencimiento'} · ${NOMBRE_DISP[l.dispositivos]}</div></div><span class="chip ${l.vigente ? 'ok' : 'mal'}">${estadoTexto(l)}</span></div>`).join('') || '<div class="vacio-mini">Aún no tienes licencias activas.</div>'}</div>
       <div class="caja" style="grid-column:1/-1"><h3>Historial de transmisiones <button class="btn mini pri" data-a="xlsHistorial" ${hist.length ? '' : 'disabled'}>⬇ Descargar Excel</button></h3>
         <p class="nota-p">${CU.rol === 'admin' ? 'Todo lo que se hizo en tu organización.' : 'Solo ves tu propia actividad.'}${hist.length > 50 ? ' Aquí se muestran las últimas 50; el Excel trae todas.' : ''}</p>
-        ${hist.length ? `<div class="tabla-wrap"><table><thead><tr><th>Cuándo</th><th>Usuario</th><th>Herramienta</th><th>Qué pasó</th></tr></thead><tbody>${filasH}</tbody></table></div>` : '<div class="vacio-mini">Todavía no hay actividad registrada.</div>'}</div>
+        ${hist.length ? `<div class="tabla-wrap"><table class="t-cards"><thead><tr><th>Cuándo</th><th>Usuario</th><th>Herramienta</th><th>Qué pasó</th></tr></thead><tbody>${filasH}</tbody></table></div>` : '<div class="vacio-mini">Todavía no hay actividad registrada.</div>'}</div>
       <div class="caja" style="grid-column:1/-1"><h3>Todos mis datos</h3>
         ${CU.puede_exportar
           ? `<p class="nota-p">Un solo Excel con los datos de tu cuenta: organización, licencias, usuarios, logos y uso. Cada descarga queda registrada.</p><button class="btn pri" data-a="xlsTodo">⬇ Descargar todos mis datos (Excel)</button>`
@@ -1054,9 +1100,9 @@ function hojasExportacion(ex, admin){
   ];
 }
 const hoyArchivo = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Lima'}).format(new Date());
-async function conEspera(btn, fn){
-  const txt = btn ? btn.textContent : ''; if (btn){ btn.disabled = true; btn.textContent = 'Preparando…'; }
-  try{ await fn(); toast('Excel descargado'); }
+async function conEspera(btn, fn, ok = 'Excel descargado'){
+  const txt = btn ? btn.textContent : ''; if (btn){ btn.disabled = true; btn.textContent = txt.length <= 2 ? '…' : 'Preparando…'; }
+  try{ await fn(); toast(ok); }
   catch(e){ toast(e.message || 'No se pudo exportar', true); }
   finally{ if (btn){ btn.disabled = false; btn.textContent = txt; } }
 }
@@ -1088,6 +1134,63 @@ function exportarVista(v){
     columnas: [{clave: 'c', titulo: 'Cuándo', tipo: 'fechahora'}, {clave: 'q', titulo: 'Quién'}, {clave: 'a', titulo: 'Qué'}, {clave: 'o', titulo: 'Organización'}, {clave: 'd', titulo: 'Detalle', ancho: 60}],
     filas: (A.auditoria || []).map(a => ({c: a.cuando, q: a.quien_nombre, a: NOMBRES_ACCION[a.accion] || a.accion, o: a.empresa, d: a.detalle ? Object.entries(a.detalle).map(([k, x]) => k + ': ' + x).join(' · ') : ''}))}]};
 }
+
+
+/* ---------- Celular: renovar, contacto, "Más" y actualizar ---------- */
+function sumarMeses(iso, n){
+  const [y, m, d] = iso.split('-').map(Number);
+  const t = new Date(Date.UTC(y, m - 1 + n, 1)); const ult = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth() + 1, 0)).getUTCDate();
+  t.setUTCDate(Math.min(d, ult)); return t.toISOString().slice(0, 10);
+}
+function telDe(c){
+  const t = String(c || '').trim(); if (!t || t.includes('@')) return null;
+  const d = t.replace(/\D/g, ''); if (d.length === 9) return '51' + d; if (d.length === 11 && d.startsWith('51')) return d; return null;
+}
+function contactoAcciones(c){
+  const tel = telDe(c), mail = c && String(c).includes('@') ? String(c).trim() : null;
+  if (!tel && !mail) return '';
+  return `<div class="contacto-ac">${tel ? `<a href="tel:+${tel}">📞 Llamar</a><a href="https://wa.me/${tel}" target="_blank" rel="noopener">💬 WhatsApp</a>` : ''}${mail ? `<a href="mailto:${esc(mail)}">✉ Correo</a>` : ''}</div>`;
+}
+Object.assign(acciones, {
+  refrescarTodo(d, btn){ conEspera(btn, async () => { await cargarPanel(); pintarShell(); if (orgAbierta) cargarLogosOrg(orgAbierta); }, 'Datos actualizados'); },
+  mas(){
+    const items = [['herramientas', 'Herramientas', 'tool'], ['actividad', 'Actividad', 'act'], ['mis', 'Abrir mis apps', 'apps']];
+    modal({titulo: 'Más', hoja: true, html: `<div class="lista-mas">${items.map(([id, t, ic]) => `<button data-a="masIr" data-v="${id}">${icono(ic)}${t}</button>`).join('')}
+      <button data-a="refrescarTodo">${icono('act')}Actualizar datos</button></div>`, botones: [{txt: 'Cerrar'}]});
+  },
+  masIr(d){ const m = document.querySelectorAll('#capas .modal'); if (m.length) m[m.length - 1].remove(); vista = d.v; pintarShell(); },
+  renovar(d){
+    const o = A.organizaciones.find(x => x.id === d.e); const l = o.licencias.find(x => x.herramienta_id === d.h);
+    const hoy = A.hoy; const base = l.vence_el && l.vence_el > hoy ? l.vence_el : hoy; let nuevo = null;
+    const nom = nomHerr(d.h);
+    const m = modal({titulo: 'Renovar ' + nom, html: `<p class="txt"><b>${esc(o.nombre)}</b><br>${l.vence_el ? (l.vence_el < hoy ? 'Venció el ' : 'Vence el ') + fechaBonita(l.vence_el) : 'Hoy no tiene vencimiento'}. ${l.vence_el && l.vence_el >= hoy ? 'Se suma desde esa fecha.' : 'Se cuenta desde hoy.'}</p>
+        <div class="opciones-renov">${[[1, '+1 mes'], [3, '+3 meses'], [6, '+6 meses'], [12, '+1 año']].map(([n, t]) => `<button data-n="${n}">${t}</button>`).join('')}
+          <button data-n="sin">Sin vencimiento</button><button data-n="fecha">Elegir fecha</button></div>
+        <label class="campo" id="rFechaBox" hidden>Nueva fecha <input type="date" id="rFecha"></label>
+        <div class="renov-res" id="rRes">Elige una opción.</div>`,
+      botones: [{txt: 'Cancelar'}, {txt: 'Renovar', cls: 'pri', fn: async () => {
+        if (nuevo === null) throw new Error('Elige una opción de renovación');
+        await rpc('yp_admin_licencia', {p_empresa: o.id, p_herramienta: d.h, p_activa: true, p_vence: nuevo === 'sin' ? null : nuevo, p_dispositivos: l.dispositivos});
+        await cargarPanel(); pintarShell(); if (orgAbierta) cargarLogosOrg(orgAbierta); toast('Licencia renovada');
+      }}]});
+    const pinta = () => { $('#rRes', m).innerHTML = nuevo === null ? 'Elige una opción.' : (nuevo === 'sin' ? 'Quedará <b>sin vencimiento</b>.' : 'Nuevo vencimiento: <b>' + fechaBonita(nuevo) + '</b>'); };
+    m.querySelectorAll('.opciones-renov button').forEach(b => b.onclick = () => {
+      m.querySelectorAll('.opciones-renov button').forEach(x => x.classList.toggle('sel', x === b));
+      const v = b.dataset.n; $('#rFechaBox', m).hidden = v !== 'fecha';
+      if (v === 'sin') nuevo = 'sin'; else if (v === 'fecha'){ nuevo = $('#rFecha', m).value || null; } else nuevo = sumarMeses(base, Number(v));
+      pinta();
+    });
+    $('#rFecha', m).addEventListener('change', e => { nuevo = e.target.value || null; pinta(); });
+  }
+});
+// Al volver a la app después de un rato, el administrador ve datos frescos
+let ultimoVistazo = Date.now();
+document.addEventListener('visibilitychange', async () => {
+  if (document.hidden){ ultimoVistazo = Date.now(); return; }
+  if (A && P && P.es_super && Date.now() - ultimoVistazo > 120000 && !document.querySelector('#capas .modal')){
+    try{ await cargarPanel(); pintarShell(); if (orgAbierta) cargarLogosOrg(orgAbierta); }catch(e){}
+  }
+});
 
 /* ---------- arranque ---------- */
 window.addEventListener('hashchange', () => { if (A && P && P.es_super){ const h = location.hash.replace('#', ''); if (VISTAS.some(v => v[0] === h) && h !== vista){ vista = h; pintarShell(); } } });
