@@ -193,6 +193,9 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:rgba(255,255,255,.035)}
 .solic dl{display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:13.5px}
 .solic dt{color:var(--gris)} .solic dd{word-break:break-word}
 
+.navcli{display:flex;gap:6px;margin-left:8px}
+.navcli .btn.activo{border-color:var(--turq);color:var(--turq);background:rgba(46,211,183,.1)}
+.nota-p{color:var(--gris);font-size:13.5px;line-height:1.55;margin:0 0 12px}
 /* ---------- celular ---------- */
 @media (max-width:860px){
   .shell{grid-template-columns:1fr}
@@ -206,6 +209,7 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:rgba(255,255,255,.035)}
   .dos,.lic .opc{grid-template-columns:1fr}
   .quien .org{display:none}
 }
+@media (max-width:520px){ .quien{display:none} header.barra .logo svg{height:24px} .navcli{margin-left:0} }
 </style>
 </head>
 <body>
@@ -289,6 +293,7 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:rgba(255,255,255,.035)}
 <g transform="translate(518,3)" clip-path="url(#capnv2)"><path d="M2,48 A24,39 0 0 1 50,48 A24,39 0 0 1 2,48 Z" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
 <g transform="translate(597,3)" clip-path="url(#capnv2)"><path d="M0,96 L0,0 L46,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M0,48 L36,48" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
 <g transform="translate(654,3)" clip-path="url(#capnv2)"><path d="M0,9 L52,9" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M26,9 L26,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g></g></svg></a>
+    <nav class="navcli" id="navCli" hidden><button class="btn mini activo" data-a="cliVista" data-v="herr">Herramientas</button><button class="btn mini" data-a="cliVista" data-v="cuenta">Mi cuenta</button></nav>
     <div class="esp"></div>
     <button class="btn mini" id="bInstalar" hidden>⬇ Instalar</button>
     <div class="quien" id="quien"></div>
@@ -300,6 +305,7 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:rgba(255,255,255,.035)}
 <div id="toast" role="status"></div>
 <div id="capas"></div>
 
+<script src="exportar-excel.js"></script>
 <script>
 /* =====================================================================
    PORTAL YUPASOFT
@@ -503,6 +509,7 @@ async function iniciar(){
 function pintarBarra(){
   const nombre = P.nombre || P.usuario || 'Tu cuenta';
   $('#quien').innerHTML = `<b>${esc(nombre)}</b>${P.es_super ? ' <span class="chip sup">ADMIN</span>' : ''}<span class="org"><br>${P.empresa ? esc(P.empresa.nombre) : 'Yupasoft'}</span>`;
+  $('#navCli').hidden = !!P.es_super;
   document.title = 'Portal Yupasoft';
 }
 
@@ -526,12 +533,19 @@ function urlHerramienta(h){
 function entrarCliente(){
   const hs = P.herramientas || [];
   const volver = params.get('volver');
+  if (params.get('cuenta')){ vistaCli = 'cuenta'; pintarCliente(); return; }
   const usables = hs.filter(h => estadoHerramienta(h, false).ok);
   if (!params.get('menu')){
     if (volver){ const h = usables.find(x => x.id === volver); if (h){ location.replace(urlHerramienta(h)); return; } }
     if (hs.length === 1 && usables.length === 1){ location.replace(urlHerramienta(usables[0])); return; }
   }
-  $('#cuerpoApp').innerHTML = pintarLanzador(hs, false);
+  pintarCliente();
+}
+let vistaCli = 'herr';
+function pintarCliente(){
+  document.querySelectorAll('#navCli button').forEach(b => b.classList.toggle('activo', b.dataset.v === vistaCli));
+  if (vistaCli === 'cuenta'){ pintarCuentaCliente(); return; }
+  $('#cuerpoApp').innerHTML = pintarLanzador(P.herramientas || [], false);
 }
 function pintarLanzador(hs, esAdmin){
   const nombre = P.nombre || P.usuario || '';
@@ -653,7 +667,7 @@ function vOrgs(){
       <td><div class="herram-chips">${o.licencias.map(chipLic).join('') || '<span class="chip">Sin licencias</span>'}</div></td>
       <td class="mono">${nUsuarios(o)}</td></tr>`).join('');
   return `<div class="titulo-vista"><div><h2>Organizaciones y personas</h2><p>Cada cliente, con sus licencias y sus usuarios.</p></div>
-      <button class="btn pri" data-a="nuevaOrg">+ Nueva</button></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-a="xlsVista" data-v="orgs">⬇ Excel</button><button class="btn pri" data-a="nuevaOrg">+ Nueva</button></div></div>
     <div class="barra-filtros"><input id="buscaOrg" placeholder="Buscar por nombre o contacto…" value="${esc(filtroOrg)}"></div>
     <div class="tabla-wrap"><table><thead><tr><th>Nombre</th><th>Tipo</th><th>Licencias</th><th>Usuarios</th></tr></thead>
       <tbody>${filas || '<tr><td colspan="4" class="vacio-mini">No hay resultados.</td></tr>'}</tbody></table></div>`;
@@ -716,7 +730,7 @@ function pintarDrawer(conservarScroll){
           <label class="campo">Contacto <input id="oContacto" value="${esc(o.contacto || '')}"></label></div>
         <label class="campo">Notas internas <textarea id="oNotas" rows="2">${esc(o.notas || '')}</textarea></label>
         <label class="marca-chk" style="margin-bottom:14px"><input type="checkbox" id="oActiva" ${o.activa ? 'checked' : ''}> Cuenta activa (si la desactivas, nadie de aquí puede usar ninguna herramienta)</label>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-a="guardarOrg">Guardar datos</button><button class="btn peligro" data-a="borrarOrg">Borrar…</button></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-a="guardarOrg">Guardar datos</button><button class="btn" data-a="xlsOrg">⬇ Exportar todos sus datos</button><button class="btn peligro" data-a="borrarOrg">Borrar…</button></div></div>
       <div class="bloque"><h4>Herramientas y licencias</h4>${lics}</div>
       <div class="bloque"><h4>Usuarios <button class="btn mini pri" data-a="nuevoUsuario">+ Agregar usuario</button></h4>
         ${miembros.map(u => filaUsuario(u, true)).join('') || '<div class="vacio-mini">Todavía no tiene usuarios. Agrega el primero.</div>'}</div>
@@ -748,7 +762,7 @@ function filaUsuario(u, dentroOrg){
 function vUsuarios(){
   const q = filtroUsr.toLowerCase();
   const lista = A.usuarios.filter(u => { const org = A.organizaciones.find(o => o.id === u.empresa_id); return !q || ((u.usuario || '') + ' ' + (u.nombre || '') + ' ' + (u.email || '') + ' ' + (org ? org.nombre : '')).toLowerCase().includes(q); });
-  return `<div class="titulo-vista"><div><h2>Usuarios</h2><p>Todas las personas con acceso. Para crear uno nuevo, entra a la organización.</p></div></div>
+  return `<div class="titulo-vista"><div><h2>Usuarios</h2><p>Todas las personas con acceso. Para crear uno nuevo, entra a la organización.</p></div><button class="btn" data-a="xlsVista" data-v="usuarios">⬇ Excel</button></div>
     <div class="barra-filtros"><input id="buscaUsr" placeholder="Buscar usuario, nombre u organización…" value="${esc(filtroUsr)}"></div>
     <div class="caja">${lista.map(u => filaUsuario(u, false)).join('') || '<div class="vacio-mini">No hay resultados.</div>'}</div>`;
 }
@@ -769,7 +783,7 @@ function vHerramientas(){
 const ESTADOS_SOL = ['Nuevo', 'Contactado', 'Cotizado', 'Cerrado', 'Descartado'];
 function vSolicitudes(){
   const campos = [['solucion', 'Solución'], ['negocio', 'Negocio'], ['organizacion', 'Organización'], ['necesidad', 'Necesidad'], ['productos', 'Productos'], ['locales', 'Locales'], ['usuarios', 'Usuarios'], ['codigo', 'Código de barras'], ['variantes', 'Variantes'], ['lotes', 'Lotes'], ['factura', 'Factura hoy con'], ['frecuencia', 'Frecuencia'], ['formato', 'Formato'], ['fecha_evento', 'Fecha del evento'], ['mensaje', 'Mensaje']];
-  return `<div class="titulo-vista"><div><h2>Solicitudes</h2><p>Lo que llega desde el formulario de tu página.</p></div></div>
+  return `<div class="titulo-vista"><div><h2>Solicitudes</h2><p>Lo que llega desde el formulario de tu página.</p></div><button class="btn" data-a="xlsVista" data-v="solicitudes">⬇ Excel</button></div>
     ${(A.solicitudes || []).map(s => `<div class="solic"><div class="cab-s"><div><b>${esc(s.nombre || 'Sin nombre')}</b> <span class="chip">${esc(s.solucion || '')}</span></div>
         <div style="display:flex;gap:8px;align-items:center"><span class="sub mono">${fechaBonita(s.creado_en)}</span>
         <select class="estSol" data-id="${s.id}" style="padding:6px 8px;border-radius:8px;background:var(--tinta-2);border:1px solid var(--borde)">${ESTADOS_SOL.map(e => `<option ${((s.estado || 'Nuevo') === e) ? 'selected' : ''}>${e}</option>`).join('')}</select></div></div>
@@ -777,9 +791,9 @@ function vSolicitudes(){
 }
 
 /* --- Actividad --- */
-const NOMBRES_ACCION = {org_creada: 'Creó una organización', org_editada: 'Editó una organización', org_borrada: 'Borró una organización', licencia_guardada: 'Guardó una licencia', licencia_quitada: 'Quitó una licencia', herramienta_estado: 'Cambió el estado de una herramienta', usuario_guardado: 'Guardó datos de usuario', usuario_asignado: 'Asignó un usuario', usuario_quitado: 'Quitó un usuario de su organización', usuario_creado: 'Creó un usuario', usuario_renombrado: 'Cambió el usuario', usuario_bloqueado: 'Bloqueó un usuario', usuario_desbloqueado: 'Desbloqueó un usuario', usuario_eliminado: 'Eliminó un usuario', clave_cambiada: 'Cambió una contraseña', logo_agregado: 'Agregó un logo', logo_borrado: 'Borró un logo', ver_como: 'Entró a ver como una organización'};
+const NOMBRES_ACCION = {org_creada: 'Creó una organización', org_editada: 'Editó una organización', org_borrada: 'Borró una organización', licencia_guardada: 'Guardó una licencia', licencia_quitada: 'Quitó una licencia', herramienta_estado: 'Cambió el estado de una herramienta', usuario_guardado: 'Guardó datos de usuario', usuario_asignado: 'Asignó un usuario', usuario_quitado: 'Quitó un usuario de su organización', usuario_creado: 'Creó un usuario', usuario_renombrado: 'Cambió el usuario', usuario_bloqueado: 'Bloqueó un usuario', usuario_desbloqueado: 'Desbloqueó un usuario', usuario_eliminado: 'Eliminó un usuario', clave_cambiada: 'Cambió una contraseña', logo_agregado: 'Agregó un logo', logo_borrado: 'Borró un logo', ver_como: 'Entró a ver como una organización', exportacion_admin: 'Exportó los datos de una organización', exportacion_cliente: 'Un cliente descargó todos sus datos'};
 function vActividad(){
-  return `<div class="titulo-vista"><div><h2>Actividad</h2><p>Registro de cada cambio que hiciste como administrador.</p></div></div>
+  return `<div class="titulo-vista"><div><h2>Actividad</h2><p>Registro de cada cambio que hiciste como administrador.</p></div><button class="btn" data-a="xlsVista" data-v="actividad">⬇ Excel</button></div>
     <div class="tabla-wrap"><table><thead><tr><th>Cuándo</th><th>Quién</th><th>Qué</th><th>Organización</th><th>Detalle</th></tr></thead><tbody>
     ${(A.auditoria || []).map(a => `<tr><td class="mono" style="white-space:nowrap">${new Date(a.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}</td><td>${esc(a.quien_nombre || '')}</td><td>${esc(NOMBRES_ACCION[a.accion] || a.accion)}</td><td>${esc(a.empresa || '')}</td><td class="mono" style="font-size:12px;color:var(--gris)">${esc(a.detalle ? Object.entries(a.detalle).map(([k, v]) => k + ': ' + v).join(' · ') : '')}</td></tr>`).join('') || '<tr><td colspan="5" class="vacio-mini">Aún no hay movimientos.</td></tr>'}
     </tbody></table></div>`;
@@ -939,6 +953,91 @@ function subirLogo(input){
     im.src = lector.result;
   };
   lector.readAsDataURL(f);
+}
+
+
+/* ---------- Mi cuenta (cliente) y exportación a Excel ---------- */
+const NOMBRE_EVENTO = {sala_abierta: 'Abrió una sala de transmisión', sala_prueba_admin: 'Prueba del administrador'};
+const NOMBRE_ROL = {admin: 'Responsable', operador: 'Operador'};
+const nomHerr = id => ({yupavideo: 'Yupavideo', inventario: 'Inventario y ventas'}[id] || id || '');
+const estadoTexto = l => !l.activa ? 'Inactiva' : (l.vigente ? 'Vigente' : 'Vencida');
+let CU = null;
+async function pintarCuentaCliente(){
+  $('#cuerpoApp').innerHTML = '<div class="cargando"><div class="giro"></div><p>Cargando tu cuenta…</p></div>';
+  try{ CU = await rpc('yp_mi_cuenta'); }
+  catch(e){ $('#cuerpoApp').innerHTML = `<div class="cargando"><p>No se pudo cargar tu cuenta.<br>${esc(e.message)}</p></div>`; return; }
+  const org = CU.empresa;
+  const hist = CU.historial || [];
+  const filasH = hist.slice(0, 50).map(h => `<tr><td class="mono" style="white-space:nowrap">${new Date(h.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td><td>${esc(h.usuario)}</td><td>${esc(nomHerr(h.herramienta_id))}</td><td>${esc(NOMBRE_EVENTO[h.evento] || h.evento)}</td></tr>`).join('');
+  $('#cuerpoApp').innerHTML = `<div class="pagina">
+    <div class="saludo"><div class="rot">Mi cuenta</div><h2>${org ? esc(org.nombre) : 'Mi cuenta'}</h2>
+      <p>Tus datos son tuyos: aquí puedes verlos y descargarlos en Excel cuando quieras.</p></div>
+    <div class="cuadros">
+      <div class="caja"><h3>Mis datos</h3>
+        <div class="fila"><span>Usuario</span><b>${esc(CU.usuario || '—')}</b></div>
+        ${CU.nombre ? `<div class="fila"><span>Nombre</span><b>${esc(CU.nombre)}</b></div>` : ''}
+        <div class="fila"><span>Rol</span><b>${esc(NOMBRE_ROL[CU.rol] || '—')}</b></div>
+        <div class="fila"><span>Cuenta</span><b>${org ? (org.tipo === 'individual' ? 'Persona' : 'Organización') : '—'}</b></div></div>
+      <div class="caja"><h3>Mis licencias</h3>
+        ${(CU.licencias || []).map(l => `<div class="fila"><div><b>${esc(l.herramienta)}</b><div class="sub">${l.vence_el ? 'Vence el ' + fechaBonita(l.vence_el) : 'Sin vencimiento'} · ${NOMBRE_DISP[l.dispositivos]}</div></div><span class="chip ${l.vigente ? 'ok' : 'mal'}">${estadoTexto(l)}</span></div>`).join('') || '<div class="vacio-mini">Aún no tienes licencias activas.</div>'}</div>
+      <div class="caja" style="grid-column:1/-1"><h3>Historial de transmisiones <button class="btn mini pri" data-a="xlsHistorial" ${hist.length ? '' : 'disabled'}>⬇ Descargar Excel</button></h3>
+        <p class="nota-p">${CU.rol === 'admin' ? 'Todo lo que se hizo en tu organización.' : 'Solo ves tu propia actividad.'}${hist.length > 50 ? ' Aquí se muestran las últimas 50; el Excel trae todas.' : ''}</p>
+        ${hist.length ? `<div class="tabla-wrap"><table><thead><tr><th>Cuándo</th><th>Usuario</th><th>Herramienta</th><th>Qué pasó</th></tr></thead><tbody>${filasH}</tbody></table></div>` : '<div class="vacio-mini">Todavía no hay actividad registrada.</div>'}</div>
+      <div class="caja" style="grid-column:1/-1"><h3>Todos mis datos</h3>
+        ${CU.puede_exportar
+          ? `<p class="nota-p">Un solo Excel con los datos de tu cuenta: organización, licencias, usuarios, logos y uso. Cada descarga queda registrada.</p><button class="btn pri" data-a="xlsTodo">⬇ Descargar todos mis datos (Excel)</button>`
+          : '<p class="nota-p">Solo el responsable de tu organización puede descargar todos los datos. Pídeselo a él.</p>'}</div>
+    </div></div>`;
+}
+function hojasExportacion(ex, admin){
+  const o = ex.organizacion;
+  const filasOrg = [['Nombre', o.nombre], ['Tipo', o.tipo === 'individual' ? 'Persona' : 'Organización'], ['Contacto', o.contacto || ''], ['Cuenta activa', o.activa ? 'Sí' : 'No'], ['Creada el', fechaBonita(o.creado_el)]];
+  if (admin) filasOrg.push(['Notas internas', o.notas || '']);
+  return [
+    {nombre: 'Organización', titulo: 'Organización · ' + o.nombre, columnas: [{clave: 'a', titulo: 'Dato', ancho: 24}, {clave: 'b', titulo: 'Valor', ancho: 52}], filas: filasOrg.map(([a, b]) => ({a, b}))},
+    {nombre: 'Licencias', titulo: 'Licencias', columnas: [{clave: 'h', titulo: 'Herramienta'}, {clave: 'e', titulo: 'Estado'}, {clave: 'v', titulo: 'Vence el'}, {clave: 'd', titulo: 'Dispositivos'}],
+      filas: ex.licencias.map(l => ({h: l.herramienta, e: estadoTexto(l), v: l.vence_el ? fechaBonita(l.vence_el) : 'Sin vencimiento', d: NOMBRE_DISP[l.dispositivos]}))},
+    {nombre: 'Usuarios', titulo: 'Usuarios', columnas: [{clave: 'u', titulo: 'Usuario'}, {clave: 'n', titulo: 'Nombre'}, {clave: 'c', titulo: 'Contacto'}, {clave: 'r', titulo: 'Rol'}, {clave: 'b', titulo: 'Estado'}, {clave: 'cr', titulo: 'Creado el', tipo: 'fecha'}, {clave: 'ui', titulo: 'Último ingreso', tipo: 'fechahora'}],
+      filas: ex.usuarios.map(u => ({u: u.usuario, n: u.nombre, c: u.contacto, r: NOMBRE_ROL[u.rol] || u.rol, b: u.bloqueado ? 'Bloqueado' : 'Activo', cr: u.creado_el, ui: u.ultimo_ingreso}))},
+    {nombre: 'Logos', titulo: 'Logos cargados', columnas: [{clave: 'n', titulo: 'Nombre'}, {clave: 'c', titulo: 'Cargado el', tipo: 'fecha'}], filas: ex.logos.map(g => ({n: g.nombre, c: g.creado_el}))},
+    {nombre: 'Uso', titulo: 'Uso de las herramientas', columnas: [{clave: 'f', titulo: 'Cuándo', tipo: 'fechahora'}, {clave: 'u', titulo: 'Usuario'}, {clave: 'h', titulo: 'Herramienta'}, {clave: 'e', titulo: 'Qué pasó'}],
+      filas: ex.uso.map(x => ({f: x.cuando, u: x.usuario, h: nomHerr(x.herramienta_id), e: NOMBRE_EVENTO[x.evento] || x.evento}))}
+  ];
+}
+const hoyArchivo = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Lima'}).format(new Date());
+async function conEspera(btn, fn){
+  const txt = btn ? btn.textContent : ''; if (btn){ btn.disabled = true; btn.textContent = 'Preparando…'; }
+  try{ await fn(); toast('Excel descargado'); }
+  catch(e){ toast(e.message || 'No se pudo exportar', true); }
+  finally{ if (btn){ btn.disabled = false; btn.textContent = txt; } }
+}
+Object.assign(acciones, {
+  cliVista(d){ vistaCli = d.v; pintarCliente(); },
+  xlsHistorial(d, btn){ conEspera(btn, () => YupaExcel.descargar({archivo: 'Yupasoft_historial_' + (CU.empresa ? CU.empresa.nombre : '') + '_' + hoyArchivo(), hojas: [{
+      nombre: 'Historial', titulo: 'Historial de transmisiones · ' + (CU.empresa ? CU.empresa.nombre : ''),
+      columnas: [{clave: 'f', titulo: 'Cuándo', tipo: 'fechahora'}, {clave: 'u', titulo: 'Usuario'}, {clave: 'h', titulo: 'Herramienta'}, {clave: 'e', titulo: 'Qué pasó'}],
+      filas: CU.historial.map(h => ({f: h.cuando, u: h.usuario, h: nomHerr(h.herramienta_id), e: NOMBRE_EVENTO[h.evento] || h.evento}))}]})); },
+  xlsTodo(d, btn){ conEspera(btn, async () => { const ex = await rpc('yp_exportar', {}); await YupaExcel.descargar({archivo: 'Yupasoft_mis-datos_' + ex.organizacion.nombre + '_' + hoyArchivo(), hojas: hojasExportacion(ex, false)}); }); },
+  xlsOrg(d, btn){ const o = orgActual(); conEspera(btn, async () => { const ex = await rpc('yp_exportar', {p_empresa: o.id}); await YupaExcel.descargar({archivo: 'Yupasoft_datos_' + o.nombre + '_' + hoyArchivo(), hojas: hojasExportacion(ex, true)}); await cargarPanel(); }); },
+  xlsVista(d, btn){ conEspera(btn, () => YupaExcel.descargar(exportarVista(d.v))); }
+});
+function exportarVista(v){
+  const f = hoyArchivo();
+  if (v === 'orgs') return {archivo: 'Yupasoft_organizaciones_' + f, hojas: [{nombre: 'Organizaciones', titulo: 'Organizaciones y personas',
+    columnas: [{clave: 'n', titulo: 'Nombre'}, {clave: 't', titulo: 'Tipo'}, {clave: 'c', titulo: 'Contacto'}, {clave: 'a', titulo: 'Cuenta'}, {clave: 'l', titulo: 'Licencias', ancho: 50}, {clave: 'u', titulo: 'Usuarios', tipo: 'entero'}, {clave: 'cr', titulo: 'Creada el', tipo: 'fecha'}, {clave: 'no', titulo: 'Notas internas', ancho: 36}],
+    filas: A.organizaciones.map(o => ({n: o.nombre, t: o.tipo === 'individual' ? 'Persona' : 'Organización', c: o.contacto, a: o.activa ? 'Activa' : 'Desactivada',
+      l: o.licencias.map(l => nomHerr(l.herramienta_id) + ': ' + estadoTexto(l) + (l.vence_el ? ' hasta ' + fechaBonita(l.vence_el) : ' (sin vencimiento)') + ' · ' + NOMBRE_DISP[l.dispositivos]).join(' | '),
+      u: nUsuarios(o), cr: o.creado_el, no: o.notas}))}]};
+  if (v === 'usuarios') return {archivo: 'Yupasoft_usuarios_' + f, hojas: [{nombre: 'Usuarios', titulo: 'Usuarios',
+    columnas: [{clave: 'u', titulo: 'Usuario'}, {clave: 'n', titulo: 'Nombre'}, {clave: 'c', titulo: 'Contacto'}, {clave: 'o', titulo: 'Organización'}, {clave: 'r', titulo: 'Rol'}, {clave: 'b', titulo: 'Estado'}, {clave: 'ui', titulo: 'Último ingreso', tipo: 'fechahora'}, {clave: 'cr', titulo: 'Creado el', tipo: 'fecha'}],
+    filas: A.usuarios.map(u => { const o = A.organizaciones.find(x => x.id === u.empresa_id); return {u: u.usuario || u.email, n: u.nombre, c: u.contacto, o: o ? o.nombre : 'Sin organización', r: u.es_super ? 'Administrador' : (NOMBRE_ROL[u.rol] || ''), b: u.bloqueado ? 'Bloqueado' : 'Activo', ui: u.ultimo_ingreso, cr: u.creado}; })}]};
+  if (v === 'solicitudes') {
+    const campos = [['creado_en', 'Fecha', 'fecha'], ['nombre', 'Nombre'], ['solucion', 'Solución'], ['estado', 'Estado'], ['negocio', 'Negocio'], ['organizacion', 'Organización'], ['necesidad', 'Necesidad'], ['productos', 'Productos'], ['locales', 'Locales'], ['usuarios', 'Usuarios'], ['codigo', 'Código de barras'], ['variantes', 'Variantes'], ['lotes', 'Lotes'], ['factura', 'Factura hoy con'], ['frecuencia', 'Frecuencia'], ['formato', 'Formato'], ['fecha_evento', 'Fecha del evento'], ['mensaje', 'Mensaje']];
+    return {archivo: 'Yupasoft_solicitudes_' + f, hojas: [{nombre: 'Solicitudes', titulo: 'Solicitudes de la página', columnas: campos.map(([k, t, tp]) => ({clave: k, titulo: t, tipo: tp || 'texto'})), filas: A.solicitudes}]};
+  }
+  return {archivo: 'Yupasoft_actividad_' + f, hojas: [{nombre: 'Actividad', titulo: 'Actividad del administrador',
+    columnas: [{clave: 'c', titulo: 'Cuándo', tipo: 'fechahora'}, {clave: 'q', titulo: 'Quién'}, {clave: 'a', titulo: 'Qué'}, {clave: 'o', titulo: 'Organización'}, {clave: 'd', titulo: 'Detalle', ancho: 60}],
+    filas: (A.auditoria || []).map(a => ({c: a.cuando, q: a.quien_nombre, a: NOMBRES_ACCION[a.accion] || a.accion, o: a.empresa, d: a.detalle ? Object.entries(a.detalle).map(([k, x]) => k + ': ' + x).join(' · ') : ''}))}]};
 }
 
 /* ---------- arranque ---------- */
