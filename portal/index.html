@@ -92,22 +92,46 @@ header.barra .esp{flex:1}
 .saludo .rot{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--turq);text-transform:uppercase}
 .saludo h2{font-size:clamp(26px,4.4vw,38px);font-weight:800;letter-spacing:-.02em;margin:8px 0 10px}
 .saludo p{color:var(--gris);font-size:15px;max-width:42em}
-.herr{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
-.h-card{position:relative;overflow:hidden;text-align:left;border-radius:20px;padding:24px;cursor:pointer;
-  background:linear-gradient(160deg,var(--panel-2),var(--panel));border:1px solid var(--borde);color:inherit;display:flex;flex-direction:column;gap:12px;min-height:200px;
-  transition:transform .2s,box-shadow .2s,border-color .2s}
-.h-card::before{content:"";position:absolute;inset:-40% -30% auto auto;width:260px;height:260px;border-radius:50%;background:var(--c);opacity:.16;filter:blur(40px);transition:opacity .2s}
-.h-card:hover{transform:translateY(-4px);border-color:var(--c);box-shadow:0 18px 44px rgba(0,0,0,.4)}
-.h-card:hover::before{opacity:.3}
-.h-card .ico{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,transparent);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c)}
-.h-card .ico svg{width:28px;height:28px}
-.h-card h3{font-size:20px;font-weight:700}
-.h-card p{color:var(--gris);font-size:14px;line-height:1.5;flex:1}
-.h-card .pie{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.h-card .ir{font-weight:700;color:var(--c);font-size:14px}
-.h-card.off{cursor:default;opacity:.62}
+.herr{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.h-card{position:relative;overflow:hidden;text-align:left;border-radius:24px;padding:0;cursor:pointer;color:inherit;display:flex;flex-direction:column;min-height:340px;
+  background:linear-gradient(165deg,var(--panel-2),var(--panel));border:1px solid var(--borde);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .25s;
+  animation:aparece .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 90ms)}
+@keyframes aparece{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.h-card:hover{transform:translateY(-6px);border-color:var(--c);box-shadow:0 24px 60px rgba(0,0,0,.45),0 0 60px -12px color-mix(in srgb,var(--c) 50%,transparent)}
+.h-card .arte{position:relative;height:172px;display:grid;place-items:center;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.06);
+  background:radial-gradient(120% 140% at 80% 0%,color-mix(in srgb,var(--c) 30%,transparent),transparent 62%),linear-gradient(180deg,rgba(0,0,0,.2),transparent)}
+.h-card .arte svg.escena{width:88%;height:88%;color:var(--c);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.h-card:hover .arte svg.escena{transform:scale(1.07) translateY(-3px)}
+.h-card .cuerpo{padding:20px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.h-card .cab-t{display:flex;align-items:center;gap:12px}
+.h-card .ico{width:42px;height:42px;flex:none;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,transparent);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c)}
+.h-card .ico svg{width:23px;height:23px}
+.h-card h3{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.h-card p{color:var(--gris);font-size:14px;line-height:1.55}
+.h-card .pie{margin-top:auto;padding-top:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.h-card .ir{display:inline-flex;align-items:center;gap:8px;background:var(--c);color:var(--tinta);padding:10px 18px;border-radius:12px;font-weight:800;font-size:14px;transition:gap .2s}
+.h-card:hover .ir{gap:14px}
+.h-card.off{cursor:default;opacity:.66}
 .h-card.off:hover{transform:none;border-color:var(--borde);box-shadow:none}
-.h-card.off::before{opacity:.05}
+.herr.uno .h-card{flex-direction:row;min-height:320px}
+.herr.uno .h-card .arte{order:2;flex:1.15;height:auto;border-bottom:0;border-left:1px solid rgba(255,255,255,.06)}
+.herr.uno .h-card .cuerpo{flex:1;justify-content:center;padding:32px}
+.herr.uno .h-card h3{font-size:32px}
+@media (max-width:760px){
+  .herr.uno .h-card{flex-direction:column}
+  .herr.uno .h-card .arte{order:0;height:172px;flex:none;border-left:0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .herr.uno .h-card .cuerpo{padding:20px 24px 24px}
+  .herr.uno .h-card h3{font-size:24px}
+}
+/* escenas animadas de las tarjetas */
+.ar-pulso{animation:arPulso 1.3s ease-in-out infinite}
+@keyframes arPulso{50%{opacity:.2}}
+.ar-cam{opacity:.45;animation:arCam 6s ease-in-out infinite}
+@keyframes arCam{0%,28%{opacity:1}34%,100%{opacity:.45}}
+.ar-bar{transform-box:fill-box;transform-origin:bottom;animation:arBar 3.4s ease-in-out infinite}
+@keyframes arBar{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){.h-card,.ar-pulso,.ar-cam,.ar-bar{animation:none}.ar-cam{opacity:1}}
 .vacio{border:1px dashed var(--borde);border-radius:18px;padding:34px;text-align:center;color:var(--gris);line-height:1.7}
 .banda-como{position:sticky;top:0;z-index:30;background:var(--ambar);color:var(--tinta);font-weight:700;font-size:14px;padding:9px 16px;text-align:center}
 
@@ -513,6 +537,39 @@ function pintarBarra(){
   document.title = 'Portal Yupasoft';
 }
 
+
+/* ---------- Tarjetas de herramientas ---------- */
+const ESCENAS = {
+  video: `<svg class="escena" viewBox="0 0 320 170" fill="none" aria-hidden="true">
+    <rect x="46" y="10" width="228" height="104" rx="13" fill="#0A1626" stroke="currentColor" stroke-opacity=".55" stroke-width="2"/>
+    <rect x="54" y="18" width="212" height="88" rx="8" fill="url(#gv)"/>
+    <defs><linearGradient id="gv" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".30"/><stop offset="1" stop-color="#0C1A2E" stop-opacity=".9"/></linearGradient></defs>
+    <circle cx="160" cy="58" r="19" fill="currentColor" fill-opacity=".28"/><rect x="132" y="80" width="56" height="26" rx="13" fill="currentColor" fill-opacity=".22"/>
+    <rect x="62" y="26" width="68" height="19" rx="9.5" fill="#EF5350"/><circle class="ar-pulso" cx="73" cy="35.5" r="4" fill="#fff"/>
+    <text x="81" y="39.5" font-family="IBM Plex Mono,monospace" font-size="10" font-weight="600" fill="#fff">EN VIVO</text>
+    <g transform="translate(238,26)" fill="currentColor"><rect width="5" height="5" rx="1.4" opacity=".4"/><rect x="7" width="5" height="5" rx="1.4" opacity=".4"/><rect x="14" width="5" height="5" rx="1.4" fill="#F2A93B"/><rect y="7" width="5" height="5" rx="1.4" opacity=".4"/><rect x="7" y="7" width="5" height="5" rx="1.4"/><rect x="14" y="7" width="5" height="5" rx="1.4"/></g>
+    <g><rect class="ar-cam" x="46" y="124" width="70" height="38" rx="8" fill="#0A1626" stroke="currentColor" stroke-width="2" style="animation-delay:0s"/>
+       <rect class="ar-cam" x="125" y="124" width="70" height="38" rx="8" fill="#0A1626" stroke="currentColor" stroke-width="2" style="animation-delay:2s"/>
+       <rect class="ar-cam" x="204" y="124" width="70" height="38" rx="8" fill="#0A1626" stroke="currentColor" stroke-width="2" style="animation-delay:4s"/></g>
+    <g fill="currentColor" fill-opacity=".5"><circle cx="81" cy="143" r="6"/><circle cx="160" cy="143" r="6"/><circle cx="239" cy="143" r="6"/></g></svg>`,
+  caja: `<svg class="escena" viewBox="0 0 320 170" fill="none" aria-hidden="true">
+    <rect x="30" y="14" width="260" height="142" rx="14" fill="#0A1626" stroke="currentColor" stroke-opacity=".5" stroke-width="2"/>
+    <g fill="currentColor"><rect class="ar-bar" x="56" y="70" width="26" height="74" rx="6" opacity=".95"/><rect class="ar-bar" x="94" y="52" width="26" height="92" rx="6" opacity=".7" style="animation-delay:.35s"/>
+      <rect class="ar-bar" x="132" y="84" width="26" height="60" rx="6" opacity=".95" style="animation-delay:.7s"/><rect class="ar-bar" x="170" y="40" width="26" height="104" rx="6" opacity=".7" style="animation-delay:1.05s"/></g>
+    <g transform="translate(214,40)" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" fill="currentColor" fill-opacity=".14"><path d="M32 22L2 8 32-6 62 8z"/><path d="M2 8v36l30 14V22M62 8v36L32 58"/></g>
+    <rect x="52" y="26" width="72" height="8" rx="4" fill="currentColor" fill-opacity=".35"/><rect x="52" y="40" width="40" height="6" rx="3" fill="currentColor" fill-opacity=".2"/></svg>`
+};
+const escenaDe = h => ESCENAS[h.icono] || `<svg class="escena" viewBox="0 0 24 24" style="width:46%;height:46%" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">${(ICONOS[h.icono] || ICONOS.caja).replace(/^<svg[^>]*>|<\/svg>$/g, '')}</svg>`;
+function tarjetaHerramienta(h, i, {activa, chips, nota, accion, cursor}){
+  return `<${accion ? 'button' : 'div'} class="h-card ${activa ? '' : 'off'}" style="--c:${esc(h.color)};--i:${i};${cursor ? 'cursor:default;' : ''}" ${accion || ''}>
+    <div class="arte">${escenaDe(h)}</div>
+    <div class="cuerpo">
+      <div class="cab-t"><div class="ico">${icono(h.icono)}</div><h3>${esc(h.nombre)}</h3></div>
+      <p>${esc(h.descripcion || '')}</p>${nota ? `<p style="color:var(--ambar);font-size:13px">${esc(nota)}</p>` : ''}
+      <div class="pie"><div class="herram-chips">${chips}</div>${activa && accion ? '<span class="ir">Abrir <span>→</span></span>' : ''}</div>
+    </div></${accion ? 'button' : 'div'}>`;
+}
+
 /* ---------- vista del cliente ---------- */
 function estadoHerramienta(h, esAdmin){
   const l = h.licencia;
@@ -550,24 +607,18 @@ function pintarCliente(){
 function pintarLanzador(hs, esAdmin){
   const nombre = P.nombre || P.usuario || '';
   const org = P.empresa ? P.empresa.nombre : '';
-  let tarjetas = hs.map(h => {
+  let tarjetas = hs.map((h, i) => {
     const e = estadoHerramienta(h, esAdmin);
-    const prueba = h.estado === 'pruebas' ? ' <span class="chip aviso">En pruebas</span>' : '';
-    const nota = e.motivo ? `<p style="color:var(--ambar);font-size:13px;flex:none">${esc(e.motivo)}</p>` : '';
+    const prueba = h.estado === 'pruebas' ? '<span class="chip aviso">En pruebas</span>' : '';
     const disp = h.licencia && h.licencia.dispositivos !== 'todos' ? `<span class="chip">${NOMBRE_DISP[h.licencia.dispositivos]}</span>` : '';
-    return `<button class="h-card ${e.ok ? '' : 'off'}" style="--c:${esc(h.color)}" ${e.ok ? `data-a="abrir" data-id="${esc(h.id)}"` : 'disabled'}>
-      <div class="ico">${icono(h.icono)}</div>
-      <h3>${esc(h.nombre)}</h3>
-      <p>${esc(h.descripcion || '')}</p>${nota}
-      <div class="pie"><div class="herram-chips">${e.chip}${prueba}${disp}</div>${e.ok ? '<span class="ir">Abrir →</span>' : ''}</div>
-    </button>`;
+    return tarjetaHerramienta(h, i, {activa: e.ok, chips: e.chip + prueba + disp, nota: e.motivo, accion: e.ok ? `data-a="abrir" data-id="${esc(h.id)}"` : 'disabled'});
   }).join('');
   if (!hs.length) tarjetas = `<div class="vacio" style="grid-column:1/-1">Aún no tienes herramientas activas en tu cuenta.<br><a href="${WHATSAPP}" target="_blank" rel="noopener">Escribe a Yupasoft</a> y las activamos.</div>`;
   const cont = `<div class="pagina">
     <div class="saludo"><div class="rot">${org ? esc(org) : 'Portal Yupasoft'}</div>
       <h2>${nombre ? 'Hola, ' + esc(nombre) : 'Bienvenido'}</h2>
       <p>${esAdmin ? 'Estas son todas tus herramientas. Ábrelas con tu propia cuenta para probarlas antes de lanzarlas.' : 'Elige la herramienta con la que quieres trabajar.'}</p></div>
-    <div class="herr">${tarjetas}</div>
+    <div class="herr ${hs.length === 1 ? 'uno' : ''}">${tarjetas}</div>
     ${esAdmin ? '' : `<p class="ayuda" style="margin-top:30px">¿Necesitas ayuda? <a href="${WHATSAPP}" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></p>`}
   </div>`;
   return cont;
@@ -770,12 +821,10 @@ function vUsuarios(){
 /* --- Herramientas --- */
 function vHerramientas(){
   return `<div class="titulo-vista"><div><h2>Herramientas</h2><p>Las aplicaciones que ofreces. En <b>pruebas</b> solo tú las ves; al <b>publicarlas</b> las ven los clientes que tengan licencia.</p></div></div>
-    <div class="herr">${A.herramientas.map(h => {
+    <div class="herr">${A.herramientas.map((h, i) => {
       const n = A.organizaciones.filter(o => o.licencias.some(l => l.herramienta_id === h.id)).length;
-      return `<div class="h-card" style="--c:${esc(h.color)};cursor:default"><div class="ico">${icono(h.icono)}</div><h3>${esc(h.nombre)}</h3><p>${esc(h.descripcion || '')}</p>
-        <div class="herram-chips"><span class="chip ${h.estado === 'publicada' ? 'ok' : 'aviso'}">${h.estado === 'publicada' ? 'Publicada' : 'En pruebas'}</span><span class="chip">${n} cliente${n === 1 ? '' : 's'}</span></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn mini" data-a="abrir" data-id="${h.id}">Abrir como yo</button>
-        <button class="btn mini ${h.estado === 'publicada' ? '' : 'pri'}" data-a="estadoHerr" data-id="${h.id}" data-e="${h.estado === 'publicada' ? 'pruebas' : 'publicada'}">${h.estado === 'publicada' ? 'Volver a pruebas' : 'Publicar'}</button></div></div>`;
+      const chips = `<span class="chip ${h.estado === 'publicada' ? 'ok' : 'aviso'}">${h.estado === 'publicada' ? 'Publicada' : 'En pruebas'}</span><span class="chip">${n} cliente${n === 1 ? '' : 's'}</span>`;
+      return tarjetaHerramienta(h, i, {activa: true, chips, cursor: true}).replace('<div class="pie">', `<div class="pie" style="flex-direction:column;align-items:flex-start"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn mini" data-a="abrir" data-id="${h.id}">Abrir como yo</button><button class="btn mini ${h.estado === 'publicada' ? '' : 'pri'}" data-a="estadoHerr" data-id="${h.id}" data-e="${h.estado === 'publicada' ? 'pruebas' : 'publicada'}">${h.estado === 'publicada' ? 'Volver a pruebas' : 'Publicar'}</button></div>`);
     }).join('')}</div>`;
 }
 
