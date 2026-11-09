@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portal Yupasoft</title>
+<meta name="description" content="Portal de clientes de Yupasoft: entra a tus herramientas.">
+<meta name="theme-color" content="#0C1A2E">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --tinta:#0C1A2E; --tinta-2:#0A1526; --panel:#142540; --panel-2:#1A2F4E; --borde:#243B58;
+  --turq:#2ED3B7; --turq-soft:#5CE0C4; --turq-osc:#159C86; --ambar:#F2A93B; --rojo:#EF5350;
+  --gris:#9BB0C9; --gris-osc:#6B8099; --claro:#F4F7FA; --texto:#E8EEF6;
+  --display:'Sora',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --radio:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--display);background:var(--tinta);color:var(--texto);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100dvh}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--turq);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--turq);outline-offset:2px;border-radius:8px}
+[hidden]{display:none!important}
+.mono{font-family:var(--mono)}
+
+/* ---------- fondo: la yupana que se enciende ---------- */
+.fondo{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  background:radial-gradient(1100px 600px at 80% -10%,rgba(46,211,183,.16),transparent 60%),
+             radial-gradient(900px 600px at -10% 110%,rgba(242,169,59,.10),transparent 60%),var(--tinta)}
+.fondo .rej{position:absolute;right:-60px;bottom:-60px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px;width:min(560px,80vw);opacity:.55;transform:rotate(-8deg)}
+.fondo .rej i{aspect-ratio:1;border-radius:22%;border:2px solid rgba(255,255,255,.08)}
+.fondo .rej i.on{background:rgba(46,211,183,.16);border-color:rgba(46,211,183,.35);animation:enciende 5.6s ease-in-out infinite both}
+.fondo .rej i.top{background:rgba(242,169,59,.22);border-color:rgba(242,169,59,.5)}
+@keyframes enciende{0%,100%{opacity:.35}12%,70%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.fondo .rej i.on{animation:none}}
+
+/* ---------- ingreso ---------- */
+#vLogin{position:relative;z-index:1;min-height:100dvh;display:grid;place-items:center;padding:24px 16px}
+.login{width:min(440px,100%);display:flex;flex-direction:column;align-items:center;gap:26px}
+.login .marca svg{width:min(300px,72vw);height:auto;display:block}
+.tarjeta-login{width:100%;background:rgba(20,37,64,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:28px 26px 24px;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.tarjeta-login h1{font-size:22px;font-weight:800;letter-spacing:-.01em}
+.tarjeta-login .sub{color:var(--gris);font-size:14px;margin:6px 0 20px}
+label.campo{display:block;font-size:12px;font-family:var(--mono);letter-spacing:.08em;color:var(--gris);margin-bottom:14px;text-transform:uppercase}
+label.campo input,label.campo select,label.campo textarea{display:block;width:100%;margin-top:7px;padding:13px 14px;border-radius:12px;
+  background:var(--tinta-2);border:1px solid var(--borde);font-size:16px;color:#fff;font-family:var(--display);text-transform:none;letter-spacing:0}
+label.campo input:focus,label.campo select:focus,label.campo textarea:focus{border-color:var(--turq);outline:none;box-shadow:0 0 0 3px rgba(46,211,183,.2)}
+.clave{position:relative}
+.clave .ojo{position:absolute;right:6px;bottom:6px;background:none;border:0;cursor:pointer;padding:7px 9px;border-radius:8px;opacity:.7}
+.clave .ojo:hover{opacity:1;background:rgba(255,255,255,.06)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:14.5px;cursor:pointer;
+  background:var(--panel-2);color:#fff;border:1px solid var(--borde);transition:transform .15s,box-shadow .15s,background .15s;white-space:nowrap}
+.btn:hover{background:#21395c}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.pri{background:linear-gradient(90deg,var(--turq),var(--turq-soft));color:var(--tinta);border:0;box-shadow:0 8px 26px rgba(46,211,183,.28)}
+.btn.pri:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(46,211,183,.4)}
+.btn.peligro{background:rgba(239,83,80,.14);border-color:rgba(239,83,80,.5);color:#FFB4A9}
+.btn.mini{padding:7px 11px;font-size:12.5px;border-radius:9px}
+.btn.ancho{width:100%;padding:14px;font-size:15.5px}
+.error{color:#FFB4A9;font-size:13.5px;min-height:20px;margin-top:10px}
+.aviso{color:var(--ambar);font-size:13.5px}
+.ayuda{text-align:center;color:var(--gris);font-size:13px;line-height:1.6}
+.ayuda a{font-weight:600}
+.pie-login{color:var(--gris-osc);font-size:12px;font-family:var(--mono);text-align:center}
+
+/* ---------- barra superior ---------- */
+header.barra{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:12px 20px;
+  background:rgba(12,26,46,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07)}
+header.barra .logo svg{height:30px;width:auto;display:block}
+header.barra .esp{flex:1}
+.quien{font-size:13px;color:var(--gris);text-align:right;line-height:1.3}
+.quien b{color:#fff;font-weight:600}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:11.5px;font-family:var(--mono);font-weight:600;
+  border:1px solid var(--borde);color:var(--gris);background:rgba(255,255,255,.03);white-space:nowrap}
+.chip.ok{color:var(--turq);border-color:rgba(46,211,183,.45);background:rgba(46,211,183,.08)}
+.chip.mal{color:#FFB4A9;border-color:rgba(239,83,80,.5);background:rgba(239,83,80,.1)}
+.chip.aviso{color:var(--ambar);border-color:rgba(242,169,59,.5);background:rgba(242,169,59,.09)}
+.chip.sup{color:var(--tinta);background:var(--ambar);border-color:var(--ambar)}
+
+/* ---------- lanzador de herramientas ---------- */
+#vApp{position:relative;z-index:1;min-height:100dvh}
+.pagina{max-width:1040px;margin:0 auto;padding:34px 20px 60px}
+.saludo{margin-bottom:28px}
+.saludo .rot{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--turq);text-transform:uppercase}
+.saludo h2{font-size:clamp(26px,4.4vw,38px);font-weight:800;letter-spacing:-.02em;margin:8px 0 10px}
+.saludo p{color:var(--gris);font-size:15px;max-width:42em}
+.herr{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.h-card{position:relative;overflow:hidden;text-align:left;border-radius:20px;padding:24px;cursor:pointer;
+  background:linear-gradient(160deg,var(--panel-2),var(--panel));border:1px solid var(--borde);color:inherit;display:flex;flex-direction:column;gap:12px;min-height:200px;
+  transition:transform .2s,box-shadow .2s,border-color .2s}
+.h-card::before{content:"";position:absolute;inset:-40% -30% auto auto;width:260px;height:260px;border-radius:50%;background:var(--c);opacity:.16;filter:blur(40px);transition:opacity .2s}
+.h-card:hover{transform:translateY(-4px);border-color:var(--c);box-shadow:0 18px 44px rgba(0,0,0,.4)}
+.h-card:hover::before{opacity:.3}
+.h-card .ico{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,transparent);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);color:var(--c)}
+.h-card .ico svg{width:28px;height:28px}
+.h-card h3{font-size:20px;font-weight:700}
+.h-card p{color:var(--gris);font-size:14px;line-height:1.5;flex:1}
+.h-card .pie{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.h-card .ir{font-weight:700;color:var(--c);font-size:14px}
+.h-card.off{cursor:default;opacity:.62}
+.h-card.off:hover{transform:none;border-color:var(--borde);box-shadow:none}
+.h-card.off::before{opacity:.05}
+.vacio{border:1px dashed var(--borde);border-radius:18px;padding:34px;text-align:center;color:var(--gris);line-height:1.7}
+.banda-como{position:sticky;top:0;z-index:30;background:var(--ambar);color:var(--tinta);font-weight:700;font-size:14px;padding:9px 16px;text-align:center}
+
+/* ---------- administración ---------- */
+.shell{display:grid;grid-template-columns:230px 1fr;min-height:calc(100dvh - 55px)}
+nav.lateral{border-right:1px solid rgba(255,255,255,.07);padding:18px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:55px;height:calc(100dvh - 55px);overflow:auto}
+nav.lateral .sec{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--gris-osc);padding:14px 12px 6px;text-transform:uppercase}
+nav.lateral button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;padding:11px 12px;border-radius:11px;color:var(--gris);font-weight:600;font-size:14.5px;cursor:pointer}
+nav.lateral button svg{width:20px;height:20px;flex:none}
+nav.lateral button:hover{background:rgba(255,255,255,.05);color:#fff}
+nav.lateral button.activo{background:rgba(46,211,183,.12);color:var(--turq)}
+nav.lateral .num{margin-left:auto;background:var(--ambar);color:var(--tinta);border-radius:999px;font-size:11px;font-weight:800;padding:1px 8px;font-family:var(--mono)}
+main.contenido{padding:28px 28px 70px;min-width:0}
+.titulo-vista{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.titulo-vista h2{font-size:26px;font-weight:800;letter-spacing:-.015em}
+.titulo-vista p{color:var(--gris);font-size:14px;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+.kpi{background:linear-gradient(160deg,var(--panel-2),var(--panel));border:1px solid var(--borde);border-radius:16px;padding:18px}
+.kpi .n{font-family:var(--mono);font-size:34px;font-weight:600;color:var(--turq);line-height:1}
+.kpi.aviso .n{color:var(--ambar)} .kpi.mal .n{color:#FF8A80}
+.kpi .t{color:var(--gris);font-size:13px;margin-top:8px}
+.cuadros{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+.caja{background:var(--panel);border:1px solid var(--borde);border-radius:16px;padding:18px;min-width:0}
+.caja h3{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fila{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--borde);font-size:14px}
+.fila:last-child{border-bottom:0}
+.fila .sub{color:var(--gris);font-size:12.5px}
+.vacio-mini{color:var(--gris-osc);font-size:13.5px;padding:8px 0}
+.tabla-wrap{overflow:auto;border:1px solid var(--borde);border-radius:16px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:640px}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris);text-align:left;padding:12px 14px;border-bottom:1px solid var(--borde);background:rgba(0,0,0,.14);white-space:nowrap}
+td{padding:12px 14px;border-bottom:1px solid rgba(36,59,88,.6);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tr.clic{cursor:pointer} tr.clic:hover td{background:rgba(255,255,255,.035)}
+.herram-chips{display:flex;gap:6px;flex-wrap:wrap}
+.barra-filtros{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.barra-filtros input{flex:1;min-width:200px;padding:11px 14px;border-radius:12px;background:var(--panel);border:1px solid var(--borde);color:#fff}
+.grafico{display:flex;align-items:flex-end;gap:3px;height:120px;padding-top:6px}
+.grafico .b{flex:1;background:linear-gradient(180deg,var(--turq),var(--turq-osc));border-radius:4px 4px 0 0;min-height:2px;position:relative}
+.grafico .b.cero{background:var(--borde);min-height:2px;opacity:.6}
+.eje{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--gris-osc);margin-top:6px}
+
+/* ---------- panel lateral (organización) y ventanas ---------- */
+.cortina{position:fixed;inset:0;background:rgba(5,10,20,.62);z-index:60;backdrop-filter:blur(3px)}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100%);background:var(--tinta-2);border-left:1px solid var(--borde);z-index:61;overflow:auto;padding:0 0 40px;animation:entra .22s ease-out}
+@keyframes entra{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.drawer .cab{position:sticky;top:0;z-index:2;background:var(--tinta-2);padding:18px 22px;border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.drawer .cab h3{font-size:19px;font-weight:800}
+.drawer .cuerpo{padding:20px 22px;display:flex;flex-direction:column;gap:18px}
+.bloque{background:var(--panel);border:1px solid var(--borde);border-radius:14px;padding:16px}
+.bloque>h4{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lic{border:1px solid var(--borde);border-radius:12px;padding:14px;margin-bottom:12px;background:rgba(0,0,0,.14)}
+.lic.on{border-color:rgba(46,211,183,.4)}
+.lic .cabl{display:flex;align-items:center;gap:10px;font-weight:700;margin-bottom:10px}
+.lic .opc{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.lic .acc{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.marca-chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer}
+.marca-chk input{width:18px;height:18px;accent-color:var(--turq)}
+.usr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 0;border-bottom:1px dashed var(--borde)}
+.usr:last-child{border-bottom:0}
+.usr .dat{flex:1;min-width:150px}
+.usr .dat b{font-size:14.5px}
+.usr .dat .sub{color:var(--gris);font-size:12.5px}
+.logos-g{display:flex;gap:12px;flex-wrap:wrap}
+.logo-it{position:relative;width:104px;height:84px;border-radius:12px;background:repeating-conic-gradient(#1b2e49 0% 25%,#142540 0% 50%) 50%/16px 16px;border:1px solid var(--borde);display:grid;place-items:center}
+.logo-it img{max-width:90%;max-height:90%;object-fit:contain}
+.logo-it button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;border:0;background:#000b;color:#fff;cursor:pointer;font-size:11px}
+.modal{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:16px}
+.modal .caja-m{position:relative;z-index:71;width:min(470px,100%);max-height:92dvh;overflow:auto;background:var(--panel);border:1px solid var(--borde);border-radius:18px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.modal h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.modal .txt{color:var(--gris);font-size:14px;margin-bottom:16px;line-height:1.55}
+.modal .botones{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.datos-envio{background:var(--tinta-2);border:1px dashed var(--turq-osc);border-radius:12px;padding:14px;font-family:var(--mono);font-size:13.5px;line-height:1.8;white-space:pre-wrap;word-break:break-all;color:#fff}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:90;background:var(--turq);color:var(--tinta);font-weight:700;padding:11px 20px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:all .25s;max-width:92vw;text-align:center}
+#toast.ver{opacity:1;transform:translateX(-50%)}
+#toast.mal{background:var(--rojo);color:#fff}
+.cargando{display:grid;place-items:center;min-height:60dvh;color:var(--gris);gap:14px;text-align:center}
+.giro{width:34px;height:34px;border-radius:50%;border:3px solid var(--borde);border-top-color:var(--turq);animation:gira .8s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+.solic{border:1px solid var(--borde);border-radius:14px;padding:16px;background:var(--panel);margin-bottom:12px}
+.solic .cab-s{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.solic dl{display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:13.5px}
+.solic dt{color:var(--gris)} .solic dd{word-break:break-word}
+
+/* ---------- celular ---------- */
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  nav.lateral{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;z-index:25;flex-direction:row;padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+    background:rgba(10,21,38,.95);backdrop-filter:blur(14px);border-right:0;border-top:1px solid var(--borde);overflow-x:auto;gap:2px;justify-content:flex-start}
+  nav.lateral .sec{display:none}
+  nav.lateral button{flex-direction:column;gap:3px;font-size:10.5px;padding:7px 10px;min-width:64px;text-align:center;justify-content:center;position:relative}
+  nav.lateral .num{position:absolute;top:2px;right:8px;margin:0}
+  main.contenido{padding:20px 16px 110px}
+  header.barra{padding:10px 14px}
+  .dos,.lic .opc{grid-template-columns:1fr}
+  .quien .org{display:none}
+}
+</style>
+</head>
+<body>
+<div class="fondo" aria-hidden="true"><div class="rej" id="rej"></div></div>
+
+<!-- ============ INGRESO ============ -->
+<section id="vLogin" hidden>
+  <div class="login">
+    <div class="marca"><svg viewBox="0 0 718 101" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yupasoft"><style>
+.ycnv{transform-box:fill-box;transform-origin:center}
+.yvnv{opacity:.3}
+.yfnv{animation:ycnva 5.6s cubic-bezier(.3,1.4,.5,1) infinite both}
+.ywnv{animation:ywnva .7s cubic-bezier(.22,1,.36,1) .55s backwards}
+@keyframes ycnva{
+  0%  {opacity:.3;transform:scale(.78)}
+  7%  {opacity:1; transform:scale(1.1)}
+  12% {opacity:1; transform:scale(1)}
+  76% {opacity:1; transform:scale(1)}
+  88%,100% {opacity:.3;transform:scale(.78)}
+}
+@keyframes ywnva{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .yfnv,.ywnv{animation:none}
+}
+</style><rect class="ycnv yvnv" x="1.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="1.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="1.6" y="55.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="0" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.000s"/><rect class="ycnv yvnv" x="28.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="28.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="27" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.120s"/><rect class="ycnv yfnv" x="27" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.060s"/><rect class="ycnv yvnv" x="55.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="54" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.300s"/><rect class="ycnv yfnv" x="54" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.240s"/><rect class="ycnv yfnv" x="54" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.180s"/><rect class="ycnv yfnv" x="81" y="0" width="20" height="20" rx="5.5" fill="#F2A93B" style="animation-delay:0.540s"/><rect class="ycnv yfnv" x="81" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.480s"/><rect class="ycnv yfnv" x="81" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.420s"/><rect class="ycnv yfnv" x="81" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.360s"/><g class="ywnv"><defs><clipPath id="capnv"><rect x="-14" y="0" width="82" height="96"/></clipPath></defs>
+<g transform="translate(143,3)" clip-path="url(#capnv)"><path d="M0,0 L26,44 L52,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M26,44 L26,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(221,3)" clip-path="url(#capnv)"><path d="M0,0 L0,57 A26,30 0 0 0 52,57 L52,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(304,3)" clip-path="url(#capnv)"><path d="M0,96 L0,0 L20,0 A26,26 0 0 1 20,52 L0,52" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(374,3)" clip-path="url(#capnv)"><path d="M0,96 L26,0 L52,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M9,72 L43,72" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(445,3)" clip-path="url(#capnv)"><path d="M47,28.5 A21,19.5 0 1 0 26,48 A21,19.5 0 1 1 5,67.5" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(518,3)" clip-path="url(#capnv)"><path d="M2,48 A24,39 0 0 1 50,48 A24,39 0 0 1 2,48 Z" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(597,3)" clip-path="url(#capnv)"><path d="M0,96 L0,0 L46,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M0,48 L36,48" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(654,3)" clip-path="url(#capnv)"><path d="M0,9 L52,9" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M26,9 L26,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g></g></svg></div>
+    <form class="tarjeta-login" id="formLogin" autocomplete="on">
+      <h1>Entra a tu portal</h1>
+      <p class="sub">Tus herramientas de Yupasoft, en un solo lugar.</p>
+      <label class="campo">Usuario
+        <input id="logUsuario" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="tu.usuario">
+      </label>
+      <label class="campo">Contraseña
+        <div class="clave">
+          <input id="logPass" type="password" autocomplete="current-password">
+          <button type="button" class="ojo" id="bOjo" aria-label="Mostrar u ocultar contraseña">👁</button>
+        </div>
+      </label>
+      <button class="btn pri ancho" id="bEntrar" type="submit">Ingresar →</button>
+      <div class="error" id="logError" role="alert"></div>
+    </form>
+    <p class="ayuda">¿No tienes usuario o no puedes entrar?<br><a href="https://wa.me/51967292374?text=Hola%2C%20necesito%20ayuda%20con%20mi%20acceso%20al%20portal%20de%20Yupasoft" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></p>
+    <button class="btn" id="bInstalarLogin" hidden>⬇ Instalar la app en este equipo</button>
+    <p class="pie-login"><a href="https://yupasoft.github.io">yupasoft.github.io</a> · software a medida</p>
+  </div>
+</section>
+
+<!-- ============ APLICACIÓN ============ -->
+<div id="vApp" hidden>
+  <div class="banda-como" id="bandaComo" hidden></div>
+  <header class="barra">
+    <a class="logo" href="./?menu=1" aria-label="Inicio del portal"><svg viewBox="0 0 718 101" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yupasoft"><style>
+.ycnv{transform-box:fill-box;transform-origin:center}
+.yvnv{opacity:.3}
+.yfnv{animation:ycnva 5.6s cubic-bezier(.3,1.4,.5,1) infinite both}
+.ywnv{animation:ywnva .7s cubic-bezier(.22,1,.36,1) .55s backwards}
+@keyframes ycnva{
+  0%  {opacity:.3;transform:scale(.78)}
+  7%  {opacity:1; transform:scale(1.1)}
+  12% {opacity:1; transform:scale(1)}
+  76% {opacity:1; transform:scale(1)}
+  88%,100% {opacity:.3;transform:scale(.78)}
+}
+@keyframes ywnva{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+  .yfnv,.ywnv{animation:none}
+}
+</style><rect class="ycnv yvnv" x="1.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="1.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="1.6" y="55.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="0" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.000s"/><rect class="ycnv yvnv" x="28.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yvnv" x="28.6" y="28.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="27" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.120s"/><rect class="ycnv yfnv" x="27" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.060s"/><rect class="ycnv yvnv" x="55.6" y="1.6" width="16.8" height="16.8" rx="4.5" fill="none" stroke="#FFFFFF" stroke-width="3.2"/><rect class="ycnv yfnv" x="54" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.300s"/><rect class="ycnv yfnv" x="54" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.240s"/><rect class="ycnv yfnv" x="54" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.180s"/><rect class="ycnv yfnv" x="81" y="0" width="20" height="20" rx="5.5" fill="#F2A93B" style="animation-delay:0.540s"/><rect class="ycnv yfnv" x="81" y="27" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.480s"/><rect class="ycnv yfnv" x="81" y="54" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.420s"/><rect class="ycnv yfnv" x="81" y="81" width="20" height="20" rx="5.5" fill="#2ED3B7" style="animation-delay:0.360s"/><g class="ywnv"><defs><clipPath id="capnv2"><rect x="-14" y="0" width="82" height="96"/></clipPath></defs>
+<g transform="translate(143,3)" clip-path="url(#capnv2)"><path d="M0,0 L26,44 L52,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M26,44 L26,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(221,3)" clip-path="url(#capnv2)"><path d="M0,0 L0,57 A26,30 0 0 0 52,57 L52,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(304,3)" clip-path="url(#capnv2)"><path d="M0,96 L0,0 L20,0 A26,26 0 0 1 20,52 L0,52" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(374,3)" clip-path="url(#capnv2)"><path d="M0,96 L26,0 L52,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M9,72 L43,72" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(445,3)" clip-path="url(#capnv2)"><path d="M47,28.5 A21,19.5 0 1 0 26,48 A21,19.5 0 1 1 5,67.5" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(518,3)" clip-path="url(#capnv2)"><path d="M2,48 A24,39 0 0 1 50,48 A24,39 0 0 1 2,48 Z" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(597,3)" clip-path="url(#capnv2)"><path d="M0,96 L0,0 L46,0" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M0,48 L36,48" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g>
+<g transform="translate(654,3)" clip-path="url(#capnv2)"><path d="M0,9 L52,9" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/><path d="M26,9 L26,96" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8"/></g></g></svg></a>
+    <div class="esp"></div>
+    <button class="btn mini" id="bInstalar" hidden>⬇ Instalar</button>
+    <div class="quien" id="quien"></div>
+    <button class="btn mini" id="bSalir">Salir</button>
+  </header>
+  <div id="cuerpoApp"></div>
+</div>
+
+<div id="toast" role="status"></div>
+<div id="capas"></div>
+
+<script>
+/* =====================================================================
+   PORTAL YUPASOFT
+   - Una sola sesión (clave "yv_sesion") compartida con Yupavideo: mismo dominio.
+   - Entran con USUARIO; por dentro es usuario@yupasoft.invalid (no es un correo real).
+   - Toda la seguridad real está en la base (RLS / funciones); aquí solo se muestra.
+   ===================================================================== */
+const SB_URL = 'https://ylwqztypjilecjwywawd.supabase.co';
+const SB_KEY = 'sb_publishable_oHr1AqDbKi_lileKrmkhMg_4T6zYJ7E';
+const DOMINIO = '@yupasoft.invalid';
+const WHATSAPP = 'https://wa.me/51967292374';
+const PORTAL_URL = 'https://yupasoft.github.io/portal/';
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function leerLS(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function grabarLS(k, v){ try{ if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); }catch(e){} }
+const esperar = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- sesión y conexión ---------- */
+let ses = null;
+try{ ses = JSON.parse(leerLS('yv_sesion') || 'null'); }catch(e){ ses = null; }
+function guardarSesion(s){ ses = s; grabarLS('yv_sesion', s ? JSON.stringify(s) : null); }
+async function sb(path, opts = {}, conSesion = true){
+  const h = Object.assign({'apikey': SB_KEY, 'Content-Type': 'application/json'}, opts.headers || {});
+  if (conSesion && ses){ await asegurarToken(); if (ses) h['Authorization'] = 'Bearer ' + ses.access_token; }
+  const r = await fetch(SB_URL + path, Object.assign({}, opts, {headers: h}));
+  const txt = await r.text();
+  let data = null; try{ data = txt ? JSON.parse(txt) : null; }catch(e){ data = txt; }
+  if (!r.ok){
+    const msg = (data && (data.message || data.msg || data.error_description || data.error)) || ('Error ' + r.status);
+    const err = new Error(msg); err.status = r.status; throw err;
+  }
+  return data;
+}
+const rpc = (fn, args, conSesion = true) => sb('/rest/v1/rpc/' + fn, {method:'POST', body: JSON.stringify(args || {})}, conSesion);
+let refrescando = null;
+async function asegurarToken(){
+  if (!ses || ses.expires_at - Date.now()/1000 > 90) return;
+  if (!refrescando) refrescando = (async () => {
+    try{
+      const d = await sb('/auth/v1/token?grant_type=refresh_token', {method:'POST', body: JSON.stringify({refresh_token: ses.refresh_token})}, false);
+      guardarSesion({access_token: d.access_token, refresh_token: d.refresh_token, expires_at: Date.now()/1000 + d.expires_in});
+    }catch(e){ if (e.status && e.status >= 400 && e.status < 500) guardarSesion(null); }
+    finally{ refrescando = null; }
+  })();
+  await refrescando;
+}
+async function llamarFuncion(cuerpo){
+  await asegurarToken();
+  if (!ses) throw new Error('Tu sesión venció. Vuelve a ingresar.');
+  const r = await fetch(SB_URL + '/functions/v1/yv-usuarios', {
+    method: 'POST', headers: {'apikey': SB_KEY, 'Authorization': 'Bearer ' + ses.access_token, 'Content-Type': 'application/json'},
+    body: JSON.stringify(cuerpo)
+  });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok || d.error) throw new Error(d.error || ('Error ' + r.status));
+  return d;
+}
+
+/* ---------- utilidades ---------- */
+function toast(msg, mal){ const t = $('#toast'); t.textContent = msg; t.className = 'ver' + (mal ? ' mal' : ''); clearTimeout(toast.t); toast.t = setTimeout(() => t.className = '', mal ? 4800 : 2600); }
+function fechaBonita(iso){ if (!iso) return ''; const [y, m, d] = String(iso).slice(0, 10).split('-'); return `${d}/${m}/${y}`; }
+function sumarDias(iso, n){ const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
+function dispositivoActual(){
+  const ua = navigator.userAgent || '';
+  const movil = /Android|iPhone|iPad|iPod|Mobile/i.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua));
+  return movil ? 'celular' : 'computadora';
+}
+const NOMBRE_DISP = {todos: 'Computadora y celular', computadora: 'Solo computadora', celular: 'Solo celular'};
+function urlAbs(rel){ return new URL(rel, location.href).href; }
+function generarClave(){
+  const abc = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const b = new Uint32Array(10); crypto.getRandomValues(b);
+  return Array.from(b, n => abc[n % abc.length]).join('');
+}
+function slug(t){ return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '').slice(0, 24); }
+async function copiar(texto){
+  try{ await navigator.clipboard.writeText(texto); toast('Copiado'); }
+  catch(e){ const a = document.createElement('textarea'); a.value = texto; document.body.appendChild(a); a.select(); try{ document.execCommand('copy'); toast('Copiado'); }catch(_){ toast('No se pudo copiar', true); } a.remove(); }
+}
+
+const ICONOS = {
+  video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/></svg>',
+  caja: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+  panel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="9" rx="2"/><rect x="13.5" y="3" width="7.5" height="5" rx="2"/><rect x="13.5" y="11" width="7.5" height="10" rx="2"/><rect x="3" y="15" width="7.5" height="6" rx="2"/></svg>',
+  org: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5a2 2 0 012-2h7a2 2 0 012 2v16M15 9h3a2 2 0 012 2v10M3 21h18M8 7h3M8 11h3M8 15h3"/></svg>',
+  users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.8a3.5 3.5 0 010 6.4M18.5 14.8c1.7.7 2.8 2.3 3 4.7"/></svg>',
+  inbox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l3-8h12l3 8v6a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M3 13h5l1.5 2.5h5L16 13h5"/></svg>',
+  act: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>',
+  apps: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>',
+  tool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 005 5L21 12.6 12.6 21a2.1 2.1 0 01-3-3L18 9.6"/><path d="M12 8l-1-1"/></svg>'
+};
+const icono = k => ICONOS[k] || ICONOS.caja;
+
+/* ---------- fondo animado ---------- */
+(function(){
+  const g = $('#rej'); const on = [[3,0],[2,1],[3,1],[1,2],[2,2],[3,2],[0,3],[1,3],[2,3],[3,3]];
+  let h = '';
+  for (let f = 0; f < 4; f++) for (let c = 0; c < 4; c++){
+    const i = on.findIndex(p => p[0] === c && p[1] === f);
+    const top = (c === 3 && f === 0);
+    h += `<i class="${i >= 0 ? 'on' : ''}${top ? ' top' : ''}" style="animation-delay:${(i >= 0 ? i : 0) * .18}s"></i>`;
+  }
+  g.innerHTML = h;
+})();
+
+/* ---------- instalar como app ---------- */
+let eventoInstalar = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); eventoInstalar = e; mostrarInstalar(); });
+window.addEventListener('appinstalled', () => { eventoInstalar = null; mostrarInstalar(); toast('Portal instalado'); });
+const yaInstalada = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+function mostrarInstalar(){
+  const ios = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+  const puede = !yaInstalada() && (!!eventoInstalar || ios);
+  $('#bInstalar').hidden = !puede; $('#bInstalarLogin').hidden = !puede;
+}
+async function instalar(){
+  if (eventoInstalar){ eventoInstalar.prompt(); try{ await eventoInstalar.userChoice; }catch(e){} eventoInstalar = null; mostrarInstalar(); return; }
+  modal({titulo: 'Instalar en iPhone o iPad', html: '<p class="txt">Toca el botón <b>Compartir</b> (el cuadrado con la flecha) y elige <b>"Agregar a pantalla de inicio"</b>.</p>', botones: [{txt: 'Entendido', cls: 'pri'}]});
+}
+$('#bInstalar').onclick = instalar; $('#bInstalarLogin').onclick = instalar;
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+mostrarInstalar();
+
+/* ---------- ventanas ---------- */
+function modal({titulo, html, botones, onAbrir}){
+  const m = document.createElement('div'); m.className = 'modal';
+  m.innerHTML = `<div class="cortina"></div><div class="caja-m" role="dialog" aria-modal="true"><h3>${esc(titulo)}</h3>${html || ''}<div class="botones"></div></div>`;
+  const cont = m.querySelector('.botones');
+  const cerrar = () => m.remove();
+  (botones || [{txt: 'Cerrar'}]).forEach(b => {
+    const x = document.createElement('button'); x.className = 'btn ' + (b.cls || ''); x.textContent = b.txt;
+    x.onclick = async () => {
+      if (!b.fn){ cerrar(); return; }
+      x.disabled = true;
+      try{ const r = await b.fn(m); if (r !== false) cerrar(); }
+      catch(e){ toast(e.message || 'Error', true); }
+      finally{ x.disabled = false; }
+    };
+    cont.appendChild(x);
+  });
+  m.querySelector('.cortina').onclick = cerrar;
+  $('#capas').appendChild(m);
+  if (onAbrir) onAbrir(m);
+  const p = m.querySelector('input,select,textarea'); if (p) p.focus();
+  return m;
+}
+function confirmar(titulo, texto, txtBoton, fn, peligro = true){
+  modal({titulo, html: `<p class="txt">${texto}</p>`, botones: [{txt: 'Cancelar'}, {txt: txtBoton, cls: peligro ? 'peligro' : 'pri', fn}]});
+}
+
+/* ---------- ingreso ---------- */
+$('#bOjo').onclick = () => { const i = $('#logPass'); i.type = i.type === 'password' ? 'text' : 'password'; };
+$('#formLogin').addEventListener('submit', async e => {
+  e.preventDefault();
+  const u = $('#logUsuario').value.trim(), pass = $('#logPass').value;
+  $('#logError').textContent = '';
+  if (!u || !pass){ $('#logError').textContent = 'Escribe tu usuario y contraseña.'; return; }
+  const email = u.includes('@') ? u.toLowerCase() : u.toLowerCase() + DOMINIO;
+  $('#bEntrar').disabled = true; $('#bEntrar').textContent = 'Ingresando…';
+  try{
+    const d = await sb('/auth/v1/token?grant_type=password', {method:'POST', body: JSON.stringify({email, password: pass})}, false);
+    guardarSesion({access_token: d.access_token, refresh_token: d.refresh_token, expires_at: Date.now()/1000 + d.expires_in});
+    $('#logPass').value = '';
+    await iniciar();
+  }catch(err){
+    const m = err.message || '';
+    $('#logError').textContent = /banned/i.test(m) ? 'Tu acceso está bloqueado. Escribe a Yupasoft.'
+      : /invalid|credentials/i.test(m) ? 'Usuario o contraseña incorrectos.' : 'No se pudo ingresar: ' + m;
+  }finally{ $('#bEntrar').disabled = false; $('#bEntrar').textContent = 'Ingresar →'; }
+});
+async function salir(){
+  try{ if (ses) await sb('/auth/v1/logout', {method:'POST'}); }catch(e){}
+  guardarSesion(null); P = null; A = null;
+  history.replaceState(null, '', location.pathname);
+  mostrarLogin();
+}
+$('#bSalir').onclick = salir;
+function mostrarLogin(){ $('#vApp').hidden = true; $('#vLogin').hidden = false; $('#bandaComo').hidden = true; document.title = 'Portal Yupasoft'; setTimeout(() => $('#logUsuario').focus(), 50); }
+
+/* ---------- datos del portal ---------- */
+let P = null;      // lo que ve esta persona
+let A = null;      // datos de administración (solo superadmin)
+const params = new URLSearchParams(location.search);
+
+async function iniciar(){
+  if (!ses){ mostrarLogin(); return; }
+  $('#vLogin').hidden = true; $('#vApp').hidden = false;
+  $('#cuerpoApp').innerHTML = '<div class="cargando"><div class="giro"></div><p>Cargando tu portal…</p></div>';
+  try{ P = await rpc('yp_mi_portal'); }
+  catch(e){
+    if (!ses || e.status === 401 || e.status === 403){ guardarSesion(null); mostrarLogin(); return; }
+    $('#cuerpoApp').innerHTML = `<div class="cargando"><p>No hay conexión con el servidor.<br>Revisa tu internet e inténtalo de nuevo.</p><button class="btn pri" onclick="iniciar()">Reintentar</button></div>`;
+    return;
+  }
+  pintarBarra();
+  if (P.es_super){ await entrarAdmin(); return; }
+  entrarCliente();
+}
+function pintarBarra(){
+  const nombre = P.nombre || P.usuario || 'Tu cuenta';
+  $('#quien').innerHTML = `<b>${esc(nombre)}</b>${P.es_super ? ' <span class="chip sup">ADMIN</span>' : ''}<span class="org"><br>${P.empresa ? esc(P.empresa.nombre) : 'Yupasoft'}</span>`;
+  document.title = 'Portal Yupasoft';
+}
+
+/* ---------- vista del cliente ---------- */
+function estadoHerramienta(h, esAdmin){
+  const l = h.licencia;
+  const disp = dispositivoActual();
+  if (!l) return {ok: esAdmin, chip: '<span class="chip">Sin licencia</span>', motivo: ''};
+  if (!l.activa) return {ok: false, chip: '<span class="chip mal">Inactiva</span>', motivo: 'Esta herramienta está inactiva. Escribe a Yupasoft.'};
+  if (!l.vigente) return {ok: false, chip: `<span class="chip mal">Vencida${l.vence_el ? ' el ' + fechaBonita(l.vence_el) : ''}</span>`, motivo: 'Tu licencia venció. Escribe a Yupasoft para renovarla.'};
+  const chip = `<span class="chip ok">${l.vence_el ? 'Vigente · hasta ' + fechaBonita(l.vence_el) : 'Vigente · sin vencimiento'}</span>`;
+  if (l.dispositivos !== 'todos' && l.dispositivos !== disp && !esAdmin)
+    return {ok: false, chip, motivo: l.dispositivos === 'computadora' ? 'Disponible solo en computadora. Ábrela desde tu laptop o PC.' : 'Disponible solo en celular. Ábrela desde tu teléfono.'};
+  return {ok: true, chip, motivo: ''};
+}
+function urlHerramienta(h){
+  const u = new URL(h.url, location.href);
+  if (P && P.como && P.empresa) u.searchParams.set('como', P.empresa.id);
+  return u.href;
+}
+function entrarCliente(){
+  const hs = P.herramientas || [];
+  const volver = params.get('volver');
+  const usables = hs.filter(h => estadoHerramienta(h, false).ok);
+  if (!params.get('menu')){
+    if (volver){ const h = usables.find(x => x.id === volver); if (h){ location.replace(urlHerramienta(h)); return; } }
+    if (hs.length === 1 && usables.length === 1){ location.replace(urlHerramienta(usables[0])); return; }
+  }
+  $('#cuerpoApp').innerHTML = pintarLanzador(hs, false);
+}
+function pintarLanzador(hs, esAdmin){
+  const nombre = P.nombre || P.usuario || '';
+  const org = P.empresa ? P.empresa.nombre : '';
+  let tarjetas = hs.map(h => {
+    const e = estadoHerramienta(h, esAdmin);
+    const prueba = h.estado === 'pruebas' ? ' <span class="chip aviso">En pruebas</span>' : '';
+    const nota = e.motivo ? `<p style="color:var(--ambar);font-size:13px;flex:none">${esc(e.motivo)}</p>` : '';
+    const disp = h.licencia && h.licencia.dispositivos !== 'todos' ? `<span class="chip">${NOMBRE_DISP[h.licencia.dispositivos]}</span>` : '';
+    return `<button class="h-card ${e.ok ? '' : 'off'}" style="--c:${esc(h.color)}" ${e.ok ? `data-a="abrir" data-id="${esc(h.id)}"` : 'disabled'}>
+      <div class="ico">${icono(h.icono)}</div>
+      <h3>${esc(h.nombre)}</h3>
+      <p>${esc(h.descripcion || '')}</p>${nota}
+      <div class="pie"><div class="herram-chips">${e.chip}${prueba}${disp}</div>${e.ok ? '<span class="ir">Abrir →</span>' : ''}</div>
+    </button>`;
+  }).join('');
+  if (!hs.length) tarjetas = `<div class="vacio" style="grid-column:1/-1">Aún no tienes herramientas activas en tu cuenta.<br><a href="${WHATSAPP}" target="_blank" rel="noopener">Escribe a Yupasoft</a> y las activamos.</div>`;
+  const cont = `<div class="pagina">
+    <div class="saludo"><div class="rot">${org ? esc(org) : 'Portal Yupasoft'}</div>
+      <h2>${nombre ? 'Hola, ' + esc(nombre) : 'Bienvenido'}</h2>
+      <p>${esAdmin ? 'Estas son todas tus herramientas. Ábrelas con tu propia cuenta para probarlas antes de lanzarlas.' : 'Elige la herramienta con la que quieres trabajar.'}</p></div>
+    <div class="herr">${tarjetas}</div>
+    ${esAdmin ? '' : `<p class="ayuda" style="margin-top:30px">¿Necesitas ayuda? <a href="${WHATSAPP}" target="_blank" rel="noopener">Escríbenos por WhatsApp</a></p>`}
+  </div>`;
+  return cont;
+}
+
+/* ---------- administración ---------- */
+let vista = 'panel';
+let orgAbierta = null;
+let filtroOrg = '', filtroUsr = '';
+const VISTAS = [
+  ['panel', 'Panel', 'panel'], ['orgs', 'Organizaciones', 'org'], ['usuarios', 'Usuarios', 'users'],
+  ['herramientas', 'Herramientas', 'tool'], ['solicitudes', 'Solicitudes', 'inbox'], ['actividad', 'Actividad', 'act'],
+  ['mis', 'Abrir apps', 'apps']
+];
+async function cargarPanel(){ A = await rpc('yp_admin_panel'); }
+async function entrarAdmin(){
+  try{ await cargarPanel(); }
+  catch(e){ toast('No se pudo cargar el panel: ' + e.message, true); }
+  const h = (location.hash || '').replace('#', '');
+  if (VISTAS.some(v => v[0] === h)) vista = h;
+  if (params.get('menu') === '1' && !h) vista = 'mis';
+  pintarShell();
+}
+function nuevasSolicitudes(){ return A ? (A.solicitudes || []).filter(s => (s.estado || 'Nuevo') === 'Nuevo').length : 0; }
+function pintarShell(){
+  const nav = VISTAS.map(([id, txt, ic]) => {
+    const n = id === 'solicitudes' ? nuevasSolicitudes() : 0;
+    return `${id === 'mis' ? '<div class="sec">Mis herramientas</div>' : (id === 'panel' ? '<div class="sec">Administración</div>' : '')}
+      <button data-a="vista" data-v="${id}" class="${vista === id ? 'activo' : ''}">${icono(ic)}<span>${txt}</span>${n ? `<span class="num">${n}</span>` : ''}</button>`;
+  }).join('');
+  $('#cuerpoApp').innerHTML = `<div class="shell"><nav class="lateral">${nav}</nav><main class="contenido" id="contenido"></main></div>`;
+  pintarVista();
+}
+function pintarVista(){
+  document.querySelectorAll('nav.lateral button').forEach(b => b.classList.toggle('activo', b.dataset.v === vista));
+  history.replaceState(null, '', location.pathname + (vista === 'panel' ? '' : '#' + vista));
+  const c = $('#contenido');
+  const f = {panel: vPanel, orgs: vOrgs, usuarios: vUsuarios, herramientas: vHerramientas, solicitudes: vSolicitudes, actividad: vActividad, mis: vMis}[vista];
+  c.innerHTML = f ? f() : '';
+  window.scrollTo(0, 0);
+  if (orgAbierta) pintarDrawer();
+}
+
+/* --- Panel --- */
+function chipLic(l){
+  const h = (A.herramientas.find(x => x.id === l.herramienta_id) || {nombre: l.herramienta_id}).nombre;
+  if (!l.activa) return `<span class="chip mal">${esc(h)} · inactiva</span>`;
+  if (!l.vigente) return `<span class="chip mal">${esc(h)} · vencida</span>`;
+  const prox = l.vence_el && l.vence_el <= sumarDias(A.hoy, 30);
+  return `<span class="chip ${prox ? 'aviso' : 'ok'}">${esc(h)} · ${l.vence_el ? fechaBonita(l.vence_el) : 'sin venc.'}</span>`;
+}
+function vPanel(){
+  const orgs = A.organizaciones, hoy = A.hoy, lim = sumarDias(hoy, 30);
+  const lics = orgs.flatMap(o => o.licencias.map(l => Object.assign({org: o}, l)));
+  const vigentes = lics.filter(l => l.vigente).length;
+  const porVencer = lics.filter(l => l.vigente && l.vence_el && l.vence_el <= lim).sort((a, b) => a.vence_el.localeCompare(b.vence_el));
+  const vencidas = lics.filter(l => l.activa && !l.vigente && l.vence_el && l.vence_el < hoy);
+  const usuarios = A.usuarios.filter(u => !u.es_super).length;
+  const nuevas = (A.solicitudes || []).filter(s => (s.estado || 'Nuevo') === 'Nuevo');
+  const usos30 = (A.uso_dia || []).reduce((s, x) => s + Number(x.total), 0);
+  // gráfico de los últimos 30 días
+  const porDia = {}; (A.uso_dia || []).forEach(x => { porDia[x.dia] = (porDia[x.dia] || 0) + Number(x.total); });
+  const dias = []; for (let i = 29; i >= 0; i--) dias.push(sumarDias(hoy, -i));
+  const max = Math.max(1, ...dias.map(d => porDia[d] || 0));
+  const barras = dias.map(d => { const v = porDia[d] || 0; return `<div class="b ${v ? '' : 'cero'}" style="height:${v ? Math.max(6, v / max * 100) : 2}%" title="${fechaBonita(d)}: ${v}"></div>`; }).join('');
+  const fila = (l, tipo) => `<div class="fila"><div><b>${esc(l.org.nombre)}</b><div class="sub">${esc((A.herramientas.find(h => h.id === l.herramienta_id) || {}).nombre || l.herramienta_id)} · ${tipo === 'v' ? 'venció el ' : 'vence el '}${fechaBonita(l.vence_el)}</div></div><button class="btn mini" data-a="org" data-id="${l.org.id}">Abrir</button></div>`;
+  return `<div class="titulo-vista"><div><h2>Panel</h2><p>Así está tu negocio hoy, ${fechaBonita(hoy)}.</p></div>
+      <button class="btn pri" data-a="nuevaOrg">+ Nueva organización o persona</button></div>
+    <div class="kpis">
+      <div class="kpi"><div class="n">${orgs.filter(o => o.activa).length}</div><div class="t">Organizaciones y personas activas</div></div>
+      <div class="kpi"><div class="n">${usuarios}</div><div class="t">Usuarios de clientes</div></div>
+      <div class="kpi"><div class="n">${vigentes}</div><div class="t">Licencias vigentes</div></div>
+      <div class="kpi ${porVencer.length ? 'aviso' : ''}"><div class="n">${porVencer.length}</div><div class="t">Vencen en 30 días</div></div>
+      <div class="kpi ${vencidas.length ? 'mal' : ''}"><div class="n">${vencidas.length}</div><div class="t">Vencidas</div></div>
+      <div class="kpi ${nuevas.length ? 'aviso' : ''}"><div class="n">${nuevas.length}</div><div class="t">Solicitudes nuevas</div></div>
+    </div>
+    <div class="cuadros">
+      <div class="caja"><h3>Licencias por vencer o vencidas</h3>
+        ${porVencer.map(l => fila(l, 'p')).join('') + vencidas.map(l => fila(l, 'v')).join('') || '<div class="vacio-mini">Nada por vencer en los próximos 30 días.</div>'}</div>
+      <div class="caja"><h3>Solicitudes nuevas <button class="btn mini" data-a="vista" data-v="solicitudes">Ver todas</button></h3>
+        ${nuevas.slice(0, 5).map(s => `<div class="fila"><div><b>${esc(s.nombre || 'Sin nombre')}</b><div class="sub">${esc(s.solucion || '')} · ${fechaBonita(s.creado_en)}</div></div></div>`).join('') || '<div class="vacio-mini">No hay solicitudes nuevas.</div>'}</div>
+      <div class="caja" style="grid-column:1/-1"><h3>Uso de los últimos 30 días <span class="chip">${usos30} sesiones de trabajo</span></h3>
+        <div class="grafico">${barras}</div><div class="eje"><span>${fechaBonita(dias[0])}</span><span>${fechaBonita(dias[29])}</span></div></div>
+      <div class="caja" style="grid-column:1/-1"><h3>Actividad reciente</h3>
+        ${(A.uso_reciente || []).map(u => `<div class="fila"><div><b>${esc(u.empresa || '—')}</b><div class="sub">${u.evento === 'sala_prueba_admin' ? 'Prueba tuya' : 'Abrió una sala de transmisión'} · ${esc(u.herramienta_id || '')}</div></div><span class="sub mono">${new Date(u.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}</span></div>`).join('') || '<div class="vacio-mini">Todavía no hay uso registrado. Se empieza a registrar desde ahora.</div>'}</div>
+    </div>`;
+}
+
+/* --- Organizaciones --- */
+function nUsuarios(o){ return A.usuarios.filter(u => u.empresa_id === o.id).length; }
+function vOrgs(){
+  const q = filtroOrg.toLowerCase();
+  const lista = A.organizaciones.filter(o => !q || (o.nombre + ' ' + (o.contacto || '')).toLowerCase().includes(q));
+  const filas = lista.map(o => `<tr class="clic" data-a="org" data-id="${o.id}">
+      <td><b>${esc(o.nombre)}</b>${o.activa ? '' : ' <span class="chip mal">Desactivada</span>'}<div class="sub" style="color:var(--gris);font-size:12.5px">${esc(o.contacto || '')}</div></td>
+      <td><span class="chip">${o.tipo === 'individual' ? 'Persona' : 'Organización'}</span></td>
+      <td><div class="herram-chips">${o.licencias.map(chipLic).join('') || '<span class="chip">Sin licencias</span>'}</div></td>
+      <td class="mono">${nUsuarios(o)}</td></tr>`).join('');
+  return `<div class="titulo-vista"><div><h2>Organizaciones y personas</h2><p>Cada cliente, con sus licencias y sus usuarios.</p></div>
+      <button class="btn pri" data-a="nuevaOrg">+ Nueva</button></div>
+    <div class="barra-filtros"><input id="buscaOrg" placeholder="Buscar por nombre o contacto…" value="${esc(filtroOrg)}"></div>
+    <div class="tabla-wrap"><table><thead><tr><th>Nombre</th><th>Tipo</th><th>Licencias</th><th>Usuarios</th></tr></thead>
+      <tbody>${filas || '<tr><td colspan="4" class="vacio-mini">No hay resultados.</td></tr>'}</tbody></table></div>`;
+}
+function modalNuevaOrg(){
+  modal({titulo: 'Nuevo cliente', html: `
+      <label class="campo">Tipo
+        <select id="nTipo"><option value="organizacion">Organización (varios usuarios)</option><option value="individual">Persona (un solo cliente)</option></select></label>
+      <label class="campo">Nombre <input id="nNombre" placeholder="Ej.: Iglesia Central / Juan Pérez"></label>
+      <label class="campo">Contacto (correo o teléfono) <input id="nContacto" placeholder="Opcional"></label>
+      <label class="campo">Notas internas <textarea id="nNotas" rows="2" placeholder="Solo las ves tú"></textarea></label>`,
+    botones: [{txt: 'Cancelar'}, {txt: 'Crear', cls: 'pri', fn: async m => {
+      const nombre = $('#nNombre', m).value.trim(); if (!nombre) throw new Error('Escribe el nombre');
+      const id = await rpc('yp_admin_org', {p_id: null, p_nombre: nombre, p_tipo: $('#nTipo', m).value, p_activa: true, p_contacto: $('#nContacto', m).value, p_notas: $('#nNotas', m).value || null});
+      await cargarPanel(); orgAbierta = id; pintarShell(); toast('Cliente creado');
+    }}]});
+}
+
+/* --- Panel lateral de una organización --- */
+let logosOrg = {};
+async function abrirOrg(id){ orgAbierta = id; pintarDrawer(); await cargarLogosOrg(id); }
+function cerrarDrawer(){ orgAbierta = null; const d = $('#drawerBox'); if (d) d.remove(); }
+async function cargarLogosOrg(id){
+  const o = A.organizaciones.find(x => x.id === id);
+  if (!o || !o.licencias.some(l => l.herramienta_id === 'yupavideo')) return;
+  try{ logosOrg[id] = await sb('/rest/v1/logos?select=id,nombre,imagen&empresa_id=eq.' + encodeURIComponent(id) + '&order=creado_el.asc') || []; }
+  catch(e){ logosOrg[id] = []; }
+  if (orgAbierta === id) pintarDrawer(true);
+}
+function pintarDrawer(conservarScroll){
+  const o = A.organizaciones.find(x => x.id === orgAbierta); if (!o){ cerrarDrawer(); return; }
+  let box = $('#drawerBox'); const scroll = box ? box.querySelector('.drawer').scrollTop : 0;
+  if (!box){ box = document.createElement('div'); box.id = 'drawerBox'; $('#capas').appendChild(box); }
+  const miembros = A.usuarios.filter(u => u.empresa_id === o.id);
+  const lics = A.herramientas.map(h => {
+    const l = o.licencias.find(x => x.herramienta_id === h.id);
+    const sinVence = !l || !l.vence_el;
+    return `<div class="lic ${l ? 'on' : ''}" data-h="${h.id}">
+      <div class="cabl"><label class="marca-chk"><input type="checkbox" class="lContr" ${l ? 'checked' : ''}> <span style="color:${esc(h.color)}">${esc(h.nombre)}</span></label>
+        ${h.estado === 'pruebas' ? '<span class="chip aviso">En pruebas</span>' : ''}${l ? chipLic(l) : ''}</div>
+      <div class="opc" ${l ? '' : 'hidden'}>
+        <label class="marca-chk"><input type="checkbox" class="lActiva" ${!l || l.activa ? 'checked' : ''}> Activa</label>
+        <label class="marca-chk"><input type="checkbox" class="lSin" ${sinVence ? 'checked' : ''}> Sin vencimiento</label>
+        <label class="campo" style="margin:0">Vence el <input type="date" class="lVence" value="${l && l.vence_el ? l.vence_el : ''}" ${sinVence ? 'disabled' : ''}></label>
+        <label class="campo" style="margin:0">Dispositivos <select class="lDisp">${Object.entries(NOMBRE_DISP).map(([k, v]) => `<option value="${k}" ${l && l.dispositivos === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+      </div>
+      <div class="acc">${l ? `<button class="btn mini pri" data-a="guardarLic" data-h="${h.id}">Guardar licencia</button>
+        <button class="btn mini" data-a="verComo" data-h="${h.id}">👁 Ver como esta organización</button>` : `<button class="btn mini pri" data-a="guardarLic" data-h="${h.id}">Activar herramienta</button>`}</div>
+    </div>`;
+  }).join('');
+  const tieneYV = o.licencias.some(l => l.herramienta_id === 'yupavideo');
+  const logos = logosOrg[o.id];
+  box.innerHTML = `<div class="cortina" data-a="cerrarDrawer"></div>
+    <aside class="drawer"><div class="cab"><div><h3>${esc(o.nombre)}</h3><span class="chip">${o.tipo === 'individual' ? 'Persona' : 'Organización'}</span> ${o.activa ? '' : '<span class="chip mal">Desactivada</span>'}</div>
+      <button class="btn mini" data-a="cerrarDrawer">Cerrar ✕</button></div>
+    <div class="cuerpo">
+      <div class="bloque"><h4>Datos</h4>
+        <label class="campo">Nombre <input id="oNombre" value="${esc(o.nombre)}"></label>
+        <div class="dos"><label class="campo">Tipo <select id="oTipo"><option value="organizacion" ${o.tipo === 'organizacion' ? 'selected' : ''}>Organización</option><option value="individual" ${o.tipo === 'individual' ? 'selected' : ''}>Persona</option></select></label>
+          <label class="campo">Contacto <input id="oContacto" value="${esc(o.contacto || '')}"></label></div>
+        <label class="campo">Notas internas <textarea id="oNotas" rows="2">${esc(o.notas || '')}</textarea></label>
+        <label class="marca-chk" style="margin-bottom:14px"><input type="checkbox" id="oActiva" ${o.activa ? 'checked' : ''}> Cuenta activa (si la desactivas, nadie de aquí puede usar ninguna herramienta)</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-a="guardarOrg">Guardar datos</button><button class="btn peligro" data-a="borrarOrg">Borrar…</button></div></div>
+      <div class="bloque"><h4>Herramientas y licencias</h4>${lics}</div>
+      <div class="bloque"><h4>Usuarios <button class="btn mini pri" data-a="nuevoUsuario">+ Agregar usuario</button></h4>
+        ${miembros.map(u => filaUsuario(u, true)).join('') || '<div class="vacio-mini">Todavía no tiene usuarios. Agrega el primero.</div>'}</div>
+      ${tieneYV ? `<div class="bloque"><h4>Logos para Yupavideo</h4>
+        <div class="logos-g">${(logos || []).map(g => `<div class="logo-it" title="${esc(g.nombre)}"><img src="${esc(g.imagen)}" alt="${esc(g.nombre)}"><button data-a="borrarLogo" data-id="${g.id}" title="Quitar">✕</button></div>`).join('') || (logos ? '<div class="vacio-mini">Sin logos todavía.</div>' : '<div class="vacio-mini">Cargando…</div>')}</div>
+        <label class="btn" style="margin-top:14px;cursor:pointer">+ Agregar logo<input type="file" accept="image/*" id="fLogo" hidden></label>
+        <p class="vacio-mini">PNG con fondo transparente es lo mejor. Solo tú puedes agregar o quitar logos.</p></div>` : ''}
+    </div></aside>`;
+  if (conservarScroll) box.querySelector('.drawer').scrollTop = scroll;
+}
+function filaUsuario(u, dentroOrg){
+  const org = A.organizaciones.find(o => o.id === u.empresa_id);
+  const estado = u.bloqueado ? '<span class="chip mal">Bloqueado</span>' : '';
+  const sup = u.es_super ? '<span class="chip sup">ADMIN</span>' : '';
+  const ult = u.ultimo_ingreso ? 'Último ingreso: ' + new Date(u.ultimo_ingreso).toLocaleDateString('es-PE', {timeZone: 'America/Lima'}) : 'Nunca ha ingresado';
+  return `<div class="usr"><div class="dat"><b>${esc(u.usuario || u.email)}</b> ${sup}${estado}
+      <div class="sub">${esc(u.nombre || '')}${u.nombre ? ' · ' : ''}${dentroOrg ? '' : (org ? esc(org.nombre) + ' · ' : 'Sin organización · ')}${u.empresa_id ? esc(u.rol || '') + ' · ' : ''}${ult}</div>
+      ${u.usuario ? '' : '<div class="sub aviso">Entra con correo (antiguo). Asígnale un usuario.</div>'}</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${u.usuario ? '' : `<button class="btn mini pri" data-a="renombrar" data-id="${u.user_id}">Asignar usuario</button>`}
+      <button class="btn mini" data-a="clave" data-id="${u.user_id}">Contraseña</button>
+      ${u.es_super ? '' : `<button class="btn mini" data-a="bloquear" data-id="${u.user_id}" data-b="${u.bloqueado ? 0 : 1}">${u.bloqueado ? 'Desbloquear' : 'Bloquear'}</button>
+      <button class="btn mini" data-a="asignar" data-id="${u.user_id}">${u.empresa_id ? 'Mover' : 'Asignar a…'}</button>
+      <button class="btn mini peligro" data-a="eliminarUsuario" data-id="${u.user_id}">Eliminar</button>`}
+    </div></div>`;
+}
+
+/* --- Usuarios --- */
+function vUsuarios(){
+  const q = filtroUsr.toLowerCase();
+  const lista = A.usuarios.filter(u => { const org = A.organizaciones.find(o => o.id === u.empresa_id); return !q || ((u.usuario || '') + ' ' + (u.nombre || '') + ' ' + (u.email || '') + ' ' + (org ? org.nombre : '')).toLowerCase().includes(q); });
+  return `<div class="titulo-vista"><div><h2>Usuarios</h2><p>Todas las personas con acceso. Para crear uno nuevo, entra a la organización.</p></div></div>
+    <div class="barra-filtros"><input id="buscaUsr" placeholder="Buscar usuario, nombre u organización…" value="${esc(filtroUsr)}"></div>
+    <div class="caja">${lista.map(u => filaUsuario(u, false)).join('') || '<div class="vacio-mini">No hay resultados.</div>'}</div>`;
+}
+
+/* --- Herramientas --- */
+function vHerramientas(){
+  return `<div class="titulo-vista"><div><h2>Herramientas</h2><p>Las aplicaciones que ofreces. En <b>pruebas</b> solo tú las ves; al <b>publicarlas</b> las ven los clientes que tengan licencia.</p></div></div>
+    <div class="herr">${A.herramientas.map(h => {
+      const n = A.organizaciones.filter(o => o.licencias.some(l => l.herramienta_id === h.id)).length;
+      return `<div class="h-card" style="--c:${esc(h.color)};cursor:default"><div class="ico">${icono(h.icono)}</div><h3>${esc(h.nombre)}</h3><p>${esc(h.descripcion || '')}</p>
+        <div class="herram-chips"><span class="chip ${h.estado === 'publicada' ? 'ok' : 'aviso'}">${h.estado === 'publicada' ? 'Publicada' : 'En pruebas'}</span><span class="chip">${n} cliente${n === 1 ? '' : 's'}</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn mini" data-a="abrir" data-id="${h.id}">Abrir como yo</button>
+        <button class="btn mini ${h.estado === 'publicada' ? '' : 'pri'}" data-a="estadoHerr" data-id="${h.id}" data-e="${h.estado === 'publicada' ? 'pruebas' : 'publicada'}">${h.estado === 'publicada' ? 'Volver a pruebas' : 'Publicar'}</button></div></div>`;
+    }).join('')}</div>`;
+}
+
+/* --- Solicitudes --- */
+const ESTADOS_SOL = ['Nuevo', 'Contactado', 'Cotizado', 'Cerrado', 'Descartado'];
+function vSolicitudes(){
+  const campos = [['solucion', 'Solución'], ['negocio', 'Negocio'], ['organizacion', 'Organización'], ['necesidad', 'Necesidad'], ['productos', 'Productos'], ['locales', 'Locales'], ['usuarios', 'Usuarios'], ['codigo', 'Código de barras'], ['variantes', 'Variantes'], ['lotes', 'Lotes'], ['factura', 'Factura hoy con'], ['frecuencia', 'Frecuencia'], ['formato', 'Formato'], ['fecha_evento', 'Fecha del evento'], ['mensaje', 'Mensaje']];
+  return `<div class="titulo-vista"><div><h2>Solicitudes</h2><p>Lo que llega desde el formulario de tu página.</p></div></div>
+    ${(A.solicitudes || []).map(s => `<div class="solic"><div class="cab-s"><div><b>${esc(s.nombre || 'Sin nombre')}</b> <span class="chip">${esc(s.solucion || '')}</span></div>
+        <div style="display:flex;gap:8px;align-items:center"><span class="sub mono">${fechaBonita(s.creado_en)}</span>
+        <select class="estSol" data-id="${s.id}" style="padding:6px 8px;border-radius:8px;background:var(--tinta-2);border:1px solid var(--borde)">${ESTADOS_SOL.map(e => `<option ${((s.estado || 'Nuevo') === e) ? 'selected' : ''}>${e}</option>`).join('')}</select></div></div>
+      <dl>${campos.filter(([k]) => s[k]).map(([k, t]) => `<dt>${t}</dt><dd>${esc(s[k])}</dd>`).join('')}</dl></div>`).join('') || '<div class="vacio">Todavía no hay solicitudes.</div>'}`;
+}
+
+/* --- Actividad --- */
+const NOMBRES_ACCION = {org_creada: 'Creó una organización', org_editada: 'Editó una organización', org_borrada: 'Borró una organización', licencia_guardada: 'Guardó una licencia', licencia_quitada: 'Quitó una licencia', herramienta_estado: 'Cambió el estado de una herramienta', usuario_guardado: 'Guardó datos de usuario', usuario_asignado: 'Asignó un usuario', usuario_quitado: 'Quitó un usuario de su organización', usuario_creado: 'Creó un usuario', usuario_renombrado: 'Cambió el usuario', usuario_bloqueado: 'Bloqueó un usuario', usuario_desbloqueado: 'Desbloqueó un usuario', usuario_eliminado: 'Eliminó un usuario', clave_cambiada: 'Cambió una contraseña', logo_agregado: 'Agregó un logo', logo_borrado: 'Borró un logo', ver_como: 'Entró a ver como una organización'};
+function vActividad(){
+  return `<div class="titulo-vista"><div><h2>Actividad</h2><p>Registro de cada cambio que hiciste como administrador.</p></div></div>
+    <div class="tabla-wrap"><table><thead><tr><th>Cuándo</th><th>Quién</th><th>Qué</th><th>Organización</th><th>Detalle</th></tr></thead><tbody>
+    ${(A.auditoria || []).map(a => `<tr><td class="mono" style="white-space:nowrap">${new Date(a.cuando).toLocaleString('es-PE', {timeZone: 'America/Lima', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'})}</td><td>${esc(a.quien_nombre || '')}</td><td>${esc(NOMBRES_ACCION[a.accion] || a.accion)}</td><td>${esc(a.empresa || '')}</td><td class="mono" style="font-size:12px;color:var(--gris)">${esc(a.detalle ? Object.entries(a.detalle).map(([k, v]) => k + ': ' + v).join(' · ') : '')}</td></tr>`).join('') || '<tr><td colspan="5" class="vacio-mini">Aún no hay movimientos.</td></tr>'}
+    </tbody></table></div>`;
+}
+
+/* --- Abrir apps como admin --- */
+function vMis(){
+  return `<div class="titulo-vista" style="margin:-8px 0 0"><div><h2>Abrir apps</h2></div></div>` + pintarLanzador(P.herramientas || [], true).replace('<div class="pagina">', '<div style="padding:0">');
+}
+
+/* ---------- acciones (toda la interacción) ---------- */
+function orgActual(){ return A.organizaciones.find(o => o.id === orgAbierta); }
+async function refrescar(mantenerDrawer = true){ await cargarPanel(); if (!mantenerDrawer) orgAbierta = null; pintarShell(); if (orgAbierta) cargarLogosOrg(orgAbierta); }
+function mostrarDatosEnvio(usuario, clave, titulo){
+  const texto = `Portal Yupasoft: ${PORTAL_URL}\nUsuario: ${usuario}\nContraseña: ${clave}`;
+  modal({titulo: titulo || 'Datos para enviar', html: `<p class="txt">Cópialos y envíalos al cliente. Por seguridad, <b>no se vuelven a mostrar</b>; si se pierden, cambias la contraseña.</p><div class="datos-envio">${esc(texto)}</div>`,
+    botones: [{txt: 'Cerrar'}, {txt: 'Copiar datos', cls: 'pri', fn: async () => { await copiar(texto); return false; }}]});
+}
+const acciones = {
+  vista(d){ vista = d.v; pintarShell(); },
+  abrir(d){
+    const h = (P.herramientas || []).find(x => x.id === d.id) || (A && A.herramientas.find(x => x.id === d.id)); if (!h) return;
+    location.href = urlHerramienta(h);
+  },
+  org(d){ abrirOrg(d.id); },
+  cerrarDrawer(){ cerrarDrawer(); },
+  nuevaOrg(){ modalNuevaOrg(); },
+  async guardarOrg(){
+    const o = orgActual(); const nombre = $('#oNombre').value.trim(); if (!nombre) return toast('Escribe el nombre', true);
+    try{
+      await rpc('yp_admin_org', {p_id: o.id, p_nombre: nombre, p_tipo: $('#oTipo').value, p_activa: $('#oActiva').checked, p_contacto: $('#oContacto').value, p_notas: $('#oNotas').value || null});
+      await refrescar(); toast('Datos guardados');
+    }catch(e){ toast(e.message, true); }
+  },
+  borrarOrg(){
+    const o = orgActual();
+    modal({titulo: 'Borrar ' + o.nombre, html: `<p class="txt">Se borran sus licencias, logos y salas, y sus usuarios quedan sin organización. <b>No se puede deshacer.</b> Si solo quieres cortarle el acceso, mejor desactívala.<br><br>Para confirmar, escribe el nombre exacto:</p><label class="campo"><input id="cNombre" placeholder="${esc(o.nombre)}"></label>`,
+      botones: [{txt: 'Cancelar'}, {txt: 'Borrar para siempre', cls: 'peligro', fn: async m => {
+        if ($('#cNombre', m).value.trim() !== o.nombre) throw new Error('El nombre no coincide');
+        await rpc('yp_admin_borrar_org', {p_id: o.id}); cerrarDrawer(); await refrescar(false); toast('Organización borrada');
+      }}]});
+  },
+  async guardarLic(d){
+    const o = orgActual(); const card = $(`.lic[data-h="${d.h}"]`);
+    try{
+      if (!$('.lContr', card).checked){
+        if (!o.licencias.some(l => l.herramienta_id === d.h)) return toast('Marca la casilla para activar la herramienta', true);
+        await rpc('yp_admin_licencia_quitar', {p_empresa: o.id, p_herramienta: d.h});
+      } else {
+        const sin = $('.lSin', card).checked; const vence = $('.lVence', card).value;
+        if (!sin && !vence) return toast('Elige la fecha de vencimiento o marca "Sin vencimiento"', true);
+        await rpc('yp_admin_licencia', {p_empresa: o.id, p_herramienta: d.h, p_activa: $('.lActiva', card).checked, p_vence: sin ? null : vence, p_dispositivos: $('.lDisp', card).value});
+      }
+      await refrescar(); toast('Licencia guardada');
+    }catch(e){ toast(e.message, true); }
+  },
+  async verComo(d){
+    const o = orgActual(); const h = A.herramientas.find(x => x.id === d.h);
+    try{ await rpc('yp_admin_auditar', {p_accion: 'ver_como', p_empresa: o.id, p_detalle: {herramienta: d.h}}); }catch(e){}
+    const u = new URL(h.url, location.href); u.searchParams.set('como', o.id); window.open(u.href, '_blank');
+  },
+  nuevoUsuario(){
+    const o = orgActual();
+    modal({titulo: 'Nuevo usuario en ' + o.nombre, html: `
+        <label class="campo">Nombre de la persona <input id="uNombre" placeholder="Ej.: María Quispe"></label>
+        <label class="campo">Usuario (con este entra) <input id="uUsuario" placeholder="maria.quispe" autocapitalize="none" spellcheck="false"></label>
+        <label class="campo">Contacto (correo o teléfono, opcional) <input id="uContacto"></label>
+        <div class="dos"><label class="campo">Rol <select id="uRol"><option value="admin">Responsable</option><option value="operador">Operador</option></select></label>
+          <label class="campo">Contraseña <input id="uClave" value="${generarClave()}"></label></div>
+        <p class="vacio-mini">Usuario: 3 a 31 letras minúsculas, números, punto o guion. La contraseña mínimo 8 caracteres.</p>`,
+      botones: [{txt: 'Cancelar'}, {txt: 'Crear usuario', cls: 'pri', fn: async m => {
+        const usuario = $('#uUsuario', m).value.trim().toLowerCase(), clave = $('#uClave', m).value;
+        const r = await llamarFuncion({accion: 'crear', usuario, clave, nombre: $('#uNombre', m).value, contacto: $('#uContacto', m).value, rol: $('#uRol', m).value, empresa_id: o.id});
+        await refrescar(); mostrarDatosEnvio(usuario, clave, 'Usuario creado: datos para enviar');
+      }}],
+      onAbrir: m => { $('#uNombre', m).addEventListener('input', e => { const u = $('#uUsuario', m); if (!u.dataset.t) u.value = slug(e.target.value); }); $('#uUsuario', m).addEventListener('input', e => e.target.dataset.t = 1); }});
+  },
+  clave(d){
+    const u = A.usuarios.find(x => x.user_id === d.id);
+    modal({titulo: 'Cambiar contraseña de ' + (u.usuario || u.email), html: `<label class="campo">Nueva contraseña <input id="cClave" value="${generarClave()}"></label>`,
+      botones: [{txt: 'Cancelar'}, {txt: 'Cambiar', cls: 'pri', fn: async m => {
+        const clave = $('#cClave', m).value; await llamarFuncion({accion: 'clave', user_id: u.user_id, clave});
+        await refrescar(); if (u.usuario) mostrarDatosEnvio(u.usuario, clave, 'Contraseña cambiada: datos para enviar'); else toast('Contraseña cambiada');
+      }}]});
+  },
+  renombrar(d){
+    const u = A.usuarios.find(x => x.user_id === d.id);
+    modal({titulo: 'Asignar usuario', html: `<p class="txt">Hoy entra con el correo <b>${esc(u.email)}</b>. Desde ahora entrará con un usuario; su contraseña no cambia.</p>
+        <label class="campo">Usuario <input id="rUsuario" placeholder="conep.juventud" autocapitalize="none" spellcheck="false"></label>
+        <label class="campo">Nombre (opcional) <input id="rNombre"></label>`,
+      botones: [{txt: 'Cancelar'}, {txt: 'Guardar', cls: 'pri', fn: async m => {
+        const usuario = $('#rUsuario', m).value.trim().toLowerCase();
+        await llamarFuncion({accion: 'renombrar', user_id: u.user_id, usuario, nombre: $('#rNombre', m).value, contacto: u.email && !u.email.endsWith('.invalid') ? u.email : ''});
+        await refrescar(); toast('Listo: ahora entra con el usuario ' + usuario);
+      }}]});
+  },
+  async bloquear(d){
+    const u = A.usuarios.find(x => x.user_id === d.id); const bloquear = d.b === '1';
+    confirmar(bloquear ? 'Bloquear acceso' : 'Desbloquear acceso', bloquear ? `<b>${esc(u.usuario || u.email)}</b> no podrá ingresar hasta que lo desbloquees.` : `<b>${esc(u.usuario || u.email)}</b> podrá volver a ingresar.`, bloquear ? 'Bloquear' : 'Desbloquear',
+      async () => { await llamarFuncion({accion: 'bloquear', user_id: u.user_id, bloquear}); await refrescar(); toast(bloquear ? 'Usuario bloqueado' : 'Usuario desbloqueado'); }, bloquear);
+  },
+  asignar(d){
+    const u = A.usuarios.find(x => x.user_id === d.id);
+    modal({titulo: 'Asignar ' + (u.usuario || u.email), html: `<label class="campo">Organización <select id="aOrg">${A.organizaciones.map(o => `<option value="${o.id}" ${o.id === u.empresa_id ? 'selected' : ''}>${esc(o.nombre)}</option>`).join('')}</select></label>
+        <label class="campo">Rol <select id="aRol"><option value="admin" ${u.rol === 'admin' ? 'selected' : ''}>Responsable</option><option value="operador" ${u.rol !== 'admin' ? 'selected' : ''}>Operador</option></select></label>`,
+      botones: [{txt: 'Cancelar'}, {txt: 'Guardar', cls: 'pri', fn: async m => { await rpc('yp_admin_asignar_user', {p_user: u.user_id, p_empresa: $('#aOrg', m).value, p_rol: $('#aRol', m).value}); await refrescar(); toast('Asignado'); }}]});
+  },
+  eliminarUsuario(d){
+    const u = A.usuarios.find(x => x.user_id === d.id);
+    confirmar('Eliminar usuario', `Se elimina <b>${esc(u.usuario || u.email)}</b> y ya no podrá ingresar. No se puede deshacer. Si solo quieres cortarle el acceso, mejor bloquéalo.`, 'Eliminar',
+      async () => { await llamarFuncion({accion: 'eliminar', user_id: u.user_id}); await refrescar(); toast('Usuario eliminado'); });
+  },
+  estadoHerr(d){
+    const pub = d.e === 'publicada';
+    confirmar(pub ? 'Publicar herramienta' : 'Volver a pruebas', pub ? 'Los clientes que tengan licencia de esta herramienta empezarán a verla en su portal.' : 'Los clientes dejarán de verla; solo tú la verás.', pub ? 'Publicar' : 'Volver a pruebas',
+      async () => { await rpc('yp_admin_herramienta', {p_id: d.id, p_estado: d.e}); await refrescar(); toast('Herramienta actualizada'); }, !pub);
+  },
+  borrarLogo(d){
+    confirmar('Quitar logo', 'Se quita este logo de la organización.', 'Quitar', async () => { await rpc('yv_admin_borrar_logo', {p_logo: d.id}); await refrescar(); toast('Logo quitado'); });
+  }
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
+  const f = acciones[b.dataset.a]; if (f){ e.preventDefault(); f(b.dataset, b); }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'buscaOrg'){ filtroOrg = e.target.value; const p = e.target.selectionStart; pintarVista(); const n = $('#buscaOrg'); n.focus(); n.setSelectionRange(p, p); }
+  if (e.target.id === 'buscaUsr'){ filtroUsr = e.target.value; const p = e.target.selectionStart; pintarVista(); const n = $('#buscaUsr'); n.focus(); n.setSelectionRange(p, p); }
+});
+document.addEventListener('change', async e => {
+  const t = e.target;
+  if (t.classList.contains('lContr')){ const card = t.closest('.lic'); card.classList.toggle('on', t.checked); card.querySelector('.opc').hidden = !t.checked; }
+  if (t.classList.contains('lSin')){ t.closest('.lic').querySelector('.lVence').disabled = t.checked; }
+  if (t.classList.contains('estSol')){
+    try{ await rpc('yp_admin_solicitud', {p_id: Number(t.dataset.id), p_estado: t.value}); const s = A.solicitudes.find(x => String(x.id) === t.dataset.id); if (s) s.estado = t.value; toast('Estado actualizado'); pintarShell(); }
+    catch(err){ toast(err.message, true); }
+  }
+  if (t.id === 'fLogo' && t.files && t.files[0]) subirLogo(t);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ const ms = document.querySelectorAll('#capas .modal'); const m = ms[ms.length - 1]; if (m) m.remove(); else if (orgAbierta) cerrarDrawer(); } });
+
+function subirLogo(input){
+  const f = input.files[0]; input.value = ''; const o = orgActual(); if (!f || !o) return;
+  const lector = new FileReader();
+  lector.onload = () => {
+    const im = new Image();
+    im.onload = async () => {
+      const esc2 = Math.min(1, 1000 / Math.max(im.naturalWidth, im.naturalHeight));
+      const cv = document.createElement('canvas'); cv.width = Math.round(im.naturalWidth * esc2); cv.height = Math.round(im.naturalHeight * esc2);
+      cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+      const data = cv.toDataURL('image/png');
+      if (data.length > 1400000){ toast('La imagen es muy pesada. Usa una más pequeña.', true); return; }
+      try{ await rpc('yv_admin_agregar_logo', {p_empresa: o.id, p_nombre: f.name.replace(/\.[^.]+$/, '').slice(0, 60), p_imagen: data}); await refrescar(); toast('Logo agregado'); }
+      catch(e){ toast('No se pudo guardar el logo: ' + e.message, true); }
+    };
+    im.onerror = () => toast('No pude leer esa imagen.', true);
+    im.src = lector.result;
+  };
+  lector.readAsDataURL(f);
+}
+
+/* ---------- arranque ---------- */
+window.addEventListener('hashchange', () => { if (A && P && P.es_super){ const h = location.hash.replace('#', ''); if (VISTAS.some(v => v[0] === h) && h !== vista){ vista = h; pintarShell(); } } });
+iniciar();
+</script>
+</body>
+</html>
