@@ -1,7 +1,7 @@
 // Portal Yupasoft · service worker
 // Siempre intenta traer la versión nueva; si no hay internet, usa la guardada.
 // Las llamadas a Supabase NO pasan por aquí (son de otro dominio).
-const CACHE = 'yupasoft-portal-v5';
+const CACHE = 'yupasoft-portal-v6';
 const ARCHIVOS = ['./', './index.html', './exportar-excel.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', e => {
@@ -9,7 +9,7 @@ self.addEventListener('install', e => {
   self.skipWaiting();
 });
 self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("yupasoft-portal-") && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
