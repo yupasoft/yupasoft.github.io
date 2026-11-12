@@ -911,11 +911,12 @@ function vHerramientas(){
 /* --- Solicitudes --- */
 const ESTADOS_SOL = ['Nuevo', 'Contactado', 'Cotizado', 'Cerrado', 'Descartado'];
 function vSolicitudes(){
-  const campos = [['solucion', 'Solución'], ['negocio', 'Negocio'], ['organizacion', 'Organización'], ['necesidad', 'Necesidad'], ['productos', 'Productos'], ['locales', 'Locales'], ['usuarios', 'Usuarios'], ['codigo', 'Código de barras'], ['variantes', 'Variantes'], ['lotes', 'Lotes'], ['factura', 'Factura hoy con'], ['frecuencia', 'Frecuencia'], ['formato', 'Formato'], ['fecha_evento', 'Fecha del evento'], ['mensaje', 'Mensaje']];
+  const campos = [['telefono', 'Celular'], ['solucion', 'Solución'], ['negocio', 'Negocio'], ['organizacion', 'Organización'], ['necesidad', 'Necesidad'], ['productos', 'Productos'], ['locales', 'Locales'], ['usuarios', 'Usuarios'], ['codigo', 'Código de barras'], ['variantes', 'Variantes'], ['lotes', 'Lotes'], ['factura', 'Factura hoy con'], ['frecuencia', 'Frecuencia'], ['formato', 'Formato'], ['fecha_evento', 'Fecha del evento'], ['mensaje', 'Mensaje']];
   return `<div class="titulo-vista"><div><h2>Solicitudes</h2><p>Lo que llega desde el formulario de tu página.</p></div><button class="btn" data-a="xlsVista" data-v="solicitudes">⬇ Excel</button></div>
     ${(A.solicitudes || []).map(s => `<div class="solic"><div class="cab-s"><div><b>${esc(s.nombre || 'Sin nombre')}</b> <span class="chip">${esc(s.solucion || '')}</span></div>
         <div style="display:flex;gap:8px;align-items:center"><span class="sub mono">${fechaBonita(s.creado_en)}</span>
         <select class="estSol" data-id="${s.id}" style="padding:6px 8px;border-radius:8px;background:var(--tinta-2);border:1px solid var(--borde)">${ESTADOS_SOL.map(e => `<option ${((s.estado || 'Nuevo') === e) ? 'selected' : ''}>${e}</option>`).join('')}</select></div></div>
+      ${contactoAcciones(s.telefono)}
       <dl>${campos.filter(([k]) => s[k]).map(([k, t]) => `<dt>${t}</dt><dd>${esc(s[k])}</dd>`).join('')}</dl></div>`).join('') || '<div class="vacio">Todavía no hay solicitudes.</div>'}`;
 }
 
@@ -1161,7 +1162,7 @@ function exportarVista(v){
     columnas: [{clave: 'u', titulo: 'Usuario'}, {clave: 'n', titulo: 'Nombre'}, {clave: 'c', titulo: 'Contacto'}, {clave: 'o', titulo: 'Organización'}, {clave: 'r', titulo: 'Rol'}, {clave: 'b', titulo: 'Estado'}, {clave: 'ui', titulo: 'Último ingreso', tipo: 'fechahora'}, {clave: 'cr', titulo: 'Creado el', tipo: 'fecha'}],
     filas: A.usuarios.map(u => { const o = A.organizaciones.find(x => x.id === u.empresa_id); return {u: u.usuario || u.email, n: u.nombre, c: u.contacto, o: o ? o.nombre : 'Sin organización', r: u.es_super ? 'Administrador' : (NOMBRE_ROL[u.rol] || ''), b: u.bloqueado ? 'Bloqueado' : 'Activo', ui: u.ultimo_ingreso, cr: u.creado}; })}]};
   if (v === 'solicitudes') {
-    const campos = [['creado_en', 'Fecha', 'fecha'], ['nombre', 'Nombre'], ['solucion', 'Solución'], ['estado', 'Estado'], ['negocio', 'Negocio'], ['organizacion', 'Organización'], ['necesidad', 'Necesidad'], ['productos', 'Productos'], ['locales', 'Locales'], ['usuarios', 'Usuarios'], ['codigo', 'Código de barras'], ['variantes', 'Variantes'], ['lotes', 'Lotes'], ['factura', 'Factura hoy con'], ['frecuencia', 'Frecuencia'], ['formato', 'Formato'], ['fecha_evento', 'Fecha del evento'], ['mensaje', 'Mensaje']];
+    const campos = [['creado_en', 'Fecha', 'fecha'], ['nombre', 'Nombre'], ['telefono', 'Celular'], ['solucion', 'Solución'], ['estado', 'Estado'], ['negocio', 'Negocio'], ['organizacion', 'Organización'], ['necesidad', 'Necesidad'], ['productos', 'Productos'], ['locales', 'Locales'], ['usuarios', 'Usuarios'], ['codigo', 'Código de barras'], ['variantes', 'Variantes'], ['lotes', 'Lotes'], ['factura', 'Factura hoy con'], ['frecuencia', 'Frecuencia'], ['formato', 'Formato'], ['fecha_evento', 'Fecha del evento'], ['mensaje', 'Mensaje']];
     return {archivo: 'Yupasoft_solicitudes_' + f, hojas: [{nombre: 'Solicitudes', titulo: 'Solicitudes de la página', columnas: campos.map(([k, t, tp]) => ({clave: k, titulo: t, tipo: tp || 'texto'})), filas: A.solicitudes}]};
   }
   return {archivo: 'Yupasoft_actividad_' + f, hojas: [{nombre: 'Actividad', titulo: 'Actividad del administrador',

@@ -390,6 +390,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
     <div class="form">
       <div class="campos">
         <div class="campo ancho"><label for="f-nombre">Tu nombre *</label><input id="f-nombre" type="text" placeholder="Cómo te llamo" autocomplete="name"></div>
+        <div class="campo ancho"><label for="f-telefono">Tu celular o WhatsApp *</label><input id="f-telefono" type="tel" inputmode="tel" placeholder="Ej. 987 654 321" autocomplete="tel" maxlength="20"></div>
         <div class="campo ancho"><label for="f-negocio">Nombre de tu negocio u organización, y a qué se dedica *</label><input id="f-negocio" type="text" placeholder="Ej. Bazar Yuli — ropa para dama"></div>
 
         <div class="campo ancho"><label for="f-solucion">¿Qué solución te interesa? *</label>
@@ -595,6 +596,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
   /* id de campo, etiqueta en el mensaje, obligatorio, línea a la que pertenece */
   var PREGUNTAS = [
     ["f-nombre",       "Nombre",                 true,  "*"],
+    ["f-telefono",     "Celular",                true,  "*"],
     ["f-negocio",      "Negocio u organización", true,  "*"],
     ["f-solucion",     "Solución de interés",    true,  "*"],
     ["f-necesidad",    "Qué necesita resolver",  false, "*"],
@@ -613,7 +615,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
 
   /* columna de la tabla "solicitudes" en Supabase donde cae cada campo */
   var CLAVES = {
-    "f-nombre":"nombre", "f-negocio":"negocio", "f-solucion":"solucion",
+    "f-nombre":"nombre", "f-telefono":"telefono", "f-negocio":"negocio", "f-solucion":"solucion",
     "f-necesidad":"necesidad", "f-productos":"productos", "f-locales":"locales",
     "f-usuarios":"usuarios", "f-codigo":"codigo", "f-variantes":"variantes",
     "f-lotes":"lotes", "f-factura":"factura", "f-organizacion":"organizacion",
@@ -634,7 +636,7 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
   }
 
   function armar(){
-    var faltan = false;
+    var faltan = false, telMal = false;
     var lineas = ["Hola Christian, quiero una propuesta de Yupasoft.", ""];
     PREGUNTAS.forEach(function(p){
       var el = $(p[0]);
@@ -643,12 +645,19 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:30px 0;font-family:var
       var pedida = p[2] && activa(p);
       el.parentNode.classList.toggle("error", pedida && !v);
       if (pedida && !v) faltan = true;
+      /* el celular debe tener al menos 9 dígitos: es el dato para devolver el contacto */
+      if (p[0] === "f-telefono" && v && v.replace(/D/g, "").length < 9){ el.parentNode.classList.add("error"); telMal = true; }
       if (v && activa(p)) lineas.push(p[1] + ": " + v);
     });
     var e = $("f-estado");
     if (faltan){
       e.style.color = "#E0574E";
       e.textContent = "Completa los campos marcados";
+      return null;
+    }
+    if (telMal){
+      e.style.color = "#E0574E";
+      e.textContent = "Revisa tu celular: debe tener 9 dígitos";
       return null;
     }
     e.textContent = "";
