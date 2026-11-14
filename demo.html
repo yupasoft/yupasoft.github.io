@@ -83,6 +83,8 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 .btn:active{transform:scale(.98)}
 .btn-1{background:var(--turq);color:var(--tinta)}
 .btn-2{background:var(--blanco);border:1px solid var(--borde);color:var(--tinta)}
+.bt-xls{margin:-4px 0 16px}
+.bt-xls:disabled{opacity:.6}
 .btn-3{background:var(--tinta);color:#fff}
 .btn:disabled{opacity:.4}
 
@@ -229,6 +231,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
       <div class="ancho">
       <h2>Inventario</h2>
       <p class="sub" id="conteo-inv"></p>
+      <button class="btn btn-2 bt-xls" data-xls>⬇ Descargar Excel</button>
       </div>
       <div class="buscar ancho">
         <input id="q" type="search" placeholder="Buscar producto o código" autocomplete="off">
@@ -267,6 +270,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
       <div class="ancho">
       <h2>Movimientos</h2>
       <p class="sub">Todo lo que entró y salió, con quién lo hizo.</p>
+      <button class="btn btn-2 bt-xls" data-xls>⬇ Descargar Excel</button>
       </div>
       <div class="ancho lista-2" id="movs"></div>
     </div>
@@ -276,6 +280,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
       <div class="ancho">
       <h2>Reportes</h2>
       <p class="sub">Lo que tus números te están diciendo.</p>
+      <button class="btn btn-2 bt-xls" data-xls>⬇ Descargar Excel</button>
       </div>
       <section>
         <p class="rot">LOS QUE MÁS SE VENDEN</p>
@@ -480,6 +485,41 @@ function pintarReportes(){
   $("valor-inv").textContent = S(P.reduce(function(a,p){return a+p.p*p.s},0));
 }
 
+/* Excel con el formato Yupasoft (el mismo generador del portal) */
+function bajarExcel(bt){
+  var bts = document.querySelectorAll("[data-xls]");
+  bts.forEach(function(b){ b.disabled = true; });
+  var listo = window.YupaExcel ? Promise.resolve() : new Promise(function(ok, mal){
+    var sc = document.createElement("script"); sc.src = "portal/exportar-excel.js";
+    sc.onload = ok; sc.onerror = function(){ mal(new Error("sin internet")); }; document.head.appendChild(sc);
+  });
+  var estado = function(p){ return p.s===0 ? "Agotado" : p.s<=p.min ? "Por agotarse" : "Con stock"; };
+  var f = new Date(), dos = function(n){ return (n<10?"0":"")+n; };
+  listo.then(function(){
+    return YupaExcel.descargar({
+      archivo: "Yupasoft_Inventario-demo_" + f.getFullYear() + "-" + dos(f.getMonth()+1) + "-" + dos(f.getDate()),
+      hojas: [
+        { nombre: "Inventario", titulo: "Inventario · datos de demostración",
+          columnas: [{clave:"n",titulo:"Producto"},{clave:"v",titulo:"Talla"},{clave:"c",titulo:"Categoría"},{clave:"cod",titulo:"Código",tipo:"texto"},
+                     {clave:"p",titulo:"Precio",tipo:"moneda"},{clave:"s",titulo:"Stock",tipo:"entero"},{clave:"min",titulo:"Mínimo",tipo:"entero"},
+                     {clave:"est",titulo:"Estado"},{clave:"val",titulo:"Valor en tienda",tipo:"moneda"},{clave:"d",titulo:"Días sin moverse",tipo:"entero"}],
+          filas: P.map(function(p){ return {n:p.n, v:p.v, c:p.c, cod:p.cod, p:p.p, s:p.s, min:p.min, est:estado(p), val:p.p*p.s, d:p.d}; }) },
+        { nombre: "Movimientos", titulo: "Movimientos de hoy · datos de demostración",
+          columnas: [{clave:"h",titulo:"Hora"},{clave:"t",titulo:"Tipo"},{clave:"txt",titulo:"Detalle"},{clave:"u",titulo:"Usuario"},{clave:"m",titulo:"Unidades",tipo:"entero"}],
+          filas: MOV.map(function(m){ return {h:m.h, t:m.t.charAt(0).toUpperCase()+m.t.slice(1), txt:m.txt, u:m.u, m:m.m}; }) },
+        { nombre: "Más vendidos", titulo: "Lo que más se vendió hoy · datos de demostración",
+          columnas: [{clave:"n",titulo:"Producto"},{clave:"v",titulo:"Talla"},{clave:"q",titulo:"Unidades",tipo:"entero"},{clave:"tot",titulo:"Vendido",tipo:"moneda"}],
+          filas: Object.keys(TOP).sort(function(a,b){return TOP[b]-TOP[a]}).map(function(id){ var p = P.filter(function(x){return x.id==id})[0]; return {n:p.n, v:p.v, q:TOP[id], tot:p.p*TOP[id]}; }) },
+        { nombre: "Parados", titulo: "Parados hace más de 30 días · datos de demostración",
+          columnas: [{clave:"n",titulo:"Producto"},{clave:"v",titulo:"Talla"},{clave:"d",titulo:"Días sin moverse",tipo:"entero"},{clave:"s",titulo:"Stock",tipo:"entero"},{clave:"val",titulo:"Dinero inmovilizado",tipo:"moneda"}],
+          filas: P.filter(function(p){return p.d>=30}).sort(function(a,b){return b.d-a.d}).map(function(p){ return {n:p.n, v:p.v, d:p.d, s:p.s, val:p.p*p.s}; }) }
+      ]
+    });
+  }).then(function(){ toast("Excel descargado"); })
+    .catch(function(){ toast("No se pudo preparar el Excel. Revisa tu internet."); })
+    .then(function(){ bts.forEach(function(b){ b.disabled = false; }); });
+}
+
 function escanear(destino){
   $("hoja").innerHTML =
    '<div class="agarre"></div><h2>Escanear código</h2><p class="sub">Apunta la cámara al código de barras del producto.</p>'+
@@ -511,6 +551,7 @@ document.querySelectorAll(".nav button").forEach(function(b){
 $("q").addEventListener("input", pintarInventario);
 $("qv").addEventListener("input", buscarVenta);
 $("btn-cobrar").addEventListener("click", cobrar);
+document.querySelectorAll("[data-xls]").forEach(function(b){ b.addEventListener("click", function(){ bajarExcel(b); }); });
 $("btn-scan-inv").addEventListener("click", function(){ escanear("inv"); });
 $("btn-scan-venta").addEventListener("click", function(){ escanear("venta"); });
 $("modal").addEventListener("click", function(e){ if(e.target===$("modal")) cerrar(); });
