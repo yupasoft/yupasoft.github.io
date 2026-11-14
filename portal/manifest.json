@@ -4,7 +4,7 @@
   "description": "Entra a tus herramientas de Yupasoft: transmisión de eventos, inventario y más.",
   "id": "./",
   "start_url": "./",
-  "scope": "./",
+  "scope": "../",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#0C1A2E",
