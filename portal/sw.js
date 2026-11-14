@@ -1,8 +1,8 @@
 // Portal Yupasoft · service worker
 // Siempre intenta traer la versión nueva; si no hay internet, usa la guardada.
 // Las llamadas a Supabase NO pasan por aquí (son de otro dominio).
-const CACHE = 'yupasoft-portal-v14';
-const ARCHIVOS = ['./', './index.html', './exportar-excel.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
+const CACHE = 'yupasoft-portal-v15';
+const ARCHIVOS = ['./', './index.html', './exportar-excel.js', './vivo.css', './vivo.js', './manifest.json', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARCHIVOS)).catch(() => {}));
