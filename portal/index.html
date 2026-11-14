@@ -682,7 +682,8 @@ function entrarCliente(){
   const usables = hs.filter(h => estadoHerramienta(h, false).ok);
   if (!params.get('menu')){
     if (volver){ const h = usables.find(x => x.id === volver); if (h){ location.replace(urlHerramienta(h)); return; } }
-    if (hs.length === 1 && usables.length === 1){ location.replace(urlHerramienta(usables[0])); return; }
+    // Con una sola herramienta que pueda usar entra directo a ella (aunque tenga otras inactivas o vencidas). Con dos o más, elige.
+    if (usables.length === 1){ location.replace(urlHerramienta(usables[0])); return; }
   }
   pintarCliente();
 }
