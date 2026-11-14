@@ -23,8 +23,7 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 input,select{font-family:inherit;font-size:16px}
 
 /* marco de celular en escritorio */
-.marco{max-width:430px;margin:0 auto;min-height:100vh;background:var(--claro);position:relative;display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,0,0,.5)}
-@media(min-width:520px){.marco{margin:20px auto;min-height:calc(100vh - 40px);border-radius:24px;overflow:hidden}}
+.marco{min-height:100vh;background:var(--claro);position:relative;display:flex;flex-direction:column}
 
 /* cabecera */
 .top{background:var(--tinta);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none}
@@ -88,8 +87,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 .btn:disabled{opacity:.4}
 
 /* nav inferior */
-.nav{position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;background:var(--blanco);border-top:1px solid var(--borde);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:20}
-@media(min-width:520px){.nav{bottom:20px;border-radius:0 0 24px 24px}}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--blanco);border-top:1px solid var(--borde);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:20}
 .nav button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;color:var(--gris);padding:4px 0;font-weight:600}
 .nav button.on{color:var(--turq-osc)}
 .nav svg{width:21px;height:21px}
@@ -124,7 +122,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 
 /* ---------- ESCRITORIO ---------- */
 @media(min-width:900px){
-  .marco{max-width:1240px;margin:22px auto;min-height:calc(100vh - 44px);border-radius:18px;overflow:hidden;
+  .marco{height:100vh;overflow:hidden;
          display:grid;grid-template-columns:240px 1fr;grid-template-rows:auto 1fr;grid-template-areas:"top top" "nav cuerpo"}
   .top{grid-area:top;padding:16px 26px}
   .top .neg{font-size:17px}
@@ -152,6 +150,8 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
   .acciones-ficha{display:grid;grid-template-columns:1fr;gap:9px}
   .acciones-ficha .btn{width:100%}
 }
+
+@media(min-width:1500px){.lista-2{grid-template-columns:repeat(3,1fr)}}
 
 /* aviso demo */
 .aviso{background:#FDF1DE;border:1px solid #F5D9A6;border-radius:11px;padding:11px 13px;font-size:12.5px;line-height:1.55;color:#8A5A0B;margin-bottom:16px}

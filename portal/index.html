@@ -110,7 +110,7 @@ header.barra .esp{flex:1}
 
 /* ---------- lanzador de herramientas ---------- */
 #vApp{position:relative;z-index:1;min-height:100dvh}
-.pagina{max-width:1040px;margin:0 auto;padding:34px 20px 60px}
+.pagina{padding:34px clamp(20px,3vw,56px) 60px}
 .saludo{margin-bottom:28px}
 .saludo .rot{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--turq-t);text-transform:uppercase}
 .saludo h2{font-size:clamp(26px,4.4vw,38px);font-weight:800;letter-spacing:-.02em;margin:8px 0 10px}
@@ -296,7 +296,11 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:var(--hover)}
   .drawer .cab{padding-top:calc(16px + env(safe-area-inset-top))}
   .modal:not(.hoja) .caja-m{max-height:88dvh}
 }
-@media (max-width:520px){ .quien{display:none} header.barra .logo svg{height:24px} .navcli{margin-left:0} }
+@media (max-width:520px){ .quien{display:none} header.barra .logo svg{height:24px}
+  header.barra{flex-wrap:wrap;row-gap:8px}
+  .navcli{order:9;width:100%;margin-left:0}
+  .navcli .btn{flex:1;justify-content:center;text-align:center}
+}
 </style>
 </head>
 <body>
