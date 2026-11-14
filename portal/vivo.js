@@ -53,13 +53,14 @@
     } catch (e) { }
   }
 
-  function entrar(raiz) {
+  // sel (opcional): qué elementos entran en cascada, para páginas que no usan los nombres de clase del kit
+  function entrar(raiz, sel) {
     if (!raiz) return;
     fondo(); logos();
     if (calma()) return;
     raiz.classList.remove('vv-entra'); void raiz.offsetWidth; raiz.classList.add('vv-entra');
     let i = 0;
-    raiz.querySelectorAll(CASCADA).forEach(e => e.style.setProperty('--vv-i', Math.min(i++, 18)));
+    raiz.querySelectorAll(sel || CASCADA).forEach(e => { if (sel) e.classList.add('vv-c'); e.style.setProperty('--vv-i', Math.min(i++, 18)); });
     raiz.querySelectorAll('.barras > div, .graf .g-p').forEach((e, k) => { (e.matches('.g-p') ? e : e.querySelector('i') || e).style.setProperty('--vv-b', Math.min(k, 14)); });
     raiz.querySelectorAll(MONTOS).forEach(contar);
     raiz.querySelectorAll('.graf .g-s').forEach(trazar);

@@ -15,7 +15,7 @@
    ===================================================================== */
 
 /* ---------- Fondo con vida ---------- */
-.vv-fondo{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+.vv-fondo{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;
   background:radial-gradient(1100px 620px at 82% -12%,color-mix(in srgb,var(--acc) 17%,transparent),transparent 62%),
              radial-gradient(900px 600px at -12% 112%,color-mix(in srgb,var(--amb) 11%,transparent),transparent 60%)}
 .vv-fondo::before{content:"";position:absolute;width:46vmax;height:46vmax;left:8%;top:22%;border-radius:50%;
@@ -24,7 +24,6 @@
 .vv-rej i{aspect-ratio:1;border-radius:22%;border:2px solid color-mix(in srgb,var(--tx) 8%,transparent)}
 .vv-rej i.on{background:color-mix(in srgb,var(--acc) 15%,transparent);border-color:color-mix(in srgb,var(--acc) 34%,transparent);animation:vvEnciende 5.6s ease-in-out infinite both;animation-delay:calc(var(--n) * .16s)}
 .vv-rej i.top{background:color-mix(in srgb,var(--amb) 22%,transparent);border-color:color-mix(in srgb,var(--amb) 50%,transparent)}
-.vv #app,.vv .gate{position:relative;z-index:1}
 .vv .barra{background:color-mix(in srgb,var(--bg) 80%,transparent);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3)}
 @keyframes vvDeriva{from{transform:translate(0,0) scale(1)}to{transform:translate(18vw,-10vh) scale(1.25)}}
 @keyframes vvEnciende{0%,100%{opacity:.3}14%,68%{opacity:1}}
@@ -32,6 +31,8 @@
 /* ---------- Al cambiar de sección: todo entra subiendo, uno tras otro ---------- */
 .vv-entra :is(.card,.kpi,.it,.ev,.tw,.vacio,.cta,.selbar,.inicio,.nota){animation:vvSube .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--vv-i,0) * 38ms)}
 .vv-entra :is(h1,.mesnav){animation:vvLado .5s cubic-bezier(.2,.8,.2,1) both}
+/* Para páginas con otros nombres de clase: Vivo.entrar(raiz, 'selector') marca cada elemento con .vv-c */
+.vv-entra .vv-c{animation:vvSube .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--vv-i,0) * 38ms)}
 .vv-entra .barras i{transform-origin:50% 100%;animation:vvCrece .8s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--vv-b,0) * 70ms + .15s)}
 .vv-entra .barrita i{transform-origin:0 50%;animation:vvAncho .9s cubic-bezier(.2,.9,.3,1) .2s both}
 .vv-entra .graf .g-a{animation:vvVelo 1s .5s both}
@@ -150,7 +151,7 @@
 /* ---------- Ventanas y avisos ---------- */
 .vv .velo{animation:vvVelo .22s both;-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
 .vv .vent{animation:vvVent .34s cubic-bezier(.2,.9,.3,1) both}
-.vv .toast:not([hidden]){animation:vvToast .34s cubic-bezier(.2,.9,.3,1) both}
+.vv .toast[role="status"]:not([hidden]){animation:vvToast .34s cubic-bezier(.2,.9,.3,1) both}
 @keyframes vvVent{from{opacity:0;transform:translateY(18px) scale(.965)}to{opacity:1;transform:none}}
 @keyframes vvToast{from{opacity:0;transform:translate(-50%,16px) scale(.94)}to{opacity:1;transform:translate(-50%,0)}}
 @media (max-width:640px){@keyframes vvVent{from{transform:translateY(60%)}to{transform:none}}}

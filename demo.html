@@ -15,6 +15,8 @@
   --tinta:#0C1A2E; --panel:#152741; --borde:#E4EBF2;
   --turq:#2ED3B7; --turq-osc:#159C86; --ambar:#F2A93B; --rojo:#E0574E;
   --gris:#5A7086; --claro:#F4F7FA; --blanco:#fff;
+  /* nombres que usa el kit de diseño (portal/vivo.css) */
+  --acc:var(--turq-osc); --amb:var(--ambar); --bg:var(--claro); --card:var(--blanco); --card2:#EDF2F6; --bd:var(--borde); --tx:var(--tinta); --mute:var(--gris); --mal:var(--rojo);
   --sans:'Sora',system-ui,-apple-system,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -159,7 +161,21 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 .aviso{background:#FDF1DE;border:1px solid #F5D9A6;border-radius:11px;padding:11px 13px;font-size:12.5px;line-height:1.55;color:#8A5A0B;margin-bottom:16px}
 .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:var(--tinta);color:#fff;font-size:13.5px;font-weight:600;padding:12px 20px;border-radius:99px;z-index:60;opacity:0;pointer-events:none;transition:opacity .25s;white-space:nowrap}
 .toast.on{opacity:1}
+/* Con el kit de diseño (portal/vivo.css): respuesta al cursor, ventanas animadas y gráficos */
+.vv :is(.item,.card,.tab,.btn,.nav button,.icobtn){transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,border-color .2s,background-color .2s,color .2s}
+.vv button.item:hover{transform:translateY(-2px);border-color:var(--turq);box-shadow:0 14px 26px -16px rgba(12,26,46,.4)}
+.vv button.item:active{transform:scale(.985)}
+.vv .btn:not(:disabled):hover{transform:translateY(-1px)}
+.vv .btn-1{position:relative;overflow:hidden;box-shadow:0 10px 22px -12px var(--turq-osc)}
+.vv .tab:hover{border-color:var(--turq);color:var(--tinta)}
+.vv .nav button.on svg{animation:vvSalto .5s cubic-bezier(.3,1.6,.5,1)}
+.vv-entra .graf i{transform-origin:50% 100%;animation:vvCrece .8s cubic-bezier(.2,.9,.3,1) both}
+.vv .modal.on{animation:vvVelo .22s both}
+.vv .modal.on .hoja{animation:vvVent .34s cubic-bezier(.2,.9,.3,1) both}
+.kpi{cursor:pointer;text-align:left;width:100%;font:inherit;color:inherit}
+.kpi small{display:block;margin-top:6px;font-size:11px;font-weight:600;color:var(--turq-osc)}
 </style>
+<link rel="stylesheet" href="portal/vivo.css">
 </head>
 <body>
 
@@ -209,10 +225,10 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
       </div>
 
       <div class="kpis ancho">
-        <div class="kpi ok"><b id="k-vendido">S/ 0</b><span>VENDIDO HOY</span></div>
-        <div class="kpi"><b id="k-ventas">0</b><span>VENTAS DEL DÍA</span></div>
-        <div class="kpi"><b id="k-productos">0</b><span>PRODUCTOS</span></div>
-        <div class="kpi alerta"><b id="k-agotarse">0</b><span>POR AGOTARSE</span></div>
+        <button class="kpi ok" onclick="ver('movs')"><b id="k-vendido">S/ 0</b><span>VENDIDO HOY</span><small>Ver movimientos →</small></button>
+        <button class="kpi" onclick="ver('movs')"><b id="k-ventas">0</b><span>VENTAS DEL DÍA</span><small>Ver movimientos →</small></button>
+        <button class="kpi" onclick="verCat('Todas')"><b id="k-productos">0</b><span>PRODUCTOS</span><small>Ver por categoría →</small></button>
+        <button class="kpi alerta" onclick="verBajos()"><b id="k-agotarse">0</b><span>POR AGOTARSE</span><small>Ver cuáles →</small></button>
       </div>
 
       <section>
@@ -290,6 +306,10 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
         <p class="rot">PARADOS HACE MÁS DE 30 DÍAS</p>
         <div id="parados"></div>
       </section>
+      <section class="ancho">
+        <p class="rot">TU INVENTARIO POR CATEGORÍA</p>
+        <div class="card" id="dona-cat"></div>
+      </section>
       <div class="ancho">
       <p class="rot">VALOR DE TU INVENTARIO</p>
       <div class="card">
@@ -316,6 +336,7 @@ h2{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:3px}
 <div class="modal" id="modal"><div class="hoja" id="hoja"></div></div>
 <div class="toast" id="toast"></div>
 
+<script src="portal/vivo.js"></script>
 <script>
 var P = [
  {id:1, n:"Polo algodón blanco", v:"M", c:"Polos", p:35, s:126, min:20, cod:"7501234567890", d:0},
@@ -483,6 +504,32 @@ function pintarReportes(){
   }).join("") : '<div class="card vacio">Todo tu inventario ha tenido movimiento reciente.</div>';
 
   $("valor-inv").textContent = S(P.reduce(function(a,p){return a+p.p*p.s},0));
+  if (window.Vivo) {
+    var g = {}; P.forEach(function(p){ g[p.c] = (g[p.c]||0) + p.p*p.s; });
+    $("dona-cat").innerHTML = Vivo.dona(Object.keys(g).map(function(c){ return {n:c, v:g[c], a:'onclick="verCat(\''+c+'\')"'}; }), S(P.reduce(function(a,p){return a+p.p*p.s},0)), "en mercadería", S);
+  } else $("dona-cat").parentNode.style.display = "none";
+}
+/* Ventanas que se abren al tocar un indicador o un trozo de la dona */
+function listaVentana(titulo, sub, lista){
+  $("hoja").innerHTML = '<div class="agarre"></div><h2>'+titulo+'</h2><p class="sub">'+sub+'</p>'+
+    (lista.length ? lista.map(function(p){ return '<button class="item" onclick="ficha('+p.id+')"><div class="n"><b>'+p.n+' · '+p.v+'</b><span>'+S(p.p)+' · '+p.c+'</span></div><span class="stock '+nivel(p)+'">'+p.s+' und</span></button>'; }).join("") : '<div class="card vacio">No hay productos aquí.</div>')+
+    '<div style="margin-top:12px"><button class="btn btn-2" onclick="cerrar()">Cerrar</button></div>';
+  $("modal").classList.add("on");
+}
+function verCat(c){
+  if (c === "Todas") {
+    var g = {}; P.forEach(function(p){ (g[p.c] = g[p.c] || []).push(p); });
+    $("hoja").innerHTML = '<div class="agarre"></div><h2>Tus productos por categoría</h2><p class="sub">'+P.length+' productos. Toca una categoría para ver los suyos.</p>'+
+      (window.Vivo ? Vivo.barrasH(Object.keys(g).map(function(k){ return {n:k, v:g[k].reduce(function(a,p){return a+p.p*p.s},0), t:S(g[k].reduce(function(a,p){return a+p.p*p.s},0)), s:g[k].length+' productos · '+g[k].reduce(function(a,p){return a+p.s},0)+' und', a:'onclick="verCat(\''+k+'\')"'}; }).sort(function(a,b){return b.v-a.v})) : '')+
+      '<div style="margin-top:12px"><button class="btn btn-2" onclick="cerrar()">Cerrar</button></div>';
+    $("modal").classList.add("on"); return;
+  }
+  var l = P.filter(function(p){return p.c===c}).sort(function(a,b){return b.p*b.s-a.p*a.s});
+  listaVentana(c, l.length+' productos · '+S(l.reduce(function(a,p){return a+p.p*p.s},0))+' en mercadería', l);
+}
+function verBajos(){
+  var l = P.filter(function(p){return p.s<=p.min});
+  listaVentana("Por agotarse", l.length ? l.length+' productos agotados o bajo su mínimo. Toca uno para reponerlo.' : 'Todo con stock suficiente.', l);
 }
 
 /* Excel con el formato Yupasoft (el mismo generador del portal) */
@@ -542,6 +589,7 @@ function ver(v){
     b.classList.toggle("on", b.dataset.v===v);
   });
   $("cuerpo").scrollTop = 0;
+  if (window.Vivo) Vivo.entrar($("v-"+v), ".card,.kpi,.item,.aviso,.tab,.buscar");
 }
 function pintarTodo(){ pintarInicio(); pintarInventario(); pintarCarrito(); pintarMovs(); pintarReportes(); }
 
@@ -561,6 +609,7 @@ var meses=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","se
 var hoy=new Date();
 $("fecha-hoy").textContent = dias[hoy.getDay()]+", "+hoy.getDate()+" de "+meses[hoy.getMonth()];
 pintarTodo();
+if (window.Vivo) Vivo.entrar($("v-inicio"), ".card,.kpi,.item,.aviso");
 </script>
 </body>
 </html>
