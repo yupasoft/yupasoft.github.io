@@ -117,7 +117,7 @@
       return `<circle class="seg" cx="50" cy="50" r="${R}" style="--c:${x.c};--d:${Math.max(0, L - (d.length > 1 ? 1.2 : 0)).toFixed(2)};--C:${C.toFixed(2)};--o:${o.toFixed(2)};--k:${k}"><title>${esc(x.n)}: ${esc(f(x.v))}</title></circle>`; }).join('');
     return `<div class="vv-dona"><div class="vv-dona-g"><svg viewBox="0 0 100 100" role="img" aria-label="${esc(sub || '')}"><circle class="pista" cx="50" cy="50" r="${R}"/>${seg}</svg>
       <div class="vv-dona-c"><b>${esc(centro)}</b><small>${esc(sub || '')}</small></div></div>
-      <ul class="vv-ley">${d.map(x => `<li ${x.a ? x.a + ' role="button" tabindex="0" class="toca"' : ''}><i style="background:${x.c}"></i><span>${esc(x.n)}</span><b>${esc(f(x.v))}</b><em>${Math.round(x.v / tot * 100)}%</em></li>`).join('')}</ul></div>`;
+      <ul class="vv-ley">${d.map(x => `<li ${x.a ? x.a + ' role="button" tabindex="0" class="toca"' : ''}><i style="--c:${x.c}"></i><span>${esc(x.n)}</span><b>${esc(f(x.v))}</b><em>${Math.round(x.v / tot * 100)}%</em></li>`).join('')}</ul></div>`;
   }
   // Barras horizontales: datos [{n, v, t: texto a la derecha, s?: texto chico, c?: color, a?: atributos para hacerla tocable}]
   function barrasH(datos) {

@@ -1,0 +1,79 @@
+/* =====================================================================
+   YUPASOFT · Tema (colores y letra comunes al portal y a todas las herramientas)
+
+   Un solo lugar para los colores de los dos modos. Lo traen solas las herramientas que usan el kit
+   (vivo.css lo importa); el portal y las que no usan el kit lo enlazan:
+     <link rel="stylesheet" href="../portal/tema.css">   (después de su propio <style>)
+
+   Ideas del tema (2026-11-15, pedido de Christian: «en uno que no se vea muy azul todo y el otro muy blanco en todo»):
+   · Oscuro: grafito casi neutro. El azul marino queda para la marca; así el color de acento resalta.
+   · Claro: fondo gris suave, tarjetas blancas con borde marcado y la barra de arriba en azul marino.
+   · Cada herramienta puede tener su color de acento: define --herr (vivo, para el oscuro) y --herr-osc
+     (oscuro, para leerse sobre blanco) en su :root. Sin eso, usa el turquesa de la marca.
+   · Colores «de ficha» (--f-*): vivos, iguales en los dos modos, para fondos que llevan encima tinta
+     azul marino (íconos, avisos). Nunca usarlos como color de texto sobre blanco: no se leen.
+   Gana a los colores de cada página porque sus reglas empiezan con «html:root».
+   Para comprobar un cambio de color: la auditoría de contraste de las pruebas (ver CLAUDE.md del AD).
+   ===================================================================== */
+
+html:root{
+  /* fichas: mismos en claro y oscuro */
+  --f-acc:var(--herr,#2ED3B7); --f-amb:#F2A93B; --f-mal:#FF7A70; --f-neu:#AEB8C6; --f-tinta:#0C1A2E;
+  --vv-m:100%;                                  /* cuánto del color propio llevan los gráficos (en claro se oscurecen) */
+
+  /* herramientas (finanzas, inventario, yupaletras, probador…) */
+  --bg:#0D1117; --card:#161B22; --card2:#1F2630; --bd:#2E3642; --tx:#F3F5F7; --mute:#A0A9B6;
+  --acc:var(--herr,#2ED3B7); --acc-tx:#0C1A2E; --amb:#F2A93B; --mal:#FF7A70;
+
+  /* portal */
+  --tinta-2:#0A0D12; --panel:#161B22; --panel-2:#1F2630; --borde:#2E3642;
+  --gris:#A0A9B6; --gris-osc:#7F8A98; --texto:#E9EDF2; --fuerte:#FFFFFF;
+  --linea:rgba(255,255,255,.08); --hover:rgba(255,255,255,.06);
+  --vidrio:rgba(13,17,23,.84); --vidrio-2:rgba(22,27,34,.78); --velo:rgba(3,6,10,.66); --sutil:rgba(0,0,0,.20);
+  --turq-t:#2ED3B7; --ambar-t:#F2A93B; --rojo-t:#FF8A80; --turq-osc:#159C86;
+
+  /* yupavideo */
+  --panel2:#1F2630; --txt:#F3F5F7; --sub:#A0A9B6; --campo:#0A0D12; --campo2:#12161C; --hov:#2A323D;
+  color-scheme:dark;
+}
+
+html:root[data-tema="claro"]{
+  --vv-m:64%;
+  --bg:#E6EAF0; --card:#FFFFFF; --card2:#EDF0F5; --bd:#C7D0DB; --tx:#0F1B2D; --mute:#485668;
+  --acc:var(--herr-osc,#0A7566); --acc-tx:#FFFFFF; --amb:#8F5300; --mal:#B3261E;
+
+  --tinta-2:#F5F7FA; --panel:#FFFFFF; --panel-2:#EDF0F5; --borde:#C7D0DB;
+  --gris:#485668; --gris-osc:#556272; --texto:#0F1B2D; --fuerte:#0F1B2D;
+  --linea:rgba(15,27,45,.13); --hover:rgba(15,27,45,.06);
+  --vidrio:rgba(255,255,255,.88); --vidrio-2:rgba(255,255,255,.92); --velo:rgba(15,27,45,.42); --sutil:rgba(15,27,45,.05);
+  --turq-t:#0A7566; --ambar-t:#8F5300; --rojo-t:#B3261E; --turq-osc:#0A7566;
+
+  --panel2:#EDF0F5; --txt:#0F1B2D; --sub:#485668; --campo:#F5F7FA; --campo2:#EDF0F5; --hov:#DCE2EA;
+  color-scheme:light;
+}
+
+/* ---------- Letra: Inter para leer (textos, tablas, botones); Sora queda para títulos y cifras grandes ---------- */
+html:root body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-feature-settings:'cv11','ss01';letter-spacing:-.006em}
+html:root :is(h1,h2,h3){font-family:'Sora','Inter',system-ui,sans-serif}
+
+/* ---------- Claro: la barra de arriba (y el dibujo de las tarjetas del portal) va en azul marino.
+   Adentro valen los colores del oscuro, con las superficies en azul marino ---------- */
+html:root[data-tema="claro"] :is(.barra,.ini-barra,.h-card .arte){
+  --bg:#0C1A2E; --card:#16263D; --card2:#1E3250; --bd:#2F4666; --tx:#F3F5F7; --mute:#B2C0D2;
+  --acc:var(--herr,#2ED3B7); --acc-tx:#0C1A2E; --amb:#F2A93B; --mal:#FF7A70;
+  --panel:#16263D; --panel-2:#1E3250; --borde:#2F4666; --gris:#B2C0D2; --gris-osc:#93A4BA; --texto:#F3F5F7; --fuerte:#FFFFFF;
+  --linea:rgba(255,255,255,.10); --hover:rgba(255,255,255,.08); --turq-t:#2ED3B7; --ambar-t:#F2A93B; --rojo-t:#FF8A80;
+  --panel2:#1E3250; --txt:#F3F5F7; --sub:#B2C0D2; --campo:#0A1626; --campo2:#10213A; --hov:#27406A;
+  color-scheme:dark;
+}
+html:root[data-tema="claro"] :is(.barra,.ini-barra){
+  background:#0C1A2E; color:#F3F5F7; border-bottom-color:transparent; box-shadow:0 6px 22px -12px rgba(12,26,46,.55);
+  -webkit-backdrop-filter:none; backdrop-filter:none;
+}
+html:root[data-tema="claro"] :is(.barra,.ini-barra) svg [stroke="#FFFFFF"]{stroke:#FFFFFF}      /* el logo vuelve a blanco sobre la barra oscura */
+
+/* ---------- Claro: las tarjetas se despegan del fondo ---------- */
+html:root[data-tema="claro"] :is(.card,.kpi,.caja,.bloque,.h-card,.solic,.tabla-wrap,.pn){box-shadow:0 1px 2px rgba(15,27,45,.06),0 10px 24px -18px rgba(15,27,45,.30)}
+
+/* ---------- Claro: lo que lleva tinta azul marino sobre ámbar conserva el ámbar vivo (botón de ofertas, cintas de aviso) ---------- */
+html:root[data-tema="claro"] :is(.bt.amb,.pill.of,.cinta,.banda-como,.chip.sup){--amb:#F2A93B;--ambar:#F2A93B}
