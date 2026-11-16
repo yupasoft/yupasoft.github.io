@@ -302,9 +302,25 @@ tr.clic{cursor:pointer} tr.clic:hover td{background:var(--hover)}
   .navcli{order:9;width:100%;margin-left:0}
   .navcli .btn{flex:1;justify-content:center;text-align:center}
 }
+/* ---------- movimiento al pasar el cursor, como los botones de Yupafinanzas (pedido de Christian, 2026-11-15) ---------- */
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .btn{transition:translate .16s cubic-bezier(.2,.8,.2,1),scale .14s,box-shadow .2s,background .15s,border-color .2s,transform .15s}
+  .btn:not(:disabled):hover{translate:0 -2px;border-color:var(--turq-t);box-shadow:0 12px 24px -14px var(--turq-t)}
+  .btn.peligro:not(:disabled):hover{border-color:var(--rojo-t);box-shadow:0 12px 24px -14px var(--rojo-t)}
+  .btn:not(:disabled):active{translate:0 0;scale:.97}
+  .btn.pri{position:relative;overflow:hidden}
+  .btn.pri::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;transform:skewX(-20deg);pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent)}
+  .btn.pri:not(:disabled):hover::after{animation:brillo .7s ease}
+  .kpi,.kpi[data-a],.caja,.solic{transition:translate .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s,border-color .2s,transform .15s}
+  :is(.kpi,.caja,.solic):hover{translate:0 -3px;border-color:color-mix(in srgb,var(--k,var(--turq-t)) 70%,var(--borde))}
+  nav.lateral button{transition:translate .16s cubic-bezier(.2,.8,.2,1),background .15s,color .15s}
+  nav.lateral button:hover{translate:3px 0}
+  .hoja .lista-mas button,.opciones-renov button,.contacto-ac a{transition:translate .16s cubic-bezier(.2,.8,.2,1),border-color .2s,background .15s}
+  :is(.hoja .lista-mas button,.opciones-renov button,.contacto-ac a):hover{translate:0 -2px;border-color:var(--turq-t)}
+}
+@keyframes brillo{to{left:130%}}
 </style>
-<link rel="stylesheet" href="tema.css">
-</head>
+<link rel="stylesheet" href="tema.css"></head>
 <body>
 <div class="fondo" aria-hidden="true"><div class="rej" id="rej"></div></div>
 

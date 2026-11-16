@@ -22,18 +22,21 @@ html:root{
   --vv-m:100%;                                  /* cuánto del color propio llevan los gráficos (en claro se oscurecen) */
 
   /* herramientas (finanzas, inventario, yupaletras, probador…) */
-  --bg:#0D1117; --card:#161B22; --card2:#1F2630; --bd:#2E3642; --tx:#F3F5F7; --mute:#A0A9B6;
+  /* Grafito con un punto de azul: el primer grafito (#0D1117) se veía «un poco negro» (Christian, 2026-11-15) */
+  --bg:#10151E; --card:#1A222E; --card2:#243042; --bd:#36445A; --tx:#F3F5F7; --mute:#A9B4C3;
   --acc:var(--herr,#2ED3B7); --acc-tx:#0C1A2E; --amb:#F2A93B; --mal:#FF7A70;
+  --k-tx-p:88%; --k-tx-b:#FFFFFF;              /* la cifra de un cuadro con color propio (--k): cuánto de su color y con qué se mezcla */
+  --k-fondo:26%; --k-borde:46%;
 
   /* portal */
-  --tinta-2:#0A0D12; --panel:#161B22; --panel-2:#1F2630; --borde:#2E3642;
-  --gris:#A0A9B6; --gris-osc:#7F8A98; --texto:#E9EDF2; --fuerte:#FFFFFF;
-  --linea:rgba(255,255,255,.08); --hover:rgba(255,255,255,.06);
-  --vidrio:rgba(13,17,23,.84); --vidrio-2:rgba(22,27,34,.78); --velo:rgba(3,6,10,.66); --sutil:rgba(0,0,0,.20);
+  --tinta-2:#0B1017; --panel:#1A222E; --panel-2:#243042; --borde:#36445A;
+  --gris:#A9B4C3; --gris-osc:#8491A3; --texto:#E9EDF2; --fuerte:#FFFFFF;
+  --linea:rgba(255,255,255,.09); --hover:rgba(255,255,255,.07);
+  --vidrio:rgba(16,21,30,.84); --vidrio-2:rgba(26,34,46,.80); --velo:rgba(4,8,14,.66); --sutil:rgba(0,0,0,.20);
   --turq-t:#2ED3B7; --ambar-t:#F2A93B; --rojo-t:#FF8A80; --turq-osc:#159C86;
 
   /* yupavideo */
-  --panel2:#1F2630; --txt:#F3F5F7; --sub:#A0A9B6; --campo:#0A0D12; --campo2:#12161C; --hov:#2A323D;
+  --panel2:#243042; --txt:#F3F5F7; --sub:#A9B4C3; --campo:#0B1017; --campo2:#141B26; --hov:#2F3C50;
   color-scheme:dark;
 }
 
@@ -41,6 +44,8 @@ html:root[data-tema="claro"]{
   --vv-m:64%;
   --bg:#E6EAF0; --card:#FFFFFF; --card2:#EDF0F5; --bd:#C7D0DB; --tx:#0F1B2D; --mute:#485668;
   --acc:var(--herr-osc,#0A7566); --acc-tx:#FFFFFF; --amb:#8F5300; --mal:#B3261E;
+  --k-tx-p:46%; --k-tx-b:#0C1A2E;
+  --k-fondo:24%; --k-borde:55%;
 
   --tinta-2:#F5F7FA; --panel:#FFFFFF; --panel-2:#EDF0F5; --borde:#C7D0DB;
   --gris:#485668; --gris-osc:#556272; --texto:#0F1B2D; --fuerte:#0F1B2D;
@@ -72,8 +77,53 @@ html:root[data-tema="claro"] :is(.barra,.ini-barra){
 }
 html:root[data-tema="claro"] :is(.barra,.ini-barra) svg [stroke="#FFFFFF"]{stroke:#FFFFFF}      /* el logo vuelve a blanco sobre la barra oscura */
 
-/* ---------- Claro: las tarjetas se despegan del fondo ---------- */
-html:root[data-tema="claro"] :is(.card,.kpi,.caja,.bloque,.h-card,.solic,.tabla-wrap,.pn){box-shadow:0 1px 2px rgba(15,27,45,.06),0 10px 24px -18px rgba(15,27,45,.30)}
+/* ---------- Las tarjetas se despegan del fondo (en oscuro, además, un filo de luz arriba) ---------- */
+html:root{--t-sombra:inset 0 1px 0 rgba(255,255,255,.07),0 16px 30px -24px #000}
+html:root[data-tema="claro"]{--t-sombra:0 1px 2px rgba(15,27,45,.06),0 10px 24px -18px rgba(15,27,45,.30)}
+html:root :is(.card,.caja,.bloque,.h-card,.solic,.tabla-wrap,.pn,.it,.pz){box-shadow:var(--t-sombra)}
+
+/* ---------- Oscuro: más luz de color en el fondo, para que no se vea negro ---------- */
+html:root:not([data-tema="claro"]) .vv-fondo{
+  background:radial-gradient(1100px 640px at 84% -12%,color-mix(in srgb,var(--acc) 26%,transparent),transparent 62%),
+             radial-gradient(900px 620px at -12% 112%,color-mix(in srgb,var(--amb) 17%,transparent),transparent 60%),
+             radial-gradient(900px 600px at 28% 34%,rgba(110,130,255,.09),transparent 70%)}
+html:root:not([data-tema="claro"]) .fondo{
+  background:radial-gradient(1100px 640px at 82% -10%,rgba(46,211,183,.24),transparent 60%),
+             radial-gradient(900px 620px at -10% 110%,rgba(242,169,59,.16),transparent 60%),
+             radial-gradient(900px 600px at 28% 34%,rgba(110,130,255,.09),transparent 70%),var(--bg)}
+
+/* ---------- Cuadros de indicadores: cada uno con su color (--k), en los dos modos ----------
+   El color va por posición; un aviso siempre es ámbar y un problema siempre rojo. La cifra toma el color del cuadro. */
+html:root .kpi{--k:var(--f-acc)}
+html:root .kpi:nth-child(6n+2){--k:#7AA2FF}
+html:root .kpi:nth-child(6n+3){--k:#B79CFF}
+html:root .kpi:nth-child(6n+4){--k:#F2A93B}
+html:root .kpi:nth-child(6n+5){--k:#FF8FB1}
+html:root .kpi:nth-child(6n){--k:#58C4DD}
+html:root .kpi:is(.aviso,.alerta){--k:#F2A93B}
+html:root .kpi.mal{--k:#FF7A70}
+html:root .kpi{
+  background:linear-gradient(150deg,color-mix(in srgb,var(--k) var(--k-fondo),var(--card)),color-mix(in srgb,var(--k) 7%,var(--card)) 78%);
+  border-color:color-mix(in srgb,var(--k) var(--k-borde),var(--bd));
+  box-shadow:inset 0 3px 0 var(--k),var(--t-sombra);
+}
+html:root.vv .kpi{box-shadow:var(--t-sombra)}      /* con el kit, la franja de arriba ya la pone vivo.css */
+html:root.vv .kpi::before{background:linear-gradient(90deg,var(--k),color-mix(in srgb,var(--k) 25%,transparent) 72%,transparent);opacity:1}
+html:root.vv .kpi::after{background:radial-gradient(closest-side,color-mix(in srgb,var(--k) 24%,transparent),transparent)}
+html:root .kpi :is(b,.n){color:color-mix(in srgb,var(--k) var(--k-tx-p),var(--k-tx-b))}
+html:root .kpi .vv-chip{--c:var(--k)}
+/* La tarjeta principal de cada pantalla, con el color de la herramienta */
+html:root .card:is(.heroe,.tengo){
+  background:linear-gradient(150deg,color-mix(in srgb,var(--f-acc) var(--k-fondo),var(--card)),color-mix(in srgb,var(--f-acc) 5%,var(--card)) 72%);
+  border-color:color-mix(in srgb,var(--f-acc) var(--k-borde),var(--bd))}
+html:root .card.heroe.neg{
+  background:linear-gradient(150deg,color-mix(in srgb,var(--f-mal) var(--k-fondo),var(--card)),color-mix(in srgb,var(--f-mal) 5%,var(--card)) 72%);
+  border-color:color-mix(in srgb,var(--f-mal) var(--k-borde),var(--bd))}
+/* Cajas del panel del portal y paneles de Yupavideo: una franja de color arriba, distinta en cada una */
+html:root :is(.caja,.pn:not(.hero)){--k:var(--f-acc);box-shadow:inset 0 3px 0 color-mix(in srgb,var(--k) 85%,transparent),var(--t-sombra)}
+html:root :is(.caja,.pn:not(.hero)):nth-child(4n+2){--k:#7AA2FF}
+html:root :is(.caja,.pn:not(.hero)):nth-child(4n+3){--k:#F2A93B}
+html:root :is(.caja,.pn:not(.hero)):nth-child(4n){--k:#B79CFF}
 
 /* ---------- Claro: lo que lleva tinta azul marino sobre ámbar conserva el ámbar vivo (botón de ofertas, cintas de aviso) ---------- */
 html:root[data-tema="claro"] :is(.bt.amb,.pill.of,.cinta,.banda-como,.chip.sup){--amb:#F2A93B;--ambar:#F2A93B}

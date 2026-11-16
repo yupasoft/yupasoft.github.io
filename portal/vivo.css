@@ -62,7 +62,7 @@
 .vv :is(.kpi,.card.heroe):hover::after{transform:scale(1.5)}
 
 .vv .bt{transition:transform .14s cubic-bezier(.2,.8,.2,1),box-shadow .2s,border-color .2s,background-color .2s,color .2s}
-.vv .bt:not(:disabled):hover{transform:translateY(-1px)}
+.vv .bt:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 12px 22px -14px var(--acc)}
 .vv .bt:not(:disabled):active{transform:scale(.96)}
 .vv .bt.pri,.vv .bt.amb{position:relative;overflow:hidden;box-shadow:0 8px 20px -10px var(--acc)}
 .vv .bt.amb{box-shadow:0 8px 20px -10px var(--amb)}
